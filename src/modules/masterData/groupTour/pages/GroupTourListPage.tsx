@@ -46,7 +46,7 @@ export default function GroupTourListPage() {
           </div>
         </div>
         <Button onClick={() => setDialog({ open: true, target: null })}>
-          <Plus className='mr-2 w-4 h-4' />
+          <Plus className='w-4 h-4' />
           Thêm tour
         </Button>
       </div>

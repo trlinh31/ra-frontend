@@ -43,7 +43,7 @@ export default function HotelListPage() {
         </div>
 
         <Button onClick={handleAdd}>
-          <Plus className='mr-2 w-4 h-4' />
+          <Plus className='w-4 h-4' />
           Thêm phòng mới
         </Button>
       </div>

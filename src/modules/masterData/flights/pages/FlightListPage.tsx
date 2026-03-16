@@ -51,7 +51,7 @@ export default function FlightListPage() {
           </div>
         </div>
         <Button onClick={() => setDialog({ open: true, target: null })}>
-          <Plus className='mr-2 w-4 h-4' />
+          <Plus className='w-4 h-4' />
           Thêm tuyến bay
         </Button>
       </div>

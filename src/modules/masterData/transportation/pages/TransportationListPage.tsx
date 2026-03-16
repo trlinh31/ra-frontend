@@ -139,11 +139,11 @@ export default function TransportationListPage() {
           <h2 className='font-semibold text-yellow-800 dark:text-yellow-400'>Tính theo KM</h2>
           <div className='flex gap-2'>
             <Button variant='outline' onClick={() => setGroupDialog({ open: true, target: null })}>
-              <FolderPlus className='mr-1.5 w-4 h-4' />
+              <FolderPlus className='w-4 h-4' />
               Thêm nhóm
             </Button>
             <Button onClick={() => setKmItemDialog({ open: true, target: null })} disabled={kmGroups.length === 0}>
-              <Plus className='mr-1.5 w-4 h-4' />
+              <Plus className='w-4 h-4' />
               Thêm lịch trình
             </Button>
           </div>
@@ -224,7 +224,7 @@ export default function TransportationListPage() {
         <div className='flex justify-between items-center bg-yellow-400/20 dark:bg-yellow-500/10 px-4 py-2 rounded-md'>
           <h2 className='font-semibold text-yellow-800 dark:text-yellow-400'>Tính theo lộ trình</h2>
           <Button onClick={() => setRouteDialog({ open: true, target: null })}>
-            <Plus className='mr-1.5 w-4 h-4' />
+            <Plus className='w-4 h-4' />
             Thêm lộ trình
           </Button>
         </div>

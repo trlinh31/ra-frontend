@@ -98,7 +98,7 @@ export default function HotelForm({ defaultValues, onSubmit, onCancel, isSubmitt
           <div className='flex justify-between items-center'>
             <Label className='font-medium text-sm'>Giá theo khoảng thời gian</Label>
             <Button type='button' variant='outline' size='sm' onClick={handleAddPriceRange}>
-              <Plus className='mr-1 w-4 h-4' />
+              <Plus className='w-4 h-4' />
               Thêm khoảng giá
             </Button>
           </div>

@@ -99,11 +99,11 @@ export default function EntranceFeeListPage() {
         </div>
         <div className='flex gap-2'>
           <Button variant='outline' onClick={() => setGroupDialog({ open: true, target: null })}>
-            <FolderPlus className='mr-1.5 w-4 h-4' />
+            <FolderPlus className='w-4 h-4' />
             Thêm nhóm
           </Button>
           <Button onClick={() => setItemDialog({ open: true, target: null })} disabled={groups.length === 0}>
-            <Plus className='mr-1.5 w-4 h-4' />
+            <Plus className='w-4 h-4' />
             Thêm dịch vụ
           </Button>
         </div>

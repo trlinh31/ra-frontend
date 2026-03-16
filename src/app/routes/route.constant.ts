@@ -21,4 +21,14 @@ export const PATHS = {
     ENTRANCE_FEE: "/master-data/entrance-fee",
     FLIGHTS: "/master-data/flights",
   },
+
+  TOUR: {
+    ROOT: "/tour",
+    DAYS: "/tour/days",
+    DAY_CREATE: "/tour/days/create",
+    DAY_EDIT: "/tour/days/:id",
+    TOURS: "/tour/tours",
+    TOUR_CREATE: "/tour/tours/create",
+    TOUR_EDIT: "/tour/tours/:id",
+  },
 } as const;

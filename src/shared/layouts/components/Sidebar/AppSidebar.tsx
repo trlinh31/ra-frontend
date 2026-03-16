@@ -58,7 +58,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <SidebarGroup className='p-0'>
                 <SidebarGroupLabel
                   asChild
-                  className='group/label flex items-center gap-2 hover:bg-sidebar-accent p-2 rounded-md h-auto font-medium text-xs tracking-wider text-sidebar-accent-foreground cursor-pointer'>
+                  className='group/label flex items-center gap-2 hover:bg-sidebar-accent p-2 rounded-md h-auto font-medium text-sidebar-accent-foreground cursor-pointer'>
                   <CollapsibleTrigger>
                     {item.icon && <item.icon className='w-3.5 h-3.5 shrink-0' />}
                     <span className='flex-1 text-left'>{item.title}</span>
