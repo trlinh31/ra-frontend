@@ -2,15 +2,15 @@ import { z } from "zod";
 import { CURRENCIES, SERVICE_TYPES } from "../types/day.type";
 
 export const dayServiceSchema = z.object({
-  serviceType: z.enum(SERVICE_TYPES, { required_error: "Vui lòng chọn loại dịch vụ" }),
+  serviceType: z.enum(SERVICE_TYPES, { error: "Vui lòng chọn loại dịch vụ" }),
   name: z.string().min(1, "Vui lòng nhập tên dịch vụ"),
   quantity: z.preprocess(
     (val) => (val === "" || val == null ? undefined : Number(val)),
-    z.number({ required_error: "Vui lòng nhập số lượng" }).min(1, "Tối thiểu 1")
+    z.number({ error: "Vui lòng nhập số lượng" }).min(1, "Tối thiểu 1")
   ),
   unitPrice: z.preprocess(
     (val) => (val === "" || val == null ? undefined : Number(val)),
-    z.number({ required_error: "Vui lòng nhập đơn giá" }).min(0, "Giá không được âm")
+    z.number({ error: "Vui lòng nhập đơn giá" }).min(0, "Giá không được âm")
   ),
   currency: z.enum(CURRENCIES).default("VND"),
   notes: z.string().optional().default(""),
