@@ -1,15 +1,25 @@
 import type { GroupTour } from "../types/group-tour.type";
 
 let _tours: GroupTour[] = [
-  { id: "1", tourName: "Hoi An Motorbike Street Food Tour", contractRateUsd: 45, notes: "3.00 pm - 8.00 pm" },
-  { id: "2", tourName: "Bike Tour to Countryside and Food tour", contractRateUsd: 35, notes: "3.00 pm - 8.00 pm" },
-  { id: "3", tourName: "Hoi An Street Walking Food Tour", contractRateUsd: 34, notes: "3.00 pm - 7.00 pm" },
-  { id: "4", tourName: "Evening Walking Food Tour", contractRateUsd: 34, notes: "5.00 pm - 9.00 pm" },
   {
-    id: "5",
-    tourName: "Hoi An City and Food Tour with Foot Massage",
-    contractRateUsd: 29,
-    notes: "8.00 am - 12.00 pm",
+    id: "1",
+    code: "GT001",
+    tourName: "Tour Hà Nội - Hạ Long",
+    supplier: "Công ty ABC",
+    content: "Tham quan Hà Nội và Hạ Long trong 3 ngày 2 đêm",
+    price: 5000000,
+    notes: "Bao gồm vé máy bay và khách sạn",
+    isActive: true,
+  },
+  {
+    id: "2",
+    code: "GT002",
+    tourName: "Tour Đà Nẵng - Hội An",
+    supplier: "Công ty XYZ",
+    content: "Khám phá Đà Nẵng và Hội An trong 4 ngày 3 đêm",
+    price: 6000000,
+    notes: "Bao gồm vé máy bay, khách sạn và ăn uống",
+    isActive: true,
   },
 ];
 

@@ -1,79 +1,51 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, type Resolver } from "react-hook-form";
-
+import { mapGroupTourDataToFormValues } from "@/modules/masterData/groupTour/mappers/group-tour-form.mapper";
+import { groupTourSchema, type GroupTourFormValues } from "@/modules/masterData/groupTour/schemas/group-tour.schema";
+import type { GroupTour } from "@/modules/masterData/groupTour/types/group-tour.type";
+import FormCurrenctyInput from "@/shared/components/form/FormCurrenctyInput";
+import FormInput from "@/shared/components/form/FormInput";
+import FormSwitch from "@/shared/components/form/FormSwitch/FormSwitch";
+import FormTextarea from "@/shared/components/form/FormTextarea";
 import { Button } from "@/shared/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/shared/components/ui/form";
-import { Input } from "@/shared/components/ui/input";
-import { Textarea } from "@/shared/components/ui/textarea";
-import { groupTourSchema, type GroupTourFormValues } from "../schemas/group-tour.schema";
+import { Form } from "@/shared/components/ui/form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Save } from "lucide-react";
+import { useForm } from "react-hook-form";
 
-type Props = {
-  defaultValues?: Partial<GroupTourFormValues>;
+interface GroupTourFormProps {
+  defaultValues?: GroupTour | undefined;
   onSubmit: (values: GroupTourFormValues) => void;
   onCancel: () => void;
-};
+  isSubmitting?: boolean;
+  isEdit?: boolean;
+}
 
-export default function GroupTourForm({ defaultValues, onSubmit, onCancel }: Props) {
+export default function GroupTourForm({ defaultValues, onSubmit, onCancel, isSubmitting, isEdit }: GroupTourFormProps) {
   const form = useForm<GroupTourFormValues>({
-    resolver: zodResolver(groupTourSchema) as Resolver<GroupTourFormValues>,
-    defaultValues: {
-      tourName: "",
-      contractRateUsd: undefined as unknown as number,
-      notes: "",
-      ...defaultValues,
-    },
+    resolver: zodResolver(groupTourSchema),
+    defaultValues: mapGroupTourDataToFormValues(defaultValues),
   });
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
-        <FormField
-          control={form.control}
-          name='tourName'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Tên tour</FormLabel>
-              <FormControl>
-                <Textarea placeholder='Nhập tên tour...' rows={2} className='resize-none' {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+        <div className='gap-4 grid grid-cols-1 sm:grid-cols-2'>
+          <FormInput name='code' label='Mã tour' required />
+          <FormInput name='tourName' label='Tên tour' required />
+          <FormInput name='supplier' label='Nhà cung cấp' required />
+          <FormCurrenctyInput name='price' label='Giá tiền (VNĐ)' required />
+          <FormSwitch name='isActive' label='Hoạt động' />
+          <FormTextarea name='content' label='Nội dung' className='sm:col-span-2' />
+          <FormTextarea name='notes' label='Ghi chú' className='sm:col-span-2' />
+        </div>
 
-        <FormField
-          control={form.control}
-          name='contractRateUsd'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Contract Rate (USD)</FormLabel>
-              <FormControl>
-                <Input type='number' min={0} placeholder='Nhập giá hợp đồng' {...field} value={field.value ?? ""} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name='notes'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Ghi chú</FormLabel>
-              <FormControl>
-                <Input placeholder='Ví dụ: 3.00 pm - 8.00 pm' {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className='flex justify-end gap-3 pt-2'>
-          <Button type='button' variant='outline' onClick={onCancel}>
+        <div className='flex justify-start gap-3'>
+          <Button type='button' variant='outline' size='lg' onClick={onCancel}>
             Hủy
           </Button>
-          <Button type='submit'>Lưu</Button>
+          <Button type='submit' size='lg' disabled={isSubmitting}>
+            <Save />
+            {isEdit ? "Cập nhật" : "Lưu"}
+          </Button>
         </div>
       </form>
     </Form>

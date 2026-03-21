@@ -1,14 +1,12 @@
-export type VisaServiceGroup = {
-  id: string;
-  name: string; // ĐÓN, TIỀN, Dịch vụ thêm
-};
+export type UnitPriceType = "PAX" | "GROUP";
 
-export type VisaServiceItem = {
+export type VisaService = {
   id: string;
-  groupId: string;
+  code: string;
+  group: string;
   serviceName: string;
-  priceUsd?: number;
-  priceUnit?: string; // e.g. "PAX"
+  price: number;
+  priceUnit: UnitPriceType;
   description: string;
   pickupLocation: string;
 };

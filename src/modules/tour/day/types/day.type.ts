@@ -1,15 +1,14 @@
-export const SERVICE_TYPES = ["hotel", "transport", "entrance_fee", "flight", "guide", "meal", "other"] as const;
+export const SERVICE_TYPES = ["hotel", "transport", "group_tour", "visa", "entrance_fee", "flight"] as const;
 
 export type ServiceType = (typeof SERVICE_TYPES)[number];
 
 export const SERVICE_TYPE_LABELS: Record<ServiceType, string> = {
   hotel: "Khách sạn",
   transport: "Vận chuyển",
+  group_tour: "Nhóm tour",
+  visa: "Visa",
   entrance_fee: "Phí vào cổng",
   flight: "Chuyến bay",
-  guide: "Hướng dẫn viên",
-  meal: "Bữa ăn",
-  other: "Khác",
 };
 
 export const CURRENCIES = ["VND", "USD"] as const;

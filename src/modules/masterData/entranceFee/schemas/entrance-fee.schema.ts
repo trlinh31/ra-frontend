@@ -1,15 +1,13 @@
 import { z } from "zod";
 
-export const entranceFeeGroupSchema = z.object({
-  code: z.string().min(1, "Vui lòng nhập mã nhóm"),
-  name: z.string().optional().default(""),
-});
-export type EntranceFeeGroupFormValues = z.infer<typeof entranceFeeGroupSchema>;
-
-export const entranceFeeItemSchema = z.object({
-  groupId: z.string().min(1, "Vui lòng chọn nhóm"),
+export const entranceFeeSchema = z.object({
+  code: z.string().min(1, "Vui lòng nhập mã phí vào cổng"),
   serviceName: z.string().min(1, "Vui lòng nhập tên dịch vụ"),
-  adultNetRateVnd: z.preprocess((val) => (val === "" || val == null ? undefined : Number(val)), z.number().min(0, "Giá không được âm").optional()),
-  notes: z.string().optional().default(""),
+  country: z.string().min(1, "Vui lòng chọn quốc gia"),
+  city: z.string().min(1, "Vui lòng chọn thành phố"),
+  price: z.number({ error: "Vui lòng nhập giá tiền" }).min(0, "Giá tiền không được âm"),
+  notes: z.string(),
+  isActive: z.boolean(),
 });
-export type EntranceFeeItemFormValues = z.infer<typeof entranceFeeItemSchema>;
+
+export type EntranceFeeFormValues = z.infer<typeof entranceFeeSchema>;

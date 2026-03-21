@@ -1,10 +1,54 @@
-import type { Flight } from "../types/flight.type";
+import type { Flight } from "@/modules/masterData/flights/types/flight.type";
 
 let _flights: Flight[] = [
-  { id: "f1", route: "VNA HAN - DAD", netRateUsd: 120, notes: "" },
-  { id: "f2", route: "VNA DAD - SGN", netRateUsd: 120, notes: "" },
-  { id: "f3", route: "AA BKK - CNX", netRateUsd: 100, notes: "Yipeng Lantern Festival period - case by case" },
-  { id: "f4", route: "AA CNX - HKT", netRateUsd: 250, notes: "Yipeng Lantern Festival period - case by case" },
+  {
+    id: "f1",
+    code: "FL1",
+    airlineCode: "VNA",
+    origin: "HAN",
+    destination: "DAD",
+    airline: "Vietnam Airlines",
+    flightTime: "02:00",
+    price: 150000,
+    notes: "",
+    isActive: true,
+  },
+  {
+    id: "f2",
+    code: "FL2",
+    airlineCode: "VNA",
+    origin: "DAD",
+    destination: "SGN",
+    airline: "Vietnam Airlines",
+    flightTime: "01:30",
+    price: 120000,
+    notes: "",
+    isActive: true,
+  },
+  {
+    id: "f3",
+    code: "FL3",
+    airlineCode: "AA",
+    origin: "BKK",
+    destination: "CNX",
+    airline: "American Airlines",
+    flightTime: "02:00",
+    price: 100000,
+    notes: "Yipeng Lantern Festival period - case by case",
+    isActive: true,
+  },
+  {
+    id: "f4",
+    code: "FL4",
+    airlineCode: "AA",
+    origin: "CNX",
+    destination: "HKT",
+    airline: "American Airlines",
+    flightTime: "01:30",
+    price: 250000,
+    notes: "Yipeng Lantern Festival period - case by case",
+    isActive: false,
+  },
 ];
 
 export const flightMockStore = {

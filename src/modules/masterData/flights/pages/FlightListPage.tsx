@@ -1,138 +1,116 @@
-import { Button } from "@/shared/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/shared/components/ui/table";
-import { Pencil, Plane, Plus, Trash2 } from "lucide-react";
-import { useState } from "react";
-
-import FlightForm from "../components/FlightForm";
-import { flightMockStore } from "../data/flight.mock-store";
-import type { FlightFormValues } from "../schemas/flight.schema";
-import type { Flight } from "../types/flight.type";
+import { PATHS } from "@/app/routes/route.constant";
+import FlightFilterBar, { type FlightFilters } from "@/modules/masterData/flights/components/FlightFilterBar";
+import { flightMockStore } from "@/modules/masterData/flights/data/flight.mock-store";
+import { getRouteCode } from "@/modules/masterData/flights/helpers/getRouteCode";
+import type { Flight } from "@/modules/masterData/flights/types/flight.type";
+import { AppTable } from "@/shared/components/common/AppTable";
+import ActionButton from "@/shared/components/table/ActionButton";
+import TableToolbar from "@/shared/components/table/TableToolbar";
+import { Switch } from "@/shared/components/ui/switch";
+import { useConfirm } from "@/shared/contexts/ConfirmContext";
+import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
+import type { ColumnDef } from "@tanstack/react-table";
+import { Plane } from "lucide-react";
+import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function FlightListPage() {
+  const navigate = useNavigate();
+
+  const { confirm } = useConfirm();
+
   const [flights, setFlights] = useState<Flight[]>(() => flightMockStore.getAll());
-  const [dialog, setDialog] = useState<{ open: boolean; target: Flight | null }>({
-    open: false,
-    target: null,
-  });
-  const [deleteTarget, setDeleteTarget] = useState<Flight | null>(null);
+  const [filters, setFilters] = useState<FlightFilters>({ routeCode: "", isActive: "" });
 
-  function handleSubmit(values: FlightFormValues) {
-    const data: Omit<Flight, "id"> = {
-      route: values.route,
-      netRateUsd: values.netRateUsd as number,
-      notes: values.notes ?? "",
-    };
-    if (dialog.target) {
-      flightMockStore.update(dialog.target.id, data);
-    } else {
-      flightMockStore.create(data);
-    }
-    setFlights(flightMockStore.getAll());
-    setDialog({ open: false, target: null });
-  }
+  const filteredFlights = useMemo(() => {
+    return flights.filter((f) => {
+      if (filters.routeCode && !getRouteCode(f).toLowerCase().includes(filters.routeCode.toLowerCase())) return false;
+      if (filters.isActive !== "" && f.isActive !== (filters.isActive === "true")) return false;
+      return true;
+    });
+  }, [flights, filters]);
 
-  function handleDeleteConfirm() {
-    if (!deleteTarget) return;
-    flightMockStore.delete(deleteTarget.id);
+  const handleAdd = () => {
+    navigate(PATHS.MASTER_DATA.FLIGHTS_CREATE);
+  };
+
+  const handleEdit = (flight: Flight) => {
+    navigate(`${PATHS.MASTER_DATA.FLIGHTS_EDIT.replace(":id", flight.id)}`);
+  };
+
+  const handleDelete = async (flight: Flight) => {
+    if (!flight) return;
+
+    const ok = await confirm({
+      description: "Bạn có chắc chắn muốn xóa chuyến bay này không? Hành động này không thể hoàn tác.",
+    });
+
+    if (!ok) return;
+
+    flightMockStore.delete(flight.id);
     setFlights(flightMockStore.getAll());
-    setDeleteTarget(null);
-  }
+  };
+
+  const columns: ColumnDef<Flight>[] = [
+    {
+      id: "index",
+      header: "STT",
+      cell: ({ row }) => row.index + 1,
+    },
+    {
+      header: "Mã chuyến bay",
+      accessorKey: "code",
+    },
+    {
+      id: "route",
+      header: "Mã tuyến đường",
+      cell: ({ row }) => getRouteCode(row.original),
+    },
+    {
+      header: "Hãng bay",
+      accessorKey: "airline",
+    },
+    {
+      header: "Thời gian bay",
+      accessorKey: "flightTime",
+    },
+    {
+      header: "Giá bay (VNĐ)",
+      accessorKey: "price",
+      cell: ({ row }) => formatNumberVN(row.original.price),
+    },
+    {
+      header: "Ghi chú",
+      accessorKey: "notes",
+      enableSorting: false,
+      maxSize: 200,
+    },
+    {
+      header: "Hoạt động",
+      accessorKey: "status",
+      enableSorting: false,
+      cell: ({ row }) => <Switch defaultChecked={row.original.isActive} />,
+    },
+    {
+      id: "actions",
+      header: "Hành động",
+      enableSorting: false,
+      cell: ({ row }) => (
+        <div className='flex items-center gap-2'>
+          <ActionButton action='edit' onClick={() => handleEdit(row.original)} />
+          <ActionButton action='delete' onClick={() => handleDelete(row.original)} />
+        </div>
+      ),
+    },
+  ];
 
   return (
     <div className='space-y-4'>
-      {/* Header */}
-      <div className='flex justify-between items-center'>
-        <div className='flex items-center gap-3'>
-          <Plane className='w-6 h-6 text-primary' />
-          <div>
-            <h1 className='font-bold text-2xl tracking-tight'>Quản lý chuyến bay</h1>
-            <p className='text-muted-foreground text-sm'>Danh sách tuyến bay và giá net</p>
-          </div>
-        </div>
-        <Button onClick={() => setDialog({ open: true, target: null })}>
-          <Plus className='w-4 h-4' />
-          Thêm tuyến bay
-        </Button>
-      </div>
+      <TableToolbar title='Quản lý chuyến bay' description='Danh sách các chuyến bay của hệ thống' icon={Plane} onAdd={handleAdd} />
 
-      {/* Table */}
-      <div className='border rounded-md'>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className='w-16 text-center'>STT</TableHead>
-              <TableHead>Tuyến bay</TableHead>
-              <TableHead className='w-44 text-right'>Net Rate (USD)</TableHead>
-              <TableHead>Ghi chú</TableHead>
-              <TableHead className='w-24 text-right'>Thao tác</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {flights.length === 0 && (
-              <TableRow>
-                <TableCell colSpan={5} className='py-10 text-muted-foreground text-center'>
-                  Chưa có dữ liệu
-                </TableCell>
-              </TableRow>
-            )}
-            {flights.map((flight, idx) => (
-              <TableRow key={flight.id}>
-                <TableCell className='text-muted-foreground text-center'>{idx + 1}</TableCell>
-                <TableCell className='font-medium'>{flight.route}</TableCell>
-                <TableCell className='font-semibold text-right'>{flight.netRateUsd}</TableCell>
-                <TableCell className='text-muted-foreground text-sm'>{flight.notes || "—"}</TableCell>
-                <TableCell className='text-right'>
-                  <div className='flex justify-end items-center gap-1'>
-                    <Button variant='ghost' size='icon' onClick={() => setDialog({ open: true, target: flight })}>
-                      <Pencil className='w-4 h-4' />
-                    </Button>
-                    <Button variant='ghost' size='icon' className='text-destructive hover:text-destructive' onClick={() => setDeleteTarget(flight)}>
-                      <Trash2 className='w-4 h-4' />
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+      <FlightFilterBar onFilter={setFilters} />
 
-      {/* Add / Edit Dialog */}
-      <Dialog open={dialog.open} onOpenChange={(open) => setDialog((s) => ({ ...s, open }))}>
-        <DialogContent className='max-w-md'>
-          <DialogHeader>
-            <DialogTitle>{dialog.target ? "Chỉnh sửa tuyến bay" : "Thêm tuyến bay mới"}</DialogTitle>
-          </DialogHeader>
-          <FlightForm
-            defaultValues={
-              dialog.target ? { route: dialog.target.route, netRateUsd: dialog.target.netRateUsd, notes: dialog.target.notes } : undefined
-            }
-            onSubmit={handleSubmit}
-            onCancel={() => setDialog({ open: false, target: null })}
-          />
-        </DialogContent>
-      </Dialog>
-
-      {/* Delete Dialog */}
-      <Dialog open={!!deleteTarget} onOpenChange={() => setDeleteTarget(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Xoá tuyến bay</DialogTitle>
-            <DialogDescription>
-              Bạn có chắc muốn xoá tuyến <strong>{deleteTarget?.route}</strong>? Không thể hoàn tác.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant='outline' onClick={() => setDeleteTarget(null)}>
-              Hủy
-            </Button>
-            <Button variant='destructive' onClick={handleDeleteConfirm}>
-              Xoá
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <AppTable columns={columns} data={filteredFlights} />
     </div>
   );
 }

@@ -1,13 +1,17 @@
 import DashboardPage from "@/modules/dashboard";
 import EntranceFeeListPage from "@/modules/masterData/entranceFee";
+import EditEntranceFeePage from "@/modules/masterData/entranceFee/pages/EditEntranceFeePage";
 import FlightListPage from "@/modules/masterData/flights";
+import EditFlightPage from "@/modules/masterData/flights/pages/EditFlightPage";
 import GroupTourListPage from "@/modules/masterData/groupTour";
+import EditGroupTourPage from "@/modules/masterData/groupTour/pages/EditGroupTourPage";
 import HotelListPage from "@/modules/masterData/hotel";
 import EditHotelPage from "@/modules/masterData/hotel/pages/EditHotelPage";
 import TransportationListPage from "@/modules/masterData/transportation";
 import EditTransportKmPage from "@/modules/masterData/transportation/pages/EditTransportKmPage";
 import EditTransportRoutePage from "@/modules/masterData/transportation/pages/EditTransportRoutePage";
 import VisaFastTrackListPage from "@/modules/masterData/visaFastTrack";
+import EditVisaFastTrackPage from "@/modules/masterData/visaFastTrack/pages/EditVisaFastTrackPage";
 import DayListPage from "@/modules/tour/day";
 import EditDayPage from "@/modules/tour/day/pages/EditDayPage";
 import TourListPage from "@/modules/tour/tour";
@@ -97,12 +101,32 @@ export const APP_ROUTES: AppRoute[] = [
             showInSidebar: true,
           },
           {
+            path: PATHS.MASTER_DATA.GROUP_TOUR_CREATE,
+            element: <EditGroupTourPage />,
+            showInSidebar: false,
+          },
+          {
+            path: PATHS.MASTER_DATA.GROUP_TOUR_EDIT,
+            element: <EditGroupTourPage />,
+            showInSidebar: false,
+          },
+          {
             path: PATHS.MASTER_DATA.VISA_FAST_TRACK,
             title: "Visa + Fast Track",
             pageTitle: "Quản lý Visa + Fast Track",
             element: <VisaFastTrackListPage />,
             icon: Shield,
             showInSidebar: true,
+          },
+          {
+            path: PATHS.MASTER_DATA.VISA_FAST_TRACK_CREATE,
+            element: <EditVisaFastTrackPage />,
+            showInSidebar: false,
+          },
+          {
+            path: PATHS.MASTER_DATA.VISA_FAST_TRACK_EDIT,
+            element: <EditVisaFastTrackPage />,
+            showInSidebar: false,
           },
           {
             path: PATHS.MASTER_DATA.ENTRANCE_FEE,
@@ -113,12 +137,32 @@ export const APP_ROUTES: AppRoute[] = [
             showInSidebar: true,
           },
           {
+            path: PATHS.MASTER_DATA.ENTRANCE_FEE_CREATE,
+            element: <EditEntranceFeePage />,
+            showInSidebar: false,
+          },
+          {
+            path: PATHS.MASTER_DATA.ENTRANCE_FEE_EDIT,
+            element: <EditEntranceFeePage />,
+            showInSidebar: false,
+          },
+          {
             path: PATHS.MASTER_DATA.FLIGHTS,
             title: "Chuyến bay",
             pageTitle: "Quản lý Chuyến bay",
             element: <FlightListPage />,
             icon: Plane,
             showInSidebar: true,
+          },
+          {
+            path: PATHS.MASTER_DATA.FLIGHTS_CREATE,
+            element: <EditFlightPage />,
+            showInSidebar: false,
+          },
+          {
+            path: PATHS.MASTER_DATA.FLIGHTS_EDIT,
+            element: <EditFlightPage />,
+            showInSidebar: false,
           },
         ],
       },

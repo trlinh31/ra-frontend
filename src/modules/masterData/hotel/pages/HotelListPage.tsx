@@ -34,12 +34,12 @@ export default function HotelListPage() {
     });
   }, [hotels, filters]);
 
-  const handleEdit = (hotel: Hotel) => {
-    navigate(`${PATHS.MASTER_DATA.HOTEL}/${hotel.id}`);
-  };
-
   const handleAdd = () => {
     navigate(PATHS.MASTER_DATA.HOTEL_CREATE);
+  };
+
+  const handleEdit = (hotel: Hotel) => {
+    navigate(`${PATHS.MASTER_DATA.HOTEL}/${hotel.id}`);
   };
 
   const handleDelete = async (hotel: Hotel) => {

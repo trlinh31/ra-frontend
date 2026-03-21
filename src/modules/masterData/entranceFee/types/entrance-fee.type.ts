@@ -1,13 +1,10 @@
-export type EntranceFeeGroup = {
+export interface EntranceFee {
   id: string;
-  code: string; // I, II, III...
-  name: string;
-};
-
-export type EntranceFeeItem = {
-  id: string;
-  groupId: string;
+  code: string;
   serviceName: string;
-  adultNetRateVnd?: number;
+  country: string;
+  city: string;
+  price: number;
   notes: string;
-};
+  isActive: boolean;
+}

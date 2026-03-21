@@ -23,9 +23,17 @@ export const PATHS = {
     TRANSPORT_ROUTE_CREATE: "/master-data/transportation/route/create",
     TRANSPORT_ROUTE_EDIT: "/master-data/transportation/route/:id",
     GROUP_TOUR: "/master-data/group-tour",
+    GROUP_TOUR_CREATE: "/master-data/group-tour/create",
+    GROUP_TOUR_EDIT: "/master-data/group-tour/:id",
     VISA_FAST_TRACK: "/master-data/visa-fast-track",
+    VISA_FAST_TRACK_CREATE: "/master-data/visa-fast-track/create",
+    VISA_FAST_TRACK_EDIT: "/master-data/visa-fast-track/:id",
     ENTRANCE_FEE: "/master-data/entrance-fee",
+    ENTRANCE_FEE_CREATE: "/master-data/entrance-fee/create",
+    ENTRANCE_FEE_EDIT: "/master-data/entrance-fee/:id",
     FLIGHTS: "/master-data/flights",
+    FLIGHTS_CREATE: "/master-data/flights/create",
+    FLIGHTS_EDIT: "/master-data/flights/:id",
   },
 
   TOUR: {
