@@ -5,7 +5,7 @@ interface TableToolbarProps {
   title: string;
   icon?: LucideIcon;
   description?: string;
-  onAdd: () => void;
+  onAdd?: () => void;
 }
 
 export default function TableToolbar({ title, icon, description, onAdd }: TableToolbarProps) {
@@ -22,10 +22,12 @@ export default function TableToolbar({ title, icon, description, onAdd }: TableT
         </div>
       </div>
 
-      <Button type='button' size='lg' onClick={onAdd}>
-        <CirclePlus className='w-4 h-4' />
-        Thêm mới
-      </Button>
+      {onAdd && (
+        <Button type='button' size='lg' onClick={onAdd}>
+          <CirclePlus className='w-4 h-4' />
+          Thêm mới
+        </Button>
+      )}
     </div>
   );
 }

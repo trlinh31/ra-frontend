@@ -1,4 +1,4 @@
-import { HOTEL_RATE_OPTIONS } from "@/modules/masterData/hotel/constants/hotelRateOptions.constant";
+import { HOTEL_RATE_OPTIONS } from "@/modules/masterData/hotel/constants/hotel-rate-options.constant";
 import AppSelect from "@/shared/components/common/AppSelect";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";

@@ -22,7 +22,7 @@ export default function EditHotelPage() {
       hotelMockStore.create(mapHotelFormValuesToPayload(values));
     }
 
-    navigate(PATHS.MASTER_DATA.HOTEL);
+    handleCancel();
   };
 
   const handleCancel = () => {
@@ -44,8 +44,8 @@ export default function EditHotelPage() {
   return (
     <div className='space-y-6'>
       <PageHeader
-        title={isEdit ? "Chỉnh sửa khách sạn" : "Thêm mới khách sạn"}
-        description={isEdit ? `Cập nhật thông tin cho khách sạn ${hotel?.name}` : "Điền thông tin để tạo mới khách sạn"}
+        title={isEdit ? "Cập nhật Khách sạn" : "Thêm mới Khách sạn"}
+        description={isEdit ? `Cập nhật thông tin cho Khách sạn ${hotel?.name}` : "Điền thông tin để tạo mới Khách sạn"}
       />
 
       <HotelForm defaultValues={hotel} onSubmit={handleSubmit} onCancel={handleCancel} isEdit={isEdit} />

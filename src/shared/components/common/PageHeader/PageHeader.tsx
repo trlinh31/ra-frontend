@@ -12,7 +12,7 @@ export default function PageHeader({ title, description }: PageHeaderProps) {
 
   return (
     <div className='flex items-center gap-2'>
-      <Button variant='ghost' size='icon-lg' onClick={() => navigate(-1)}>
+      <Button variant='secondary' size='icon-lg' onClick={() => navigate(-1)}>
         <ArrowLeft className='w-4 h-4' />
       </Button>
 

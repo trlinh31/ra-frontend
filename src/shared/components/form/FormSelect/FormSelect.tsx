@@ -35,7 +35,6 @@ export default function FormSelect({ name, options, label, required = false, cla
             onChange={(value) => field.onChange(value)}
             placeholder={placeholder}
             disabled={disabled}
-            invalid={fieldState.invalid}
           />
 
           {fieldState.invalid && <FieldError errors={[fieldState.error]} />}

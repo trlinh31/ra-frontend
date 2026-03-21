@@ -13,9 +13,9 @@ export const mapHotelDataToFormValues = (hotel: Hotel | undefined): HotelFormVal
   };
 };
 
-export const mapHotelFormValuesToPayload = (hotel: HotelFormValues): Omit<Hotel, "id"> => {
+export const mapHotelFormValuesToPayload = (formValues: HotelFormValues): Omit<Hotel, "id"> => {
   return {
-    ...hotel,
-    rate: Number(hotel.rate),
+    ...formValues,
+    rate: Number(formValues.rate),
   };
 };

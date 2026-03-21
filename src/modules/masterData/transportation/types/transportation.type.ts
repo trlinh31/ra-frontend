@@ -1,22 +1,27 @@
-export const VEHICLE_SEAT_OPTIONS = [4, 7, 16, 29, 35, 45] as const;
-export type VehicleSeat = (typeof VEHICLE_SEAT_OPTIONS)[number];
-
-export type TransportKmGroup = {
+export type TransportKm = {
   id: string;
-  code: string; // "A", "B"
-  title: string; // "TUYẾN ĐƯỜNG CLASSIC"
-};
-
-export type TransportKmItem = {
-  id: string;
-  groupId: string;
-  schedule: string;
+  code: string;
+  country: string;
+  city: string;
+  category: string;
   km: number;
+  price: number;
   notes: string;
+  isActive: boolean;
 };
 
-export type TransportRouteItem = {
+export type TransportRoute = {
   id: string;
-  route: string;
-  prices: Partial<Record<VehicleSeat, number>>; // giá nghìn VND
+  code: string;
+  country: string;
+  startLocation: string;
+  endLocation: string;
+  vehicleCapacityPrice: VehicleCapacityPrice[];
+  notes: string;
+  isActive: boolean;
+};
+
+export type VehicleCapacityPrice = {
+  capacity: number;
+  price: number;
 };

@@ -41,10 +41,13 @@ export default function RoomForm() {
   return (
     <div className='space-y-3'>
       {fields.map((field, index) => (
-        <div key={field.id} className='gap-4 grid grid-cols-1 sm:grid-cols-[1fr_1fr_1fr_1fr_180px]'>
+        <div key={field.id} className='flex gap-4'>
           <FormSelect name={`rooms.${index}.roomType`} label='Loại phòng' options={roomsType} required />
+
           <FormDatePicker name={`rooms.${index}.priceRange.startDate`} label='Từ ngày' required />
+
           <FormDatePicker name={`rooms.${index}.priceRange.endDate`} label='Đến ngày' required />
+
           <FormCurrenctyInput name={`rooms.${index}.priceRange.price`} label='Giá (VNĐ)' required />
 
           <div className='flex justify-end items-end gap-3'>

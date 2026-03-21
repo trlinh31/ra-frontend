@@ -1,14 +1,18 @@
 import { z } from "zod";
 
-const optionalPrice = z.preprocess((val) => (val === "" || val == null ? undefined : Number(val)), z.number().min(0, "Giá không được âm").optional());
+export const vehicleCapacityPriceSchema = z.object({
+  capacity: z.number({ error: "Vui lòng nhập sức chứa chỗ ngồi" }).min(1, "Sức chứa phải lớn hơn 0"),
+  price: z.number({ error: "Vui lòng nhập giá tiền" }).min(0, "Giá tiền không được âm"),
+});
 
 export const transportRouteSchema = z.object({
-  route: z.string().min(1, "Vui lòng nhập lộ trình"),
-  price_4: optionalPrice,
-  price_7: optionalPrice,
-  price_16: optionalPrice,
-  price_29: optionalPrice,
-  price_35: optionalPrice,
-  price_45: optionalPrice,
+  code: z.string().min(1, "Vui lòng nhập mã tuyến vận chuyển"),
+  country: z.string().min(1, "Vui lòng chọn quốc gia"),
+  startLocation: z.string().min(1, "Vui lòng nhập điểm xuất phát"),
+  endLocation: z.string().min(1, "Vui lòng nhập điểm đến"),
+  vehicleCapacityPrice: z.array(vehicleCapacityPriceSchema).min(1, "Vui lòng nhập ít nhất một giá theo loại xe"),
+  notes: z.string(),
+  isActive: z.boolean(),
 });
-export type TransportRouteItemFormValues = z.infer<typeof transportRouteSchema>;
+
+export type TransportRouteFormValues = z.infer<typeof transportRouteSchema>;

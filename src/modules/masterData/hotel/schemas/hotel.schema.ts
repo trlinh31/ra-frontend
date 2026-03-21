@@ -19,7 +19,7 @@ export const roomSchema = z.object({
         },
         { message: "Vui lòng chọn ngày" }
       ),
-      price: z.coerce.number({ error: "Vui lòng nhập giá tiền" }).min(1, "Giá tiền phải lớn hơn 0"),
+      price: z.number({ error: "Vui lòng nhập giá tiền" }).min(1, "Giá tiền phải lớn hơn 0"),
     })
     .refine((data) => new Date(data.endDate) >= new Date(data.startDate), {
       message: "Ngày kết thúc phải sau ngày bắt đầu",
@@ -33,8 +33,8 @@ export const hotelSchema = z.object({
   country: z.string().min(1, "Vui lòng chọn quốc gia"),
   city: z.string().min(1, "Vui lòng chọn thành phố"),
   rooms: z.array(roomSchema).min(1, "Phải có ít nhất một phòng khách sạn"),
-  notes: z.string().optional().default(""),
-  isActive: z.boolean().default(true),
+  notes: z.string(),
+  isActive: z.boolean(),
 });
 
 export type HotelFormValues = z.infer<typeof hotelSchema>;

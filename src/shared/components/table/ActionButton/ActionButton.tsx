@@ -5,7 +5,7 @@ export type Action = "edit" | "delete" | "add";
 
 export interface ActionButtonProps {
   action: Action;
-  onClick: () => void;
+  onClick?: () => void;
   size?: "default" | "xs" | "sm" | "lg" | "icon" | "icon-xs" | "icon-sm" | "icon-lg";
 }
 

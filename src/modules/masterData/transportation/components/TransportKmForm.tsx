@@ -1,9 +1,8 @@
-import RoomForm from "@/modules/masterData/hotel/components/RoomForm";
-import { HOTEL_RATE_OPTIONS } from "@/modules/masterData/hotel/constants/hotel-rate-options.constant";
-import { mapHotelDataToFormValues } from "@/modules/masterData/hotel/mappers/hotel-form.mapper";
-import type { Hotel } from "@/modules/masterData/hotel/types/hotel.type";
+import { TRANSPORT_CATEGORY_OPTIONS } from "@/modules/masterData/transportation/constants/transport-category-options.constant";
+import { mapTransportKmDataToFormValues } from "@/modules/masterData/transportation/mappers/transport-km-form.mapper";
+import type { TransportKm } from "@/modules/masterData/transportation/types/transportation.type";
 import { countryApi } from "@/shared/api/country/country.api";
-import Section from "@/shared/components/common/Section";
+import FormCurrenctyInput from "@/shared/components/form/FormCurrenctyInput";
 import FormInput from "@/shared/components/form/FormInput";
 import FormSelect from "@/shared/components/form/FormSelect";
 import FormSwitch from "@/shared/components/form/FormSwitch/FormSwitch";
@@ -15,22 +14,22 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Save } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
-import { hotelSchema, type HotelFormValues } from "../schemas/hotel.schema";
+import { TransportKmSchema, type TransportKmFormValues } from "../schemas/transport-km.schema";
 
-type HotelFormProps = {
-  defaultValues?: Hotel | undefined;
-  onSubmit: (values: HotelFormValues) => void;
+interface TransportKmFormProps {
+  defaultValues?: TransportKm | undefined;
+  onSubmit: (values: TransportKmFormValues) => void;
   onCancel: () => void;
   isSubmitting?: boolean;
   isEdit?: boolean;
-};
+}
 
-export default function HotelForm({ defaultValues, onSubmit, onCancel, isSubmitting, isEdit }: HotelFormProps) {
+export default function TransportKmForm({ defaultValues, onSubmit, onCancel, isSubmitting, isEdit }: TransportKmFormProps) {
   const [countries, setCountries] = useState<Country[]>([]);
 
-  const form = useForm<HotelFormValues>({
-    resolver: zodResolver(hotelSchema),
-    defaultValues: mapHotelDataToFormValues(defaultValues),
+  const form = useForm<TransportKmFormValues>({
+    resolver: zodResolver(TransportKmSchema),
+    defaultValues: mapTransportKmDataToFormValues(defaultValues),
   });
 
   const fetchCountries = async () => {
@@ -57,23 +56,21 @@ export default function HotelForm({ defaultValues, onSubmit, onCancel, isSubmitt
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
         <div className='gap-4 grid grid-cols-1 sm:grid-cols-2'>
-          <FormInput name='name' label='Tên khách sạn' required />
+          <FormInput name='code' label='Mã phí vận chuyển' required />
 
-          <FormSelect name='rate' options={HOTEL_RATE_OPTIONS} label='Đánh giá' required />
+          <FormSelect name='category' options={TRANSPORT_CATEGORY_OPTIONS} label='Loại vận chuyển' required />
 
           <FormSelect name='country' options={countriesOptions} label='Quốc gia' required />
 
           <FormSelect name='city' options={citiesOptions} label='Thành phố' disabled={!form.watch("country")} required />
 
+          <FormCurrenctyInput name='km' label='Số Kilômét' required />
+
+          <FormCurrenctyInput name='price' label='Giá tiền' required />
+
           <FormTextarea name='notes' label='Ghi chú' />
 
           <FormSwitch name='isActive' label='Hoạt động' />
-
-          <Section title='Thông tin phòng khách sạn' className='col-span-2'>
-            <RoomForm />
-          </Section>
-
-          {form.formState.errors.rooms?.message && <p className='font-normal text-destructive text-sm'>{form.formState.errors.rooms.message}</p>}
         </div>
 
         <div className='flex justify-start gap-3'>

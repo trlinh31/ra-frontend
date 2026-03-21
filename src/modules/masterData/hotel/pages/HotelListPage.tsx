@@ -102,9 +102,10 @@ export default function HotelListPage() {
       header: "Ghi chú",
       accessorKey: "notes",
       enableSorting: false,
+      maxSize: 200,
     },
     {
-      header: "Trạng thái",
+      header: "Hoạt động",
       accessorKey: "status",
       enableSorting: false,
       cell: ({ row }) => <Switch defaultChecked={row.original.isActive} />,

@@ -5,6 +5,8 @@ import GroupTourListPage from "@/modules/masterData/groupTour";
 import HotelListPage from "@/modules/masterData/hotel";
 import EditHotelPage from "@/modules/masterData/hotel/pages/EditHotelPage";
 import TransportationListPage from "@/modules/masterData/transportation";
+import EditTransportKmPage from "@/modules/masterData/transportation/pages/EditTransportKmPage";
+import EditTransportRoutePage from "@/modules/masterData/transportation/pages/EditTransportRoutePage";
 import VisaFastTrackListPage from "@/modules/masterData/visaFastTrack";
 import DayListPage from "@/modules/tour/day";
 import EditDayPage from "@/modules/tour/day/pages/EditDayPage";
@@ -65,6 +67,26 @@ export const APP_ROUTES: AppRoute[] = [
             element: <TransportationListPage />,
             icon: Bus,
             showInSidebar: true,
+          },
+          {
+            path: PATHS.MASTER_DATA.TRANSPORT_KM_CREATE,
+            element: <EditTransportKmPage />,
+            showInSidebar: false,
+          },
+          {
+            path: PATHS.MASTER_DATA.TRANSPORT_KM_EDIT,
+            element: <EditTransportKmPage />,
+            showInSidebar: false,
+          },
+          {
+            path: PATHS.MASTER_DATA.TRANSPORT_ROUTE_CREATE,
+            element: <EditTransportRoutePage />,
+            showInSidebar: false,
+          },
+          {
+            path: PATHS.MASTER_DATA.TRANSPORT_ROUTE_EDIT,
+            element: <EditTransportRoutePage />,
+            showInSidebar: false,
           },
           {
             path: PATHS.MASTER_DATA.GROUP_TOUR,
