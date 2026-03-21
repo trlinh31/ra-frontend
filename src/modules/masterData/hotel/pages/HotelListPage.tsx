@@ -1,113 +1,111 @@
 import { PATHS } from "@/app/routes/route.constant";
-import { Badge } from "@/shared/components/ui/badge";
-import { Button } from "@/shared/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/shared/components/ui/table";
-import { format } from "date-fns";
-import { vi } from "date-fns/locale";
-import { Hotel as HotelIcon, Pencil, Plus, Trash2 } from "lucide-react";
+import { getMinMaxPrice } from "@/modules/masterData/hotel/helpers/getMinMaxPrice";
+import { AppTable } from "@/shared/components/common/AppTable";
+import ActionButton from "@/shared/components/table/ActionButton";
+import TableToolbar from "@/shared/components/table/TableToolbar";
+import { Switch } from "@/shared/components/ui/switch";
+import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
+import type { ColumnDef } from "@tanstack/react-table";
+import { HotelIcon, Star } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { hotelMockStore } from "../data/hotel.mock-store";
-import { ROOM_TYPE_LABELS, type Hotel } from "../types/hotel.type";
+import { type Hotel } from "../types/hotel.type";
 
 export default function HotelListPage() {
   const navigate = useNavigate();
   const [hotels, setHotels] = useState<Hotel[]>(() => hotelMockStore.getAll());
   const [deleteTarget, setDeleteTarget] = useState<Hotel | null>(null);
 
-  function handleEdit(hotel: Hotel) {
+  const handleEdit = (hotel: Hotel) => {
     navigate(`${PATHS.MASTER_DATA.HOTEL}/${hotel.id}`);
-  }
+  };
 
-  function handleAdd() {
+  const handleAdd = () => {
     navigate(PATHS.MASTER_DATA.HOTEL_CREATE);
-  }
+  };
 
-  function handleDeleteConfirm() {
+  const handleDeleteConfirm = () => {
     if (!deleteTarget) return;
     hotelMockStore.delete(deleteTarget.id);
     setHotels(hotelMockStore.getAll());
     setDeleteTarget(null);
-  }
+  };
+
+  const columns: ColumnDef<Hotel>[] = [
+    {
+      id: "index",
+      header: "STT",
+      cell: ({ row }) => row.index + 1,
+    },
+    {
+      header: "Tên khách sạn",
+      accessorKey: "name",
+    },
+    {
+      id: "priceRange",
+      header: "Khoảng giá (VNĐ)",
+      enableSorting: false,
+      cell: ({ row }) => {
+        const { min, max } = getMinMaxPrice(row.original.rooms);
+        return `${formatNumberVN(min)} - ${formatNumberVN(max)}`;
+      },
+    },
+    {
+      header: "Đánh giá",
+      accessorKey: "rate",
+      cell: ({ row }) => (
+        <div className='flex items-center gap-1'>
+          {row.original.rate}
+          <Star strokeWidth={2.25} className='w-3 h-3 text-yellow-300' />
+        </div>
+      ),
+    },
+    {
+      id: "roomCount",
+      header: "Số phòng",
+      enableSorting: false,
+      cell: ({ row }) => row.original.rooms.length,
+    },
+    {
+      header: "Quốc gia",
+      accessorKey: "country",
+    },
+    {
+      header: "Thành phố",
+      accessorKey: "city",
+    },
+    {
+      header: "Ghi chú",
+      accessorKey: "notes",
+      enableSorting: false,
+    },
+    {
+      header: "Trạng thái",
+      accessorKey: "status",
+      enableSorting: false,
+      cell: ({ row }) => <Switch defaultChecked={row.original.isActive} />,
+    },
+    {
+      id: "actions",
+      header: "Hành động",
+      enableSorting: false,
+      cell: ({ row }) => (
+        <div className='flex items-center gap-2'>
+          <ActionButton action='edit' onClick={() => handleEdit(row.original)} />
+          <ActionButton action='delete' onClick={() => setDeleteTarget(row.original)} />
+        </div>
+      ),
+    },
+  ];
 
   return (
     <div className='space-y-4'>
-      <div className='flex justify-between items-center'>
-        <div className='flex items-center gap-3'>
-          <HotelIcon className='w-6 h-6 text-primary' />
-          <div>
-            <h1 className='font-bold text-2xl tracking-tight'>Quản lý phòng khách sạn</h1>
-            <p className='text-muted-foreground text-sm'>Danh sách các loại phòng trong hệ thống</p>
-          </div>
-        </div>
+      <TableToolbar title='Quản lý khách sạn' description='Danh sách các khách sạn của hệ thống' icon={HotelIcon} onAdd={handleAdd} />
 
-        <Button onClick={handleAdd}>
-          <Plus className='w-4 h-4' />
-          Thêm phòng mới
-        </Button>
-      </div>
+      <AppTable columns={columns} data={hotels} />
 
-      <div className='border rounded-md'>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Loại phòng</TableHead>
-              <TableHead className='text-center'>Số phòng</TableHead>
-              <TableHead>Khoảng giá</TableHead>
-              <TableHead>Ghi chú</TableHead>
-              <TableHead className='text-center'>Trạng thái</TableHead>
-              <TableHead className='text-right'>Thao tác</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {hotels.length === 0 && (
-              <TableRow>
-                <TableCell colSpan={6} className='py-10 text-muted-foreground text-center'>
-                  Chưa có dữ liệu
-                </TableCell>
-              </TableRow>
-            )}
-            {hotels.map((hotel) => (
-              <TableRow key={hotel.id}>
-                <TableCell className='font-medium'>{ROOM_TYPE_LABELS[hotel.roomType]}</TableCell>
-                <TableCell className='text-center'>{hotel.roomCount}</TableCell>
-                <TableCell>
-                  <div className='space-y-1'>
-                    {hotel.priceRanges.map((range, idx) => (
-                      <div key={idx} className='text-sm'>
-                        <span className='text-muted-foreground'>
-                          {format(range.startDate, "dd/MM/yyyy", { locale: vi })}
-                          {" – "}
-                          {format(range.endDate, "dd/MM/yyyy", { locale: vi })}
-                        </span>
-                        <span className='ml-2 font-medium text-foreground'>{range.price.toLocaleString("vi-VN")}₫</span>
-                      </div>
-                    ))}
-                  </div>
-                </TableCell>
-                <TableCell className='max-w-50 text-muted-foreground text-sm truncate'>{hotel.notes || "—"}</TableCell>
-                <TableCell className='text-center'>
-                  <Badge variant={hotel.isActive ? "default" : "secondary"}>{hotel.isActive ? "Hoạt động" : "Tạm dừng"}</Badge>
-                </TableCell>
-                <TableCell className='text-right'>
-                  <div className='flex justify-end items-center gap-1'>
-                    <Button variant='ghost' size='icon' onClick={() => handleEdit(hotel)}>
-                      <Pencil className='w-4 h-4' />
-                    </Button>
-                    <Button variant='ghost' size='icon' className='text-destructive hover:text-destructive' onClick={() => setDeleteTarget(hotel)}>
-                      <Trash2 className='w-4 h-4' />
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-
-      {/* Delete Confirmation Dialog */}
-      <Dialog open={!!deleteTarget} onOpenChange={() => setDeleteTarget(null)}>
+      {/* <Dialog open={!!deleteTarget} onOpenChange={() => setDeleteTarget(null)}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Xác nhận xóa</DialogTitle>
@@ -125,7 +123,7 @@ export default function HotelListPage() {
             </Button>
           </DialogFooter>
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
     </div>
   );
 }

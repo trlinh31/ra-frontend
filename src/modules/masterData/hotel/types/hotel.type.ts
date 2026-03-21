@@ -16,9 +16,17 @@ export type PriceRange = {
 
 export type Hotel = {
   id: string;
-  roomType: RoomType;
-  roomCount: number;
-  priceRanges: PriceRange[];
+  name: string;
+  rate: number;
+  country: string;
+  city: string;
   notes: string;
+  rooms: Room[];
   isActive: boolean;
+};
+
+export type Room = {
+  id: string;
+  roomType: RoomType;
+  priceRange: PriceRange;
 };

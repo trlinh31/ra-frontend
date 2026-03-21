@@ -1,32 +1,31 @@
+import { PATHS } from "@/app/routes/route.constant";
+import HotelForm from "@/modules/masterData/hotel/components/HotelForm";
+import { hotelMockStore } from "@/modules/masterData/hotel/data/hotel.mock-store";
+import type { HotelFormValues } from "@/modules/masterData/hotel/schemas/hotel.schema";
+import PageHeader from "@/shared/components/common/PageHeader";
+import { Button } from "@/shared/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
-
-import { PATHS } from "@/app/routes/route.constant";
-import { Button } from "@/shared/components/ui/button";
-
-import HotelForm from "../components/HotelForm";
-import { hotelMockStore } from "../data/hotel.mock-store";
-import type { HotelFormValues } from "../schemas/hotel.schema";
 
 export default function EditHotelPage() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
-  const isEdit = !!id;
+  const isEdit = Boolean(id);
   const hotel = id ? hotelMockStore.getById(id) : undefined;
 
-  function handleSubmit(values: HotelFormValues) {
-    if (isEdit && id) {
-      hotelMockStore.update(id, values);
-    } else {
-      hotelMockStore.create(values);
-    }
-    navigate(PATHS.MASTER_DATA.HOTEL);
-  }
+  const handleSubmit = (values: HotelFormValues) => {
+    // if (isEdit && id) {
+    //   hotelMockStore.update(id, values);
+    // } else {
+    //   hotelMockStore.create(values);
+    // }
+    // navigate(PATHS.MASTER_DATA.HOTEL);
+  };
 
-  function handleCancel() {
+  const handleCancel = () => {
     navigate(PATHS.MASTER_DATA.HOTEL);
-  }
+  };
 
   if (isEdit && !hotel) {
     return (
@@ -42,25 +41,20 @@ export default function EditHotelPage() {
 
   return (
     <div className='space-y-6'>
-      <div className='flex items-center gap-4'>
-        <Button variant='ghost' size='icon' onClick={handleCancel}>
-          <ArrowLeft className='w-4 h-4' />
-        </Button>
-        <div>
-          <h1 className='font-bold text-2xl tracking-tight'>{isEdit ? "Chỉnh sửa phòng" : "Thêm phòng mới"}</h1>
-          <p className='text-muted-foreground text-sm'>
-            {isEdit ? "Cập nhật thông tin phòng khách sạn" : "Điền thông tin để thêm phòng mới vào hệ thống"}
-          </p>
-        </div>
-      </div>
+      <PageHeader
+        title={isEdit ? "Chỉnh sửa khách sạn" : "Thêm mới khách sạn"}
+        description={isEdit ? `Cập nhật thông tin cho khách sạn ${hotel?.name}` : "Điền thông tin để tạo mới khách sạn"}
+      />
 
       <HotelForm
         defaultValues={
           hotel
             ? {
-                roomType: hotel.roomType,
-                roomCount: hotel.roomCount,
-                priceRanges: hotel.priceRanges,
+                name: hotel.name,
+                rate: String(hotel.rate),
+                city: hotel.city,
+                country: hotel.country,
+                rooms: hotel.rooms,
                 notes: hotel.notes,
                 isActive: hotel.isActive,
               }
@@ -68,6 +62,7 @@ export default function EditHotelPage() {
         }
         onSubmit={handleSubmit}
         onCancel={handleCancel}
+        isEdit={isEdit}
       />
     </div>
   );

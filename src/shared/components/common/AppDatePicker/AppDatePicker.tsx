@@ -1,0 +1,44 @@
+import { Button } from "@/shared/components/ui/button";
+import { Calendar } from "@/shared/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/shared/components/ui/popover";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { useMemo, useState } from "react";
+
+interface FormDatePickerProps {
+  value?: string | null;
+  onChange?: (date: Date | null) => void;
+  placeholder?: string;
+  disabled?: boolean;
+}
+
+export default function AppDatePicker({ value, onChange, placeholder = "Chọn ngày", disabled }: FormDatePickerProps) {
+  const [open, setOpen] = useState(false);
+
+  const dateValue = useMemo(() => {
+    if (!value) return undefined;
+    const date = new Date(value);
+
+    return isNaN(date.getTime()) ? undefined : date;
+  }, [value]);
+
+  const onDateChange = (date: Date | undefined) => {
+    onChange?.(date ?? null);
+    setOpen(false);
+  };
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button type='button' variant='outline' className='justify-start w-full' disabled={disabled}>
+          <CalendarIcon className='mr-1 w-4 h-4' />
+          <span className={!dateValue ? "text-muted-foreground" : ""}>{dateValue ? format(dateValue, "dd/MM/yyyy") : placeholder}</span>
+        </Button>
+      </PopoverTrigger>
+
+      <PopoverContent className='p-0 w-auto'>
+        <Calendar mode='single' selected={dateValue} onSelect={onDateChange} />
+      </PopoverContent>
+    </Popover>
+  );
+}

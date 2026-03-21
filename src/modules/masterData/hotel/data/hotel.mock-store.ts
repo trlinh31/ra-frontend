@@ -3,50 +3,32 @@ import type { Hotel } from "../types/hotel.type";
 const initialHotels: Hotel[] = [
   {
     id: "1",
-    roomType: "standard",
-    roomCount: 15,
-    priceRanges: [
+    name: "Khách sạn Ánh Dương",
+    rate: 4,
+    country: "Vietnam",
+    city: "Hanoi",
+    rooms: [
       {
-        startDate: new Date("2025-01-01"),
-        endDate: new Date("2025-03-31"),
-        price: 500000,
+        id: "1",
+        roomType: "standard",
+        priceRange: {
+          startDate: new Date("2025-01-01"),
+          endDate: new Date("2025-03-31"),
+          price: 500000,
+        },
       },
       {
-        startDate: new Date("2025-07-01"),
-        endDate: new Date("2025-08-31"),
-        price: 700000,
+        id: "2",
+        roomType: "standard",
+        priceRange: {
+          startDate: new Date("2025-01-01"),
+          endDate: new Date("2025-03-31"),
+          price: 900000,
+        },
       },
     ],
     notes: "Phòng tiêu chuẩn, view thành phố",
     isActive: true,
-  },
-  {
-    id: "2",
-    roomType: "deluxe",
-    roomCount: 8,
-    priceRanges: [
-      {
-        startDate: new Date("2025-01-01"),
-        endDate: new Date("2025-12-31"),
-        price: 1200000,
-      },
-    ],
-    notes: "Phòng deluxe, view biển",
-    isActive: true,
-  },
-  {
-    id: "3",
-    roomType: "suite",
-    roomCount: 3,
-    priceRanges: [
-      {
-        startDate: new Date("2025-01-01"),
-        endDate: new Date("2025-06-30"),
-        price: 3000000,
-      },
-    ],
-    notes: "",
-    isActive: false,
   },
 ];
 
