@@ -1,21 +1,38 @@
 import { PATHS } from "@/app/routes/route.constant";
+import HotelFilterBar, { type HotelFilters } from "@/modules/masterData/hotel/components/HotelFilterBar";
 import { getMinMaxPrice } from "@/modules/masterData/hotel/helpers/getMinMaxPrice";
 import { AppTable } from "@/shared/components/common/AppTable";
 import ActionButton from "@/shared/components/table/ActionButton";
 import TableToolbar from "@/shared/components/table/TableToolbar";
 import { Switch } from "@/shared/components/ui/switch";
+import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
 import type { ColumnDef } from "@tanstack/react-table";
 import { HotelIcon, Star } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { hotelMockStore } from "../data/hotel.mock-store";
 import { type Hotel } from "../types/hotel.type";
 
 export default function HotelListPage() {
   const navigate = useNavigate();
+
+  const { confirm } = useConfirm();
+
   const [hotels, setHotels] = useState<Hotel[]>(() => hotelMockStore.getAll());
-  const [deleteTarget, setDeleteTarget] = useState<Hotel | null>(null);
+  const [filters, setFilters] = useState<HotelFilters>({ name: "", rate: "", country: "", isActive: "" });
+
+  const countries = useMemo(() => [...new Set(hotelMockStore.getAll().map((h) => h.country))], []);
+
+  const filteredHotels = useMemo(() => {
+    return hotels.filter((h) => {
+      if (filters.name && !h.name.toLowerCase().includes(filters.name.toLowerCase())) return false;
+      if (filters.rate && h.rate !== Number(filters.rate)) return false;
+      if (filters.country && h.country !== filters.country) return false;
+      if (filters.isActive !== "" && h.isActive !== (filters.isActive === "true")) return false;
+      return true;
+    });
+  }, [hotels, filters]);
 
   const handleEdit = (hotel: Hotel) => {
     navigate(`${PATHS.MASTER_DATA.HOTEL}/${hotel.id}`);
@@ -25,11 +42,17 @@ export default function HotelListPage() {
     navigate(PATHS.MASTER_DATA.HOTEL_CREATE);
   };
 
-  const handleDeleteConfirm = () => {
-    if (!deleteTarget) return;
-    hotelMockStore.delete(deleteTarget.id);
+  const handleDelete = async (hotel: Hotel) => {
+    if (!hotel) return;
+
+    const ok = await confirm({
+      description: "Bạn có chắc chắn muốn xóa khách sạn này không? Hành động này không thể hoàn tác.",
+    });
+
+    if (!ok) return;
+
+    hotelMockStore.delete(hotel.id);
     setHotels(hotelMockStore.getAll());
-    setDeleteTarget(null);
   };
 
   const columns: ColumnDef<Hotel>[] = [
@@ -93,7 +116,7 @@ export default function HotelListPage() {
       cell: ({ row }) => (
         <div className='flex items-center gap-2'>
           <ActionButton action='edit' onClick={() => handleEdit(row.original)} />
-          <ActionButton action='delete' onClick={() => setDeleteTarget(row.original)} />
+          <ActionButton action='delete' onClick={() => handleDelete(row.original)} />
         </div>
       ),
     },
@@ -103,27 +126,9 @@ export default function HotelListPage() {
     <div className='space-y-4'>
       <TableToolbar title='Quản lý khách sạn' description='Danh sách các khách sạn của hệ thống' icon={HotelIcon} onAdd={handleAdd} />
 
-      <AppTable columns={columns} data={hotels} />
+      <HotelFilterBar countries={countries} onFilter={setFilters} />
 
-      {/* <Dialog open={!!deleteTarget} onOpenChange={() => setDeleteTarget(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Xác nhận xóa</DialogTitle>
-            <DialogDescription>
-              Bạn có chắc chắn muốn xóa phòng <strong>{deleteTarget ? ROOM_TYPE_LABELS[deleteTarget.roomType] : ""}</strong> không? Hành động này
-              không thể hoàn tác.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant='outline' onClick={() => setDeleteTarget(null)}>
-              Hủy
-            </Button>
-            <Button variant='destructive' onClick={handleDeleteConfirm}>
-              Xóa
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog> */}
+      <AppTable columns={columns} data={filteredHotels} />
     </div>
   );
 }

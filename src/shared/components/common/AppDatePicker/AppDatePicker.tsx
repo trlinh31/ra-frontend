@@ -7,7 +7,7 @@ import { useMemo, useState } from "react";
 
 interface FormDatePickerProps {
   value?: string | null;
-  onChange?: (date: Date | null) => void;
+  onChange?: (date: string | null) => void;
   placeholder?: string;
   disabled?: boolean;
 }
@@ -23,7 +23,13 @@ export default function AppDatePicker({ value, onChange, placeholder = "Chọn n
   }, [value]);
 
   const onDateChange = (date: Date | undefined) => {
-    onChange?.(date ?? null);
+    if (!date) {
+      onChange?.(null);
+    } else {
+      const formattedDate = format(date, "yyyy-MM-dd");
+      onChange?.(formattedDate);
+    }
+
     setOpen(false);
   };
 
@@ -37,7 +43,7 @@ export default function AppDatePicker({ value, onChange, placeholder = "Chọn n
       </PopoverTrigger>
 
       <PopoverContent className='p-0 w-auto'>
-        <Calendar mode='single' selected={dateValue} onSelect={onDateChange} />
+        <Calendar mode='single' selected={dateValue} defaultMonth={dateValue} onSelect={onDateChange} />
       </PopoverContent>
     </Popover>
   );

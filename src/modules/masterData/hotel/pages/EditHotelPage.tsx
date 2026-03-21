@@ -1,6 +1,7 @@
 import { PATHS } from "@/app/routes/route.constant";
 import HotelForm from "@/modules/masterData/hotel/components/HotelForm";
 import { hotelMockStore } from "@/modules/masterData/hotel/data/hotel.mock-store";
+import { mapHotelFormValuesToPayload } from "@/modules/masterData/hotel/mappers/hotel-form.mapper";
 import type { HotelFormValues } from "@/modules/masterData/hotel/schemas/hotel.schema";
 import PageHeader from "@/shared/components/common/PageHeader";
 import { Button } from "@/shared/components/ui/button";
@@ -15,12 +16,13 @@ export default function EditHotelPage() {
   const hotel = id ? hotelMockStore.getById(id) : undefined;
 
   const handleSubmit = (values: HotelFormValues) => {
-    // if (isEdit && id) {
-    //   hotelMockStore.update(id, values);
-    // } else {
-    //   hotelMockStore.create(values);
-    // }
-    // navigate(PATHS.MASTER_DATA.HOTEL);
+    if (isEdit && id) {
+      hotelMockStore.update(id, mapHotelFormValuesToPayload(values));
+    } else {
+      hotelMockStore.create(mapHotelFormValuesToPayload(values));
+    }
+
+    navigate(PATHS.MASTER_DATA.HOTEL);
   };
 
   const handleCancel = () => {
@@ -46,24 +48,7 @@ export default function EditHotelPage() {
         description={isEdit ? `Cập nhật thông tin cho khách sạn ${hotel?.name}` : "Điền thông tin để tạo mới khách sạn"}
       />
 
-      <HotelForm
-        defaultValues={
-          hotel
-            ? {
-                name: hotel.name,
-                rate: String(hotel.rate),
-                city: hotel.city,
-                country: hotel.country,
-                rooms: hotel.rooms,
-                notes: hotel.notes,
-                isActive: hotel.isActive,
-              }
-            : undefined
-        }
-        onSubmit={handleSubmit}
-        onCancel={handleCancel}
-        isEdit={isEdit}
-      />
+      <HotelForm defaultValues={hotel} onSubmit={handleSubmit} onCancel={handleCancel} isEdit={isEdit} />
     </div>
   );
 }

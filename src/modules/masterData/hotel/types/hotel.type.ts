@@ -9,8 +9,8 @@ export const ROOM_TYPE_LABELS: Record<RoomType, string> = {
 };
 
 export type PriceRange = {
-  startDate: Date;
-  endDate: Date;
+  startDate: string;
+  endDate: string;
   price: number;
 };
 
@@ -26,7 +26,6 @@ export type Hotel = {
 };
 
 export type Room = {
-  id: string;
   roomType: RoomType;
   priceRange: PriceRange;
 };

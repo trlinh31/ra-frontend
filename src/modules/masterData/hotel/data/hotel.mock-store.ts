@@ -9,20 +9,18 @@ const initialHotels: Hotel[] = [
     city: "Hanoi",
     rooms: [
       {
-        id: "1",
         roomType: "standard",
         priceRange: {
-          startDate: new Date("2025-01-01"),
-          endDate: new Date("2025-03-31"),
+          startDate: "2026-03-21",
+          endDate: "2026-06-30",
           price: 500000,
         },
       },
       {
-        id: "2",
-        roomType: "standard",
+        roomType: "family",
         priceRange: {
-          startDate: new Date("2025-01-01"),
-          endDate: new Date("2025-03-31"),
+          startDate: "2025-03-21",
+          endDate: "2025-03-31",
           price: 900000,
         },
       },

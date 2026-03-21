@@ -10,7 +10,7 @@ import { useMemo } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
 export default function RoomForm() {
-  const { control, watch } = useFormContext();
+  const { control } = useFormContext();
 
   const roomsType = useMemo(() => ROOM_TYPES.map((type) => ({ label: type, value: type })), []);
 
@@ -22,7 +22,7 @@ export default function RoomForm() {
   const handleAddRoom = () => {
     append({
       roomType: "",
-      priceRange: { startDate: undefined as unknown as Date, endDate: undefined as unknown as Date, price: undefined as unknown as number },
+      priceRange: { startDate: "", endDate: "", price: undefined as unknown as number },
     });
   };
 

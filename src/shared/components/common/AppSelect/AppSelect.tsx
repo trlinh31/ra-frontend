@@ -13,13 +13,12 @@ interface AppSelectProps {
   placeholder?: string;
   disabled?: boolean;
   className?: string;
-  invalid?: boolean;
 }
 
-export default function AppSelect({ options, value, onChange, placeholder, disabled = false, className, invalid }: AppSelectProps) {
+export default function AppSelect({ options, value, onChange, placeholder, disabled = false, className }: AppSelectProps) {
   return (
     <Select onValueChange={onChange} value={value} disabled={disabled}>
-      <SelectTrigger className={cn("bg-white w-full", invalid && "border-destructive ring-3 ring-destructive/20", className)} aria-invalid={invalid}>
+      <SelectTrigger className={cn("bg-white w-full", className)}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
 
