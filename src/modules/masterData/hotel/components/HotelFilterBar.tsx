@@ -1,8 +1,8 @@
 import { HOTEL_RATE_OPTIONS } from "@/modules/masterData/hotel/constants/hotel-rate-options.constant";
 import AppSelect from "@/shared/components/common/AppSelect";
+import SearchBox from "@/shared/components/common/SearchBox/SearchBox";
 import { Button } from "@/shared/components/ui/button";
-import { Input } from "@/shared/components/ui/input";
-import { RotateCcw, Search } from "lucide-react";
+import { RotateCcw } from "lucide-react";
 import { useState } from "react";
 
 export type HotelFilters = {
@@ -47,10 +47,7 @@ export default function HotelFilterBar({ countries, onFilter }: HotelFilterBarPr
 
   return (
     <div className='flex flex-wrap items-end gap-3'>
-      <div className='relative min-w-64'>
-        <Search className='top-1/2 left-3 absolute w-4 h-4 text-muted-foreground -translate-y-1/2 pointer-events-none' />
-        <Input placeholder='Tìm theo tên...' value={filters.name} onChange={(e) => handleChange("name", e.target.value)} className='bg-white pl-9' />
-      </div>
+      <SearchBox value={filters.name} onChange={(value) => handleChange("name", value)} placeholder='Tìm theo tên khách sạn...' />
 
       <div className='min-w-36'>
         <AppSelect options={HOTEL_RATE_OPTIONS} value={filters.rate} onChange={(v) => handleChange("rate", v)} placeholder='Đánh giá' />

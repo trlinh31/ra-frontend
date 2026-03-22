@@ -8,7 +8,7 @@ export const tourDaySchema = z.object({
 export const tourSchema = z.object({
   code: z.string().min(1, "Vui lòng nhập mã tour"),
   name: z.string().min(1, "Vui lòng nhập tên tour"),
-  description: z.string().optional().default(""),
+  description: z.string(),
   days: z.array(tourDaySchema).min(1, "Tour phải có ít nhất 1 ngày"),
 });
 

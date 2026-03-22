@@ -1,5 +1,7 @@
 import { PATHS } from "@/app/routes/route.constant";
+import TransportationFilterBar, { type TransportationFilters } from "@/modules/masterData/transportation/components/TransportationFilterBar";
 import { transportMockStore } from "@/modules/masterData/transportation/data/transportation.mock-store";
+import { getMinMaxPrice } from "@/modules/masterData/transportation/helpers/getMinMaxPrice";
 import type { TransportKm, TransportRoute } from "@/modules/masterData/transportation/types/transportation.type";
 import { AppTable } from "@/shared/components/common/AppTable";
 import Section from "@/shared/components/common/Section";
@@ -10,7 +12,7 @@ import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Bus } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function TransportationListPage() {
@@ -20,6 +22,22 @@ export default function TransportationListPage() {
 
   const [TransportKms, setTransportKms] = useState<TransportKm[]>(() => transportMockStore.getAllKmItems());
   const [TransportRoutes, setTransportRoutes] = useState<TransportRoute[]>(() => transportMockStore.getAllRouteItems());
+  const [kmFilters, setKmFilters] = useState<TransportationFilters>({ search: "" });
+  const [routeFilters, setRouteFilters] = useState<TransportationFilters>({ search: "" });
+
+  const filteredKms = useMemo(() => {
+    if (!kmFilters.search) return TransportKms;
+    const q = kmFilters.search.toLowerCase();
+    return TransportKms.filter((k) => k.code.toLowerCase().includes(q) || k.city.toLowerCase().includes(q) || k.category.toLowerCase().includes(q));
+  }, [TransportKms, kmFilters]);
+
+  const filteredRoutes = useMemo(() => {
+    if (!routeFilters.search) return TransportRoutes;
+    const q = routeFilters.search.toLowerCase();
+    return TransportRoutes.filter(
+      (r) => r.code.toLowerCase().includes(q) || r.startLocation.toLowerCase().includes(q) || r.endLocation.toLowerCase().includes(q)
+    );
+  }, [TransportRoutes, routeFilters]);
 
   const handleEdit = (item: TransportKm | TransportRoute) => {
     if ("km" in item) {
@@ -118,11 +136,15 @@ export default function TransportationListPage() {
       enableSorting: false,
       cell: ({ row }) => `${row.original.startLocation} → ${row.original.endLocation}`,
     },
-    // {
-    //   header: "Giá tiền (VNĐ)",
-    //   accessorKey: "price",
-    //   cell: ({ row }) => formatNumberVN(row.original.price),
-    // },
+    {
+      id: "vehicleCapacityPrice",
+      header: "Giá theo loại xe (VNĐ)",
+      enableSorting: false,
+      cell: ({ row }) => {
+        const { min, max } = getMinMaxPrice(row.original.vehicleCapacityPrice);
+        return `${formatNumberVN(min)} - ${formatNumberVN(max)}`;
+      },
+    },
     {
       header: "Ghi chú",
       accessorKey: "notes",
@@ -156,16 +178,20 @@ export default function TransportationListPage() {
         <h2 className='font-semibold text-yellow-800'>Tính theo Kilômét</h2>
       </div>
 
+      <TransportationFilterBar onFilter={setKmFilters} placeholder='Tìm theo mã, địa điểm, danh mục...' />
+
       <Section>
-        <AppTable columns={transportKmColumns} data={TransportKms} />
+        <AppTable columns={transportKmColumns} data={filteredKms} />
       </Section>
 
       <div className='flex justify-between items-center bg-yellow-400/20 px-4 py-2 rounded-md'>
         <h2 className='font-semibold text-yellow-800'>Tính theo Lộ trình</h2>
       </div>
 
+      <TransportationFilterBar onFilter={setRouteFilters} placeholder='Tìm theo mã, điểm đón, điểm đến...' />
+
       <Section>
-        <AppTable columns={transportRouteColumns} data={TransportRoutes} />
+        <AppTable columns={transportRouteColumns} data={filteredRoutes} />
       </Section>
     </div>
   );

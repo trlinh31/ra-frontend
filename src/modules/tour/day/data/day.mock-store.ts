@@ -7,9 +7,29 @@ let _days: Day[] = [
     title: "Hà Nội - Khởi hành",
     description: "Ngày đầu đón khách tại Hà Nội, nhận phòng và tham quan nội thành",
     services: [
-      { id: "s1", serviceType: "transport", name: "Xe 16 chỗ đón sân bay Nội Bài", quantity: 1, unitPrice: 800000, currency: "VND", notes: "" },
-      { id: "s2", serviceType: "hotel", name: "Khách sạn 3★ Hà Nội (DBL)", quantity: 1, unitPrice: 50, currency: "USD", notes: "Bao gồm ăn sáng" },
-      { id: "s3", serviceType: "flight", name: "Hướng dẫn viên tiếng Anh", quantity: 1, unitPrice: 50, currency: "USD", notes: "" },
+      { id: "s1", serviceType: "transport", name: "TRANSR1 - Hanoi → Hanoi (16 chỗ)", quantity: 1, unitPrice: 30000000, currency: "VND", notes: "" },
+      { id: "s2", serviceType: "hotel", name: "Khách sạn Ánh Dương", quantity: 1, unitPrice: 500000, currency: "VND", notes: "Bao gồm ăn sáng" },
+      { id: "s3", serviceType: "flight", name: "VNA-HAN-DAD", quantity: 1, unitPrice: 150000, currency: "VND", notes: "" },
+    ],
+  },
+  {
+    id: "day2",
+    code: "HAL-01",
+    title: "Hạ Long - Tham quan vịnh",
+    description: "Di chuyển từ Hà Nội xuống Hạ Long, tham quan vịnh bằng thuyền",
+    services: [
+      { id: "s4", serviceType: "transport", name: "TRANSR1 - Hanoi → Hanoi (16 chỗ)", quantity: 1, unitPrice: 30000000, currency: "VND", notes: "" },
+      { id: "s5", serviceType: "hotel", name: "Khách sạn Ánh Dương", quantity: 1, unitPrice: 500000, currency: "VND", notes: "Bao gồm ăn sáng" },
+    ],
+  },
+  {
+    id: "day3",
+    code: "HN-02",
+    title: "Hà Nội - Kết thúc",
+    description: "Trở về Hà Nội, tiễn khách tại sân bay",
+    services: [
+      { id: "s6", serviceType: "transport", name: "TRANSR1 - Hanoi → Hanoi (16 chỗ)", quantity: 1, unitPrice: 30000000, currency: "VND", notes: "" },
+      { id: "s7", serviceType: "flight", name: "VNA-HAN-DAD", quantity: 1, unitPrice: 150000, currency: "VND", notes: "" },
     ],
   },
 ];

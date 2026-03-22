@@ -4,7 +4,7 @@ let _tours: Tour[] = [
   {
     id: "t1",
     code: "HN-HAL-3N2D",
-    name: "Hà Nội – Hạ Long 3 Ngày 2 Đêm",
+    name: "Hà Nội - Hạ Long 3 Ngày 2 Đêm",
     description: "Hành trình khám phá Hà Nội và vịnh Hạ Long kỳ vĩ",
     days: [
       { dayId: "day1", order: 1 },
@@ -19,7 +19,7 @@ let _tours: Tour[] = [
     description: "Khám phá thủ đô Hà Nội trong 2 ngày",
     days: [
       { dayId: "day1", order: 1 },
-      { dayId: "day1", order: 2 },
+      { dayId: "day2", order: 2 },
     ],
   },
 ];
