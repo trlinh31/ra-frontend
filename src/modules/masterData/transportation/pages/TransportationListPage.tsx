@@ -178,7 +178,11 @@ export default function TransportationListPage() {
         <h2 className='font-semibold text-yellow-800'>Tính theo Kilômét</h2>
       </div>
 
-      <TransportationFilterBar onFilter={setKmFilters} placeholder='Tìm theo mã, địa điểm, danh mục...' />
+      <TransportationFilterBar
+        onFilter={setKmFilters}
+        placeholder='Tìm theo mã, địa điểm, danh mục...'
+        onAdd={() => navigate(PATHS.MASTER_DATA.TRANSPORT_KM_CREATE)}
+      />
 
       <Section>
         <AppTable columns={transportKmColumns} data={filteredKms} />
@@ -188,7 +192,11 @@ export default function TransportationListPage() {
         <h2 className='font-semibold text-yellow-800'>Tính theo Lộ trình</h2>
       </div>
 
-      <TransportationFilterBar onFilter={setRouteFilters} placeholder='Tìm theo mã, điểm đón, điểm đến...' />
+      <TransportationFilterBar
+        onFilter={setRouteFilters}
+        placeholder='Tìm theo mã, điểm đón, điểm đến...'
+        onAdd={() => navigate(PATHS.MASTER_DATA.TRANSPORT_ROUTE_CREATE)}
+      />
 
       <Section>
         <AppTable columns={transportRouteColumns} data={filteredRoutes} />
