@@ -1,7 +1,7 @@
 import { countryApi } from "@/modules/masterData/country/api/country.api";
 import { mapEntranceFeeDataToFormValues } from "@/modules/masterData/entranceFee/mappers/entrance-fee-form.mapper";
 import type { EntranceFee } from "@/modules/masterData/entranceFee/types/entrance-fee.type";
-import FormCurrenctyInput from "@/shared/components/form/FormCurrenctyInput";
+import FormCurrencyInput from "@/shared/components/form/FormCurrencyInput";
 import FormInput from "@/shared/components/form/FormInput";
 import FormSelect from "@/shared/components/form/FormSelect";
 import FormSwitch from "@/shared/components/form/FormSwitch/FormSwitch";
@@ -53,7 +53,7 @@ export default function EntranceFeeForm({ defaultValues, onSubmit, onCancel, isS
           <FormInput name='serviceName' label='Tên dịch vụ' required />
           <FormSelect name='country' options={countriesOptions} label='Quốc gia' required />
           <FormSelect name='city' options={citiesOptions} label='Thành phố' disabled={!form.watch("country")} required />
-          <FormCurrenctyInput name='price' label='Giá tiền (VNĐ)' required />
+          <FormCurrencyInput name='price' label='Giá tiền (VNĐ)' required />
           <FormSwitch name='isActive' label='Hoạt động' />
           <FormTextarea name='notes' label='Ghi chú' className='sm:col-span-2' />
         </div>

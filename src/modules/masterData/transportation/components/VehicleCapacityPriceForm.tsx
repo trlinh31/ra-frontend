@@ -1,5 +1,5 @@
 import Section from "@/shared/components/common/Section";
-import FormCurrenctyInput from "@/shared/components/form/FormCurrenctyInput";
+import FormCurrencyInput from "@/shared/components/form/FormCurrencyInput";
 import ActionButton from "@/shared/components/table/ActionButton";
 import { Button } from "@/shared/components/ui/button";
 import { PlusCircle } from "lucide-react";
@@ -37,9 +37,9 @@ export default function VehicleCapacityPriceForm() {
     <div className='space-y-3'>
       {fields.map((field, index) => (
         <div key={field.id} className='flex gap-4'>
-          <FormCurrenctyInput name={`vehicleCapacityPrice.${index}.capacity`} label='Sức chứa' required />
+          <FormCurrencyInput name={`vehicleCapacityPrice.${index}.capacity`} label='Sức chứa' required />
 
-          <FormCurrenctyInput name={`vehicleCapacityPrice.${index}.price`} label='Giá (VNĐ)' required />
+          <FormCurrencyInput name={`vehicleCapacityPrice.${index}.price`} label='Giá (VNĐ)' required />
 
           <div className='flex justify-end items-end gap-3'>
             <ActionButton action='add' onClick={handleAddVehicleCapacityPrice} />

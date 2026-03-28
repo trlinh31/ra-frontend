@@ -14,7 +14,8 @@ export const PATHS = {
     ROOT: "/master-data",
     HOTEL: "/master-data/hotel",
     HOTEL_CREATE: "/master-data/hotel/create",
-    HOTEL_EDIT: "/master-data/hotel/:id",
+    HOTEL_EDIT: "/master-data/hotel/:id/edit",
+    HOTEL_DETAIL: "/master-data/hotel/:id",
     TRANSPORTATION: "/master-data/transportation",
     TRANSPORT_KM: "/master-data/transportation/km",
     TRANSPORT_ROUTE: "/master-data/transportation/route",
@@ -34,6 +35,9 @@ export const PATHS = {
     FLIGHTS: "/master-data/flights",
     FLIGHTS_CREATE: "/master-data/flights/create",
     FLIGHTS_EDIT: "/master-data/flights/:id",
+    SUPPLIER: "/master-data/supplier",
+    SUPPLIER_CREATE: "/master-data/supplier/create",
+    SUPPLIER_EDIT: "/master-data/supplier/:id",
   },
 
   TOUR: {

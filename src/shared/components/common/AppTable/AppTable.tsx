@@ -1,15 +1,18 @@
 // import AppButton from "@/shared/components/common/AppButton";
 // import AppPagination from "@/shared/components/common/AppPagination";
 // import AppSelect from "@/shared/components/common/AppSelect";
+import AppPagination from "@/shared/components/common/AppPagination";
+import AppSelect from "@/shared/components/common/AppSelect";
 import { Checkbox } from "@/shared/components/ui/checkbox";
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/shared/components/ui/empty";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/shared/components/ui/table";
-import { DEFAULT_PAGE_SIZE } from "@/shared/constants/pagination.constant";
+import { DEFAULT_PAGE_SIZE, PAGE_SIZE_OPTIONS } from "@/shared/constants/pagination.constant";
 import { cn } from "@/shared/lib/utils";
 import {
   type ColumnDef,
   flexRender,
   getCoreRowModel,
+  getExpandedRowModel,
   getSortedRowModel,
   type OnChangeFn,
   type RowSelectionState,
@@ -17,8 +20,8 @@ import {
   useReactTable,
   type VisibilityState,
 } from "@tanstack/react-table";
-import { ArrowDown, ArrowUp, ArrowUpDown, SearchX } from "lucide-react";
-import { useMemo, useState } from "react";
+import { ArrowDown, ArrowUp, ArrowUpDown, ChevronRight, SearchX } from "lucide-react";
+import React, { useMemo, useState } from "react";
 import SkeletonTable from "./SkeletonTable";
 
 const INDEX_COLUMN_ID = "index";
@@ -43,6 +46,11 @@ interface AppTableProps<TData, TValue> {
   onColumnVisibilityChange?: OnChangeFn<VisibilityState>;
 
   getRowClassName?: (row: TData) => string;
+
+  enableExpanding?: boolean;
+  renderExpandedRow?: (row: TData) => React.ReactNode;
+
+  enablePagination?: boolean;
 }
 
 export function AppTable<TData, TValue>({
@@ -64,6 +72,10 @@ export function AppTable<TData, TValue>({
   onColumnVisibilityChange,
 
   getRowClassName,
+  enableExpanding = false,
+  renderExpandedRow,
+
+  enablePagination = true,
 }: AppTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
 
@@ -81,26 +93,28 @@ export function AppTable<TData, TValue>({
     };
   }, [enableRowSelection]);
 
-  const resolvedColumns = useMemo(() => {
-    return selectColumn ? [selectColumn, ...columns] : columns;
-  }, [selectColumn, columns]);
+  const expandColumn = useMemo<ColumnDef<TData> | null>(() => {
+    if (!enableExpanding) return null;
 
-  const getStickyStyle = (meta: { sticky?: "left" | "right"; stickyOffset?: number } | undefined) => {
-    if (!meta?.sticky) return {};
-
-    const styles: React.CSSProperties = {
-      position: "sticky",
-      zIndex: 20,
+    return {
+      id: "__expand",
+      header: () => null,
+      cell: ({ row }) =>
+        row.getCanExpand() ? (
+          <button onClick={row.getToggleExpandedHandler()} className='p-1 cursor-pointer'>
+            <ChevronRight className={cn("w-4 h-4 transition-transform duration-200", row.getIsExpanded() && "rotate-90")} />
+          </button>
+        ) : null,
+      enableSorting: false,
+      enableHiding: false,
+      size: 40,
     };
+  }, [enableExpanding]);
 
-    if (meta.sticky === "left") {
-      styles.left = meta.stickyOffset ?? 0;
-    } else if (meta.sticky === "right") {
-      styles.right = meta.stickyOffset ?? 0;
-    }
-
-    return styles;
-  };
+  const resolvedColumns = useMemo(() => {
+    const cols = selectColumn ? [selectColumn, ...columns] : columns;
+    return expandColumn ? [expandColumn, ...cols] : cols;
+  }, [selectColumn, expandColumn, columns]);
 
   const table = useReactTable({
     data,
@@ -131,8 +145,11 @@ export function AppTable<TData, TValue>({
 
     onColumnVisibilityChange: enableColumnVisibility ? onColumnVisibilityChange : undefined,
 
+    getRowCanExpand: enableExpanding ? () => true : undefined,
+
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    getExpandedRowModel: getExpandedRowModel(),
   });
 
   if (loading) {
@@ -161,36 +178,36 @@ export function AppTable<TData, TValue>({
   }
 
   return (
-    <div className='space-y-2'>
+    <div className='space-y-4'>
       <div className={cn("w-full max-w-full", "overflow-x-auto", "scrollbar-custom")}>
         <Table>
           <TableHeader className='top-0 z-30 sticky'>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
+                  if (header.isPlaceholder) return null;
+
                   const isLeafColumn = !header.subHeaders || header.subHeaders.length === 0;
                   const canSort = header.column.getCanSort() && isLeafColumn && header.column.id !== INDEX_COLUMN_ID;
 
                   return (
-                    <TableHead key={header.id} colSpan={header.colSpan}>
-                      {header.isPlaceholder ? null : (
-                        <div
-                          className={cn(canSort && "flex items-center gap-2 cursor-pointer select-none")}
-                          onClick={canSort ? header.column.getToggleSortingHandler() : undefined}>
-                          {flexRender(header.column.columnDef.header, header.getContext())}
-                          {canSort && (
-                            <span className='ml-auto'>
-                              {header.column.getIsSorted() === "asc" ? (
-                                <ArrowUp className='w-4 h-4' />
-                              ) : header.column.getIsSorted() === "desc" ? (
-                                <ArrowDown className='w-4 h-4' />
-                              ) : (
-                                <ArrowUpDown className='opacity-50 w-4 h-4' />
-                              )}
-                            </span>
-                          )}
-                        </div>
-                      )}
+                    <TableHead key={header.id} colSpan={header.colSpan} rowSpan={header.rowSpan}>
+                      <div
+                        className={cn(canSort && "flex items-center gap-2 cursor-pointer select-none")}
+                        onClick={canSort ? header.column.getToggleSortingHandler() : undefined}>
+                        {flexRender(header.column.columnDef.header, header.getContext())}
+                        {canSort && (
+                          <span className='ml-auto'>
+                            {header.column.getIsSorted() === "asc" ? (
+                              <ArrowUp className='w-4 h-4' />
+                            ) : header.column.getIsSorted() === "desc" ? (
+                              <ArrowDown className='w-4 h-4' />
+                            ) : (
+                              <ArrowUpDown className='opacity-50 w-4 h-4' />
+                            )}
+                          </span>
+                        )}
+                      </div>
                     </TableHead>
                   );
                 })}
@@ -201,39 +218,51 @@ export function AppTable<TData, TValue>({
           <TableBody>
             {table.getRowModel().rows?.length &&
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className={getRowClassName?.(row.original)}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} style={{ maxWidth: cell.column.columnDef.maxSize }}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
-                </TableRow>
+                <React.Fragment key={row.id}>
+                  <TableRow
+                    data-state={row.getIsSelected() && "selected"}
+                    className={cn(enableExpanding && "cursor-pointer", getRowClassName?.(row.original))}
+                    onClick={enableExpanding ? row.getToggleExpandedHandler() : undefined}>
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell
+                        key={cell.id}
+                        style={{ maxWidth: cell.column.columnDef.maxSize }}
+                        onClick={cell.column.id === "__expand" ? (e) => e.stopPropagation() : undefined}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+
+                  {row.getIsExpanded() && renderExpandedRow && (
+                    <TableRow className='bg-slate-50 hover:bg-slate-100' onClick={(e) => e.stopPropagation()}>
+                      <TableCell colSpan={row.getVisibleCells().length} className='slide-in-from-top-2 p-4 animate-in duration-200 fade-in'>
+                        {renderExpandedRow(row.original)}
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </React.Fragment>
               ))}
           </TableBody>
         </Table>
       </div>
 
-      {/* {onPageChange && (
-        <div className='flex items-center'>
+      {enablePagination && (
+        <div className='flex justify-between items-center'>
           <div className='flex-1'>
             <div className='flex items-center gap-2'>
-              <span>Hiển thị</span>
-              <div className='max-w-[120px]'>
-                <AppSelect
-                  value={String(pageSize)}
-                  onValueChange={(value) => onPageChange(1, Number(value))}
-                  options={PAGE_SIZE_OPTIONS.map((size) => ({ label: String(size), value: String(size) }))}
-                />
+              <span className='text-sm'>Hiển thị</span>
+              <div className='max-w-30'>
+                <AppSelect value={String(pageSize)} options={PAGE_SIZE_OPTIONS.map((size) => ({ label: String(size), value: String(size) }))} />
               </div>
-              <span>bản ghi</span>
+              <span className='text-sm'>bản ghi</span>
             </div>
           </div>
 
           <div className='flex-1'>
-            <AppPagination page={page} totalPages={pageCount} onPageChange={(page) => onPageChange(page, pageSize)} />
+            <AppPagination />
           </div>
         </div>
-      )} */}
+      )}
     </div>
   );
 }

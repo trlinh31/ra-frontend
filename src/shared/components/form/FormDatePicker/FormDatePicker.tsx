@@ -1,5 +1,6 @@
 import AppDatePicker from "@/shared/components/common/AppDatePicker/AppDatePicker";
 import { Field, FieldError, FieldLabel } from "@/shared/components/ui/field";
+import type { Matcher } from "react-day-picker";
 import { Controller, useFormContext } from "react-hook-form";
 
 interface FormDatePickerProps {
@@ -9,9 +10,10 @@ interface FormDatePickerProps {
   disabled?: boolean;
   required?: boolean;
   className?: string;
+  disabledDates?: Matcher | Matcher[];
 }
 
-export default function FormDatePicker({ name, label, placeholder, disabled, required, className }: FormDatePickerProps) {
+export default function FormDatePicker({ name, label, placeholder, disabled, required, className, disabledDates }: FormDatePickerProps) {
   const { control } = useFormContext();
 
   return (
@@ -27,7 +29,7 @@ export default function FormDatePicker({ name, label, placeholder, disabled, req
             </FieldLabel>
           )}
 
-          <AppDatePicker value={field.value} onChange={field.onChange} placeholder={placeholder} disabled={disabled} />
+          <AppDatePicker value={field.value} onChange={field.onChange} placeholder={placeholder} disabled={disabled} disableDate={disabledDates} />
 
           {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
         </Field>

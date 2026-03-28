@@ -1,7 +1,7 @@
-export type CountryResponse = {
+export type CountryResponse<T> = {
   error: boolean;
   msg: string;
-  data: Country[];
+  data: T;
 };
 
 export type Country = {

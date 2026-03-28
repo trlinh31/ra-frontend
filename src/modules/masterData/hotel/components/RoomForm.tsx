@@ -1,18 +1,63 @@
-import { ROOM_TYPES } from "@/modules/masterData/hotel/types/hotel.type";
+import type { HotelFormValues } from "@/modules/masterData/hotel/schemas/hotel.schema";
 import Section from "@/shared/components/common/Section";
-import FormCurrenctyInput from "@/shared/components/form/FormCurrenctyInput";
+import FormCurrencyInput from "@/shared/components/form/FormCurrencyInput";
 import FormDatePicker from "@/shared/components/form/FormDatePicker";
 import FormSelect from "@/shared/components/form/FormSelect";
 import ActionButton from "@/shared/components/table/ActionButton";
 import { Button } from "@/shared/components/ui/button";
+import { CURRENCY_OPTIONS } from "@/shared/constants/currency.constant";
+import { addDays } from "date-fns";
 import { PlusCircle } from "lucide-react";
 import { useMemo } from "react";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import type { Matcher } from "react-day-picker";
+import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
 
 export default function RoomForm() {
-  const { control } = useFormContext();
+  const { control } = useFormContext<HotelFormValues>();
 
-  const roomsType = useMemo(() => ROOM_TYPES.map((type) => ({ label: type, value: type })), []);
+  const roomCategories = useWatch({ control, name: "roomCategories" });
+
+  const roomCategoriesOptions = useMemo(
+    () => (roomCategories ?? []).filter((type) => type.name).map((type) => ({ label: type.name, value: type.name })),
+    [roomCategories]
+  );
+
+  const rooms = useWatch({ control, name: "rooms" });
+
+  const getDisabledDates = (index: number): Matcher[] => {
+    const currentRoom = rooms?.[index];
+    if (!currentRoom?.roomCategory) return [];
+
+    return (rooms ?? [])
+      .filter((room, i) => i !== index && room.roomCategory === currentRoom.roomCategory && room.startDate && room.endDate)
+      .map((room) => ({
+        from: new Date(room.startDate),
+        to: new Date(room.endDate),
+      }));
+  };
+
+  const getEndDateDisabledDates = (index: number): Matcher[] => {
+    const currentRoom = rooms?.[index];
+    const matchers: Matcher[] = [...getDisabledDates(index)];
+
+    if (currentRoom?.startDate) {
+      const startDate = new Date(currentRoom.startDate);
+      matchers.push({ before: addDays(startDate, 1) });
+
+      const sameCategory = (rooms ?? []).filter((room, i) => i !== index && room.roomCategory === currentRoom.roomCategory && room.startDate);
+
+      const nextRangeStart = sameCategory
+        .map((room) => new Date(room.startDate))
+        .filter((d) => d > startDate)
+        .sort((a, b) => a.getTime() - b.getTime())[0];
+
+      if (nextRangeStart) {
+        matchers.push({ after: addDays(nextRangeStart, -1) });
+      }
+    }
+
+    return matchers;
+  };
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -21,10 +66,21 @@ export default function RoomForm() {
 
   const handleAddRoom = () => {
     append({
-      roomType: "",
-      priceRange: { startDate: "", endDate: "", price: undefined as unknown as number },
+      roomCategory: "",
+      startDate: "",
+      endDate: "",
+      price: undefined as unknown as number,
+      currency: "",
     });
   };
+
+  if (roomCategoriesOptions.length === 0) {
+    return (
+      <Section type='dashed' className='text-muted-foreground text-xs text-center'>
+        <p className='mb-3'>Chưa có loại phòng nào. Vui lòng thêm loại phòng trước.</p>
+      </Section>
+    );
+  }
 
   if (fields.length === 0) {
     return (
@@ -39,17 +95,14 @@ export default function RoomForm() {
   }
 
   return (
-    <div className='space-y-3'>
+    <div className='divide-y divide-gray-300'>
       {fields.map((field, index) => (
-        <div key={field.id} className='flex gap-4'>
-          <FormSelect name={`rooms.${index}.roomType`} label='Loại phòng' options={roomsType} required />
-
-          <FormDatePicker name={`rooms.${index}.priceRange.startDate`} label='Từ ngày' required />
-
-          <FormDatePicker name={`rooms.${index}.priceRange.endDate`} label='Đến ngày' required />
-
-          <FormCurrenctyInput name={`rooms.${index}.priceRange.price`} label='Giá (VNĐ)' required />
-
+        <div key={field.id} className='flex gap-4 py-4'>
+          <FormSelect name={`rooms.${index}.roomCategory`} label='Loại phòng' options={roomCategoriesOptions} required />
+          <FormDatePicker name={`rooms.${index}.startDate`} label='Từ ngày' required disabledDates={getDisabledDates(index)} />
+          <FormDatePicker name={`rooms.${index}.endDate`} label='Đến ngày' required disabledDates={getEndDateDisabledDates(index)} />
+          <FormSelect name={`rooms.${index}.currency`} label='Đơn vị tiền tệ' options={CURRENCY_OPTIONS} required />
+          <FormCurrencyInput name={`rooms.${index}.price`} label='Giá phòng' required />
           <div className='flex justify-end items-end gap-3'>
             <ActionButton action='add' onClick={handleAddRoom} />
             <ActionButton action='delete' onClick={() => remove(index)} />

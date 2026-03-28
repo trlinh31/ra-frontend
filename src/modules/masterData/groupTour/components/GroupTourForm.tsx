@@ -1,7 +1,7 @@
 import { mapGroupTourDataToFormValues } from "@/modules/masterData/groupTour/mappers/group-tour-form.mapper";
 import { groupTourSchema, type GroupTourFormValues } from "@/modules/masterData/groupTour/schemas/group-tour.schema";
 import type { GroupTour } from "@/modules/masterData/groupTour/types/group-tour.type";
-import FormCurrenctyInput from "@/shared/components/form/FormCurrenctyInput";
+import FormCurrencyInput from "@/shared/components/form/FormCurrencyInput";
 import FormInput from "@/shared/components/form/FormInput";
 import FormSwitch from "@/shared/components/form/FormSwitch/FormSwitch";
 import FormTextarea from "@/shared/components/form/FormTextarea";
@@ -32,7 +32,7 @@ export default function GroupTourForm({ defaultValues, onSubmit, onCancel, isSub
           <FormInput name='code' label='Mã tour' required />
           <FormInput name='tourName' label='Tên tour' required />
           <FormInput name='supplier' label='Nhà cung cấp' required />
-          <FormCurrenctyInput name='price' label='Giá tiền (VNĐ)' required />
+          <FormCurrencyInput name='price' label='Giá tiền (VNĐ)' required />
           <FormSwitch name='isActive' label='Hoạt động' />
           <FormTextarea name='content' label='Nội dung' className='sm:col-span-2' />
           <FormTextarea name='notes' label='Ghi chú' className='sm:col-span-2' />

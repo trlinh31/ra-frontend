@@ -2,7 +2,7 @@ import AppCurrencyInput from "@/shared/components/common/AppCurrencyInput";
 import { Field, FieldError, FieldLabel } from "@/shared/components/ui/field";
 import { Controller, useFormContext } from "react-hook-form";
 
-interface FormCurrenctyInputProps {
+interface FormCurrencyInputProps {
   name: string;
   label?: string;
   placeholder?: string;
@@ -11,7 +11,7 @@ interface FormCurrenctyInputProps {
   className?: string;
 }
 
-export default function FormCurrenctyInput({ name, label, placeholder, disabled, required, className }: FormCurrenctyInputProps) {
+export default function FormCurrencyInput({ name, label, placeholder, disabled, required, className }: FormCurrencyInputProps) {
   const { control } = useFormContext();
 
   return (

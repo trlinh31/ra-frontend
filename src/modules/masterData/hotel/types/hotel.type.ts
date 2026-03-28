@@ -1,31 +1,29 @@
-export const ROOM_TYPES = ["standard", "deluxe", "suite", "family"] as const;
-export type RoomType = (typeof ROOM_TYPES)[number];
-
-export const ROOM_TYPE_LABELS: Record<RoomType, string> = {
-  standard: "Standard",
-  deluxe: "Deluxe",
-  suite: "Suite",
-  family: "Family",
-};
-
-export type PriceRange = {
-  startDate: string;
-  endDate: string;
-  price: number;
-};
-
 export type Hotel = {
   id: string;
+  code: string;
   name: string;
   rate: number;
   country: string;
   city: string;
-  notes: string;
+  address: string;
+  note: string;
+  roomCategories: RoomCategory[];
   rooms: Room[];
+  supplier: string;
   isActive: boolean;
 };
 
+export type RoomCategory = {
+  name: string;
+  quantity: number;
+  area: number;
+  note: string;
+};
+
 export type Room = {
-  roomType: RoomType;
-  priceRange: PriceRange;
+  roomCategory: RoomCategory;
+  startDate: string;
+  endDate: string;
+  price: number;
+  currency: string;
 };

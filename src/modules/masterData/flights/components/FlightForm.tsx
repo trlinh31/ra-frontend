@@ -2,7 +2,7 @@ import { mapFlightDataToFormValues } from "@/modules/masterData/flights/mappers/
 import type { Flight } from "@/modules/masterData/flights/types/flight.type";
 import FlightCodeInput from "@/shared/components/common/FlightCodeInput";
 import Section from "@/shared/components/common/Section";
-import FormCurrenctyInput from "@/shared/components/form/FormCurrenctyInput";
+import FormCurrencyInput from "@/shared/components/form/FormCurrencyInput";
 import FormInput from "@/shared/components/form/FormInput";
 import FormSwitch from "@/shared/components/form/FormSwitch/FormSwitch";
 import FormTextarea from "@/shared/components/form/FormTextarea";
@@ -56,7 +56,7 @@ export default function FlightForm({ defaultValues, onSubmit, onCancel, isSubmit
 
           <FormTimeInput name='flightTime' label='Thời gian bay' required />
 
-          <FormCurrenctyInput name='price' label='Giá bay (VNĐ)' required />
+          <FormCurrencyInput name='price' label='Giá bay (VNĐ)' required />
 
           <FormTextarea name='notes' label='Ghi chú' />
 
