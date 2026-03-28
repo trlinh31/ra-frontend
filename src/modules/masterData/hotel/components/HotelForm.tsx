@@ -1,8 +1,8 @@
+import { countryApi } from "@/modules/masterData/country/api/country.api";
 import RoomForm from "@/modules/masterData/hotel/components/RoomForm";
 import { HOTEL_RATE_OPTIONS } from "@/modules/masterData/hotel/constants/hotel-rate-options.constant";
 import { mapHotelDataToFormValues } from "@/modules/masterData/hotel/mappers/hotel-form.mapper";
 import type { Hotel } from "@/modules/masterData/hotel/types/hotel.type";
-import { countryApi } from "@/shared/api/country/country.api";
 import Section from "@/shared/components/common/Section";
 import FormInput from "@/shared/components/form/FormInput";
 import FormSelect from "@/shared/components/form/FormSelect";
