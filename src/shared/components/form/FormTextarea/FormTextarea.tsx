@@ -25,7 +25,7 @@ export default function FormTextarea({ name, className, label, required, ...prop
             </FieldLabel>
           )}
 
-          <Textarea id={name} value={field.value} onChange={field.onChange} rows={4} maxLength={255} aria-invalid={fieldState.invalid} {...props} />
+          <Textarea id={name} value={field.value} onChange={field.onChange} rows={4} maxLength={255} aria-invalid={fieldState.invalid} {...props} className="bg-white" />
 
           {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
         </Field>
