@@ -9,6 +9,7 @@ export type Hotel = {
   note: string;
   roomCategories: RoomCategory[];
   rooms: Room[];
+  supplier: string;
   isActive: boolean;
 };
 
@@ -20,11 +21,7 @@ export type RoomCategory = {
 };
 
 export type Room = {
-  roomCategory: string;
-  priceRange: PriceRange;
-};
-
-export type PriceRange = {
+  roomCategory: RoomCategory;
   startDate: string;
   endDate: string;
   price: number;

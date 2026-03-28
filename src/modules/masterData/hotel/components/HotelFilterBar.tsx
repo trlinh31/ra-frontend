@@ -46,10 +46,6 @@ export default function HotelFilterBar({ countries, onFilter }: HotelFilterBarPr
     <div className='flex flex-wrap items-end gap-3'>
       <SearchBox value={filters.name} onChange={(value) => handleChange("name", value)} placeholder='Tìm theo tên khách sạn...' />
 
-      <div className='min-w-36'>
-        <AppSelect options={HOTEL_RATE_OPTIONS} value={filters.rate} onChange={(v) => handleChange("rate", v)} placeholder='Hạng sao' />
-      </div>
-
       <div className='min-w-40'>
         <AppSelect options={countryOptions} value={filters.country} onChange={(v) => handleChange("country", v)} placeholder='Quốc gia' />
       </div>
@@ -58,8 +54,8 @@ export default function HotelFilterBar({ countries, onFilter }: HotelFilterBarPr
         <AppSelect options={cityOptions} value={filters.city} onChange={(v) => handleChange("city", v)} placeholder='Thành phố' />
       </div>
 
-      <div className='min-w-44'>
-        <AppSelect options={STATUS_OPTIONS} value={filters.isActive} onChange={(v) => handleChange("isActive", v)} placeholder='Trạng thái' />
+      <div className='min-w-36'>
+        <AppSelect options={HOTEL_RATE_OPTIONS} value={filters.rate} onChange={(v) => handleChange("rate", v)} placeholder='Hạng sao' />
       </div>
 
       <Button type='button' variant='outline' onClick={handleReset}>
