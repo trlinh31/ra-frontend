@@ -4,8 +4,6 @@ import { hotelMockStore } from "@/modules/masterData/hotel/data/hotel.mock-store
 import { mapHotelFormValuesToPayload } from "@/modules/masterData/hotel/mappers/hotel-form.mapper";
 import type { HotelFormValues } from "@/modules/masterData/hotel/schemas/hotel.schema";
 import PageHeader from "@/shared/components/common/PageHeader";
-import { Button } from "@/shared/components/ui/button";
-import { ArrowLeft } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function EditHotelPage() {
@@ -29,17 +27,7 @@ export default function EditHotelPage() {
     navigate(PATHS.MASTER_DATA.HOTEL);
   };
 
-  if (isEdit && !hotel) {
-    return (
-      <div className='flex flex-col justify-center items-center gap-4 py-16'>
-        <p className='text-muted-foreground'>Không tìm thấy thông tin phòng.</p>
-        <Button variant='outline' onClick={handleCancel}>
-          <ArrowLeft className='mr-2 w-4 h-4' />
-          Quay lại danh sách
-        </Button>
-      </div>
-    );
-  }
+  if (isEdit && !hotel) return null;
 
   return (
     <div className='space-y-6'>

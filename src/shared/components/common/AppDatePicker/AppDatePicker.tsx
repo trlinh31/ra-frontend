@@ -4,15 +4,17 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/shared/components/ui/
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useMemo, useState } from "react";
+import type { Matcher } from "react-day-picker";
 
 interface FormDatePickerProps {
   value?: string | null;
   onChange?: (date: string | null) => void;
   placeholder?: string;
   disabled?: boolean;
+  disableDate?: Matcher | Matcher[];
 }
 
-export default function AppDatePicker({ value, onChange, placeholder = "Chọn ngày", disabled }: FormDatePickerProps) {
+export default function AppDatePicker({ value, onChange, placeholder = "Chọn ngày", disabled, disableDate }: FormDatePickerProps) {
   const [open, setOpen] = useState(false);
 
   const dateValue = useMemo(() => {
@@ -43,7 +45,7 @@ export default function AppDatePicker({ value, onChange, placeholder = "Chọn n
       </PopoverTrigger>
 
       <PopoverContent className='p-0 w-auto'>
-        <Calendar mode='single' selected={dateValue} defaultMonth={dateValue} onSelect={onDateChange} />
+        <Calendar mode='single' selected={dateValue} defaultMonth={dateValue} onSelect={onDateChange} disabled={disableDate} />
       </PopoverContent>
     </Popover>
   );

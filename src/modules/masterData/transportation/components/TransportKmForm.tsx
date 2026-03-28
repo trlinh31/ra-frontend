@@ -2,7 +2,7 @@ import { countryApi } from "@/modules/masterData/country/api/country.api";
 import { TRANSPORT_CATEGORY_OPTIONS } from "@/modules/masterData/transportation/constants/transport-category-options.constant";
 import { mapTransportKmDataToFormValues } from "@/modules/masterData/transportation/mappers/transport-km-form.mapper";
 import type { TransportKm } from "@/modules/masterData/transportation/types/transportation.type";
-import FormCurrenctyInput from "@/shared/components/form/FormCurrenctyInput";
+import FormCurrencyInput from "@/shared/components/form/FormCurrencyInput";
 import FormInput from "@/shared/components/form/FormInput";
 import FormSelect from "@/shared/components/form/FormSelect";
 import FormSwitch from "@/shared/components/form/FormSwitch/FormSwitch";
@@ -64,9 +64,9 @@ export default function TransportKmForm({ defaultValues, onSubmit, onCancel, isS
 
           <FormSelect name='city' options={citiesOptions} label='Thành phố' disabled={!form.watch("country")} required />
 
-          <FormCurrenctyInput name='km' label='Số Kilômét' required />
+          <FormCurrencyInput name='km' label='Số Kilômét' required />
 
-          <FormCurrenctyInput name='price' label='Giá tiền' required />
+          <FormCurrencyInput name='price' label='Giá tiền' required />
 
           <FormTextarea name='notes' label='Ghi chú' />
 

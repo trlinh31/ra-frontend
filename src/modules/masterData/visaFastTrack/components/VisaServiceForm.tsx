@@ -3,7 +3,7 @@ import { VISA_PRICE_UNIT_OPTIONS } from "@/modules/masterData/visaFastTrack/cons
 import { mapVisaServiceDataToFormValues } from "@/modules/masterData/visaFastTrack/mappers/visa-fast-track-form.mapper";
 import { visaServiceSchema, type VisaServiceFormValues } from "@/modules/masterData/visaFastTrack/schemas/visa-fast-track.schema";
 import type { VisaService } from "@/modules/masterData/visaFastTrack/types/visa-fast-track.type";
-import FormCurrenctyInput from "@/shared/components/form/FormCurrenctyInput";
+import FormCurrencyInput from "@/shared/components/form/FormCurrencyInput";
 import FormInput from "@/shared/components/form/FormInput";
 import FormSelect from "@/shared/components/form/FormSelect";
 import FormTextarea from "@/shared/components/form/FormTextarea";
@@ -35,7 +35,7 @@ export default function VisaServiceForm({ defaultValues, onSubmit, onCancel, isS
           <FormInput name='serviceName' label='Tên dịch vụ' required />
           <FormSelect name='group' label='Nhóm' options={VISA_GROUP_OPTIONS} required />
           <FormSelect name='priceUnit' label='Đơn vị giá' options={VISA_PRICE_UNIT_OPTIONS} required />
-          <FormCurrenctyInput name='price' label='Giá tiền (VNĐ)' required />
+          <FormCurrencyInput name='price' label='Giá tiền (VNĐ)' required />
           <FormInput name='pickupLocation' label='Địa điểm đón' />
           <FormTextarea name='description' label='Mô tả' className='sm:col-span-2' />
         </div>

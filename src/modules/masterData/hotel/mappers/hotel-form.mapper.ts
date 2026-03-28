@@ -3,12 +3,15 @@ import type { Hotel } from "@/modules/masterData/hotel/types/hotel.type";
 
 export const mapHotelDataToFormValues = (hotel: Hotel | undefined): HotelFormValues => {
   return {
+    code: hotel?.code || "",
     name: hotel?.name || "",
-    rate: hotel?.rate ? String(hotel.rate) : "",
-    city: hotel?.city || "",
+    rate: String(hotel?.rate || ""),
     country: hotel?.country || "",
+    city: hotel?.city || "",
+    address: hotel?.address || "",
     rooms: hotel?.rooms || [],
-    notes: hotel?.notes || "",
+    roomCategories: hotel?.roomCategories || [],
+    note: hotel?.note || "",
     isActive: hotel?.isActive ?? true,
   };
 };
