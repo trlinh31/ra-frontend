@@ -3,43 +3,50 @@ import type { VisaService } from "@/modules/masterData/visaFastTrack/types/visa-
 let _items: VisaService[] = [
   {
     id: "i1",
-    code: "FT01",
-    group: "Đón FT",
-    serviceName: "Đón FT",
-    price: 20,
-    priceUnit: "PAX",
-    description: "Đón khách ở visa on arrival line ưu tiên dành cho các công ty đăn ký đón",
-    pickupLocation: "Visa on arrival",
+    provider: "SB Tân Sơn Nhất",
+    // code: "FT01",
+    services: [
+      {
+        group: "Đón",
+        serviceName: "Đón FT",
+        price: 20,
+        priceUnit: "USD",
+        description: "Đón khách ở visa on arrival line ưu tiên dành cho các công ty đăn ký đón",
+        pickupLocation: "Visa on arrival",
+      },
+      {
+        group: "Đón",
+        serviceName: "ĐÓN VIP B",
+        price: 100,
+        priceUnit: "USD",
+        description: "Đón khách ở visa on arrival nhập cảnh ưu tiên qua bục, Hộ chiếu trả sau bục nhập cảnh",
+        pickupLocation: "Visa on arrival",
+      }
+    ],
+    
   },
   {
     id: "i2",
-    code: "VIPB",
-    group: "Đón FT",
-    serviceName: "ĐÓN VIP B",
-    price: 100,
-    priceUnit: "GROUP",
-    description: "Đón khách ở visa on arrival nhập cảnh ưu tiên qua bục, Hộ chiếu trả sau bục nhập cảnh",
-    pickupLocation: "Visa on arrival",
-  },
-  {
-    id: "i3",
-    code: "FT02",
-    group: "Đón FT",
-    serviceName: "Tiền fastrack",
-    price: 10,
-    priceUnit: "PAX",
-    description: "Qua Immigration nhanh sau khi check in hàng không xong",
-    pickupLocation: "Đón khách quầy E-F",
-  },
-  {
-    id: "i4",
-    code: "FT03",
-    group: "Đón FT",
-    serviceName: "Tiền fastrack + SOI CHIỀU",
-    price: 15,
-    priceUnit: "GROUP",
-    description: "Qua Immigration + soi chiếu nhanh sau khi check in hàng không xong",
-    pickupLocation: "Đón khách quầy E-F",
+    provider: "SB Tân Sơn Nhất",
+    // code: "VIPB",
+    services: [
+      {
+        group: "Đón",
+        serviceName: "Tiền fastrack",
+        price: 10,
+        priceUnit: "USD",
+        description: "Qua Immigration nhanh sau khi check in hàng không xong",
+        pickupLocation: "Đón khách quầy E-F",
+      },
+      {
+        group: "Đón",
+        serviceName: "Tiền fastrack + SOI CHIỀU",
+        price: 15,
+        priceUnit: "USD",
+        description: "Qua Immigration + soi chiếu nhanh sau khi check in hàng không xong",
+        pickupLocation: "Đón khách quầy E-F",
+      }
+    ],
   },
 ];
 

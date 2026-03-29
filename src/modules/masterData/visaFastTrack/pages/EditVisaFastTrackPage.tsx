@@ -5,6 +5,7 @@ import { mapVisaServiceFormValuesToPayload } from "@/modules/masterData/visaFast
 import type { VisaServiceFormValues } from "@/modules/masterData/visaFastTrack/schemas/visa-fast-track.schema";
 import PageHeader from "@/shared/components/common/PageHeader";
 import { useNavigate, useParams } from "react-router-dom";
+import ProviderForm from "../components/ProviderForm";
 
 export default function EditVisaFastTrackPage() {
   const navigate = useNavigate();
@@ -28,9 +29,9 @@ export default function EditVisaFastTrackPage() {
     <div className='space-y-6'>
       <PageHeader
         title={isEdit ? "Cập nhật Visa / Fast Track" : "Thêm mới Visa / Fast Track"}
-        description={isEdit ? `Cập nhật thông tin dịch vụ ${item?.code}` : "Điền thông tin để tạo mới dịch vụ Visa / Fast Track"}
+        description={isEdit ? `Cập nhật thông tin dịch vụ ${item?.id}` : "Điền thông tin để tạo mới dịch vụ Visa / Fast Track"}
       />
-      <VisaServiceForm defaultValues={item} onSubmit={handleSubmit} onCancel={handleCancel} isEdit={isEdit} />
+      <ProviderForm defaultValues={item} onSubmit={handleSubmit} onCancel={handleCancel} isEdit={isEdit} />
     </div>
   );
 }
