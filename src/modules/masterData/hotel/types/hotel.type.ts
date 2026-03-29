@@ -47,6 +47,7 @@ export type RoomTypePricing = {
 export type PricingPeriod = {
   id: string;
   label: string;
+  currency: string;
   dateRanges: DateRange[];
   dayGroups: DayGroup[];
   prices: RoomTypePricing[];

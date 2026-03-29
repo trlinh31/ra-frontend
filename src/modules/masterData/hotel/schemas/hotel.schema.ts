@@ -25,6 +25,7 @@ const roomTypePricingSchema = z.object({
 });
 
 export const pricingPeriodSchema = z.object({
+  currency: z.string().min(1, "Trường này là bắt buộc"),
   dateRanges: z.array(dateRangeSchema).min(1, "Phải có ít nhất một khoảng ngày"),
   dayGroups: z.array(dayGroupSchema).min(1, "Phải có ít nhất một nhóm ngày"),
   prices: z.array(roomTypePricingSchema),

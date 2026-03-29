@@ -21,6 +21,7 @@ const initialHotels: Hotel[] = [
       {
         id: "1",
         label: "2026-03-29-2026-03-30, 2026-03-01-2026-03-03",
+        currency: "VND",
         dateRanges: [
           {
             from: "2026-03-29",
@@ -53,6 +54,7 @@ const initialHotels: Hotel[] = [
       {
         id: "2",
         label: "2026-03-01-2026-03-02",
+        currency: "VND",
         dateRanges: [
           {
             from: "2026-03-01",

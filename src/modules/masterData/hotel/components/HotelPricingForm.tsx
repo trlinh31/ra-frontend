@@ -24,6 +24,7 @@ export default function HotelPricingForm() {
     }));
 
     append({
+      currency: "VND",
       dateRanges: [{ from: "", to: "" }],
       dayGroups: [{ label: "", days: [] }],
       prices: initialPrices,

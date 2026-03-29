@@ -47,7 +47,7 @@ export default function HotelPricingPeriodsTable({ hotel }: HotelPricingPeriodsT
                     Ghi chú
                   </th>
                   <th className='px-3 py-3 border border-border font-semibold text-sm' colSpan={period.dayGroups.length}>
-                    Giá phòng ưu đãi
+                    Giá phòng ưu đãi ({period.currency}/ phòng/ đêm)
                   </th>
                 </tr>
                 <tr className='bg-slate-700 text-primary-foreground'>

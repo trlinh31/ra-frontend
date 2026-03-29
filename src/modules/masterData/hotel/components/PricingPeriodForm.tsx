@@ -3,8 +3,10 @@ import Section from "@/shared/components/common/Section";
 import FormCurrencyInput from "@/shared/components/form/FormCurrencyInput";
 import FormDatePicker from "@/shared/components/form/FormDatePicker";
 import FormInput from "@/shared/components/form/FormInput";
+import FormSelect from "@/shared/components/form/FormSelect";
 import ActionButton from "@/shared/components/table/ActionButton";
 import { FieldError } from "@/shared/components/ui/field";
+import { CURRENCY_OPTIONS } from "@/shared/constants/currency.constant";
 import type { Matcher } from "react-day-picker";
 import { Controller, useFieldArray, useFormContext, useWatch } from "react-hook-form";
 
@@ -31,7 +33,6 @@ export default function PricingPeriodForm({ periodIndex }: PricingPeriodFormProp
   const dayGroups = useWatch({ control, name: `pricingPeriods.${periodIndex}.dayGroups` }) ?? [];
   const watchedDateRanges = useWatch({ control, name: `pricingPeriods.${periodIndex}.dateRanges` }) ?? [];
 
-  // Parse "YYYY-MM-DD" as local midnight to avoid UTC timezone offset issues
   const parseDate = (str: string): Date => {
     const [y, m, d] = str.split("-").map(Number);
     return new Date(y, m - 1, d);
@@ -118,6 +119,16 @@ export default function PricingPeriodForm({ periodIndex }: PricingPeriodFormProp
 
   return (
     <div className='space-y-5'>
+      <div className='max-w-60'>
+        <FormSelect
+          name={`pricingPeriods.${periodIndex}.currency`}
+          label='Đơn vị tiền tệ'
+          options={CURRENCY_OPTIONS}
+          placeholder='Chọn đơn vị tiền tệ'
+          required
+        />
+      </div>
+
       <div className='space-y-3'>
         <p className='font-semibold text-sm'>Khoảng thời gian áp dụng</p>
         <div className='space-y-2'>
