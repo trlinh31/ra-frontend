@@ -1,5 +1,6 @@
 import type { Hotel } from "@/modules/masterData/hotel/types/hotel.type";
 import AppDatePicker from "@/shared/components/common/AppDatePicker/AppDatePicker";
+import { Button } from "@/shared/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/shared/components/ui/collapsible";
 import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
 import { formatDate } from "date-fns";
@@ -42,18 +43,11 @@ export default function HotelPricingPeriodsTable({ hotel }: HotelPricingPeriodsT
   return (
     <div className='space-y-4'>
       <div className='flex flex-wrap items-center gap-3'>
-        <span className='font-medium text-sm'>Tìm kiếm theo ngày:</span>
-        <div className='flex items-center gap-2'>
-          <AppDatePicker value={filterFrom} onChange={setFilterFrom} placeholder='Từ ngày' />
-          <span className='text-muted-foreground text-sm'>→</span>
-          <AppDatePicker value={filterTo} onChange={setFilterTo} placeholder='Đến ngày' />
-        </div>
-
-        {/* {(filterFrom || filterTo) && (
+        {(filterFrom || filterTo) && (
           <div>
             <Button
               type='button'
-              variant='ghost'
+              variant='destructive'
               size='sm'
               onClick={() => {
                 setFilterFrom(null);
@@ -62,11 +56,19 @@ export default function HotelPricingPeriodsTable({ hotel }: HotelPricingPeriodsT
               Xóa bộ lọc
             </Button>
           </div>
-        )} */}
+        )}
+
+        <span className='font-medium text-sm'>Tìm kiếm theo ngày:</span>
+
+        <div className='flex items-center gap-2'>
+          <AppDatePicker value={filterFrom} onChange={setFilterFrom} placeholder='Từ ngày' />
+          <span className='text-muted-foreground text-sm'>→</span>
+          <AppDatePicker value={filterTo} onChange={setFilterTo} placeholder='Đến ngày' />
+        </div>
       </div>
 
       {filteredPeriods.length === 0 ? (
-        <p className='text-muted-foreground text-sm italic'>Không có giai đoạn giá nào phù hợp.</p>
+        <p className='text-muted-foreground text-sm text-center italic'>Không có giai đoạn giá nào phù hợp.</p>
       ) : (
         <div className='space-y-2'>
           {filteredPeriods.map((period) => {
