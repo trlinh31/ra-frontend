@@ -5,7 +5,7 @@ export type Hotel = {
   id: string;
   code: string;
   name: string;
-  rate: number;
+  rate: string;
   country: string;
   city: string;
   address: string;

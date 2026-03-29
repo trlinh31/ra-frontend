@@ -4,7 +4,6 @@ import { getRouteCode } from "@/modules/masterData/flights/helpers/getRouteCode"
 import { groupTourMockStore } from "@/modules/masterData/groupTour/data/group-tour.mock-store";
 import { hotelMockStore } from "@/modules/masterData/hotel/data/hotel.mock-store";
 import { transportMockStore } from "@/modules/masterData/transportation/data/transportation.mock-store";
-import { visaFastTrackMockStore } from "@/modules/masterData/visaFastTrack/data/visa-fast-track.mock-store";
 import type { Currency, ServiceType } from "../types/day.type";
 
 export type ServiceOption = {
@@ -47,13 +46,13 @@ export const getServiceOptions = (serviceType: ServiceType): ServiceOption[] => 
         price: t.price,
         currency: "VND",
       }));
-    case "visa":
-      return visaFastTrackMockStore.getAll().map((v) => ({
-        label: v.serviceName,
-        value: v.serviceName,
-        price: v.price,
-        currency: "USD",
-      }));
+    // case "visa":
+    //   return visaFastTrackMockStore.getAll().map((v) => ({
+    //     label: v.serviceName,
+    //     value: v.serviceName,
+    //     price: v.price,
+    //     currency: "USD",
+    //   }));
     case "entrance_fee":
       return entranceFeeMockStore.getAllItems().map((ef) => ({
         label: ef.serviceName,

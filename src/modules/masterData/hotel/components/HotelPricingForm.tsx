@@ -2,9 +2,9 @@ import PricingPeriodForm from "@/modules/masterData/hotel/components/PricingPeri
 import type { HotelFormValues } from "@/modules/masterData/hotel/schemas/hotel.schema";
 import Section from "@/shared/components/common/Section";
 import ActionButton from "@/shared/components/table/ActionButton";
-import { Button } from "@/shared/components/ui/button";
 import { FieldError } from "@/shared/components/ui/field";
-import { CalendarDays, PlusCircle } from "lucide-react";
+import { formatDate } from "date-fns";
+import { CalendarDays } from "lucide-react";
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
 
 export default function HotelPricingForm() {
@@ -35,10 +35,7 @@ export default function HotelPricingForm() {
       <Section type='dashed' className='text-muted-foreground text-xs text-center'>
         <p className='mb-3'>Chưa có giai đoạn giá nào. Nhấn &ldquo;Thêm giai đoạn&rdquo; để bắt đầu.</p>
 
-        <Button type='button' onClick={handleAddPeriod}>
-          <PlusCircle className='w-4 h-4' />
-          Thêm giai đoạn
-        </Button>
+        <ActionButton action='add' text='Thêm giai đoạn' variant='default' size='default' onClick={handleAddPeriod} />
       </Section>
     );
   }
@@ -51,7 +48,7 @@ export default function HotelPricingForm() {
         const headerLabel = hasDateRanges
           ? period.dateRanges
               .filter((dr) => dr.from && dr.to)
-              .map((dr) => `${dr.from} - ${dr.to}`)
+              .map((dr) => `${formatDate(new Date(dr.from), "dd/MM")} - ${formatDate(new Date(dr.to), "dd/MM")}`)
               .join(", ")
           : `Giai đoạn #${periodIndex + 1}`;
 

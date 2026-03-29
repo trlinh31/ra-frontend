@@ -5,6 +5,7 @@ import FormDatePicker from "@/shared/components/form/FormDatePicker";
 import FormInput from "@/shared/components/form/FormInput";
 import ActionButton from "@/shared/components/table/ActionButton";
 import { FieldError } from "@/shared/components/ui/field";
+import type { Matcher } from "react-day-picker";
 import { Controller, useFieldArray, useFormContext, useWatch } from "react-hook-form";
 
 const DAY_LABELS: Record<number, string> = {
@@ -19,15 +20,58 @@ const DAY_LABELS: Record<number, string> = {
 
 const ALL_DAYS = [0, 1, 2, 3, 4, 5, 6] as const;
 
-type Props = {
+interface PricingPeriodFormProps {
   periodIndex: number;
-};
+}
 
-export default function PricingPeriodForm({ periodIndex }: Props) {
+export default function PricingPeriodForm({ periodIndex }: PricingPeriodFormProps) {
   const { control, getValues, setValue, formState } = useFormContext<HotelFormValues>();
 
   const roomTypes = useWatch({ control, name: "roomTypes" }) ?? [];
   const dayGroups = useWatch({ control, name: `pricingPeriods.${periodIndex}.dayGroups` }) ?? [];
+  const watchedDateRanges = useWatch({ control, name: `pricingPeriods.${periodIndex}.dateRanges` }) ?? [];
+
+  // Parse "YYYY-MM-DD" as local midnight to avoid UTC timezone offset issues
+  const parseDate = (str: string): Date => {
+    const [y, m, d] = str.split("-").map(Number);
+    return new Date(y, m - 1, d);
+  };
+
+  const getFromDisabled = (idx: number): Matcher[] => {
+    const matchers: Matcher[] = [];
+    const currentTo = watchedDateRanges[idx]?.to;
+    if (currentTo) matchers.push({ after: parseDate(currentTo) });
+    watchedDateRanges.forEach((dr, i) => {
+      if (i !== idx && dr?.from && dr?.to) {
+        const drFrom = parseDate(dr.from);
+        const drTo = parseDate(dr.to);
+        if (currentTo && parseDate(currentTo) >= drFrom) {
+          matchers.push((date: Date) => date <= drTo);
+        } else {
+          matchers.push({ from: drFrom, to: drTo });
+        }
+      }
+    });
+    return matchers;
+  };
+
+  const getToDisabled = (idx: number): Matcher[] => {
+    const matchers: Matcher[] = [];
+    const currentFrom = watchedDateRanges[idx]?.from;
+    if (currentFrom) matchers.push({ before: parseDate(currentFrom) });
+    watchedDateRanges.forEach((dr, i) => {
+      if (i !== idx && dr?.from && dr?.to) {
+        const drFrom = parseDate(dr.from);
+        const drTo = parseDate(dr.to);
+        if (currentFrom && parseDate(currentFrom) <= drTo) {
+          matchers.push((date: Date) => date >= drFrom);
+        } else {
+          matchers.push({ from: drFrom, to: drTo });
+        }
+      }
+    });
+    return matchers;
+  };
 
   const {
     fields: dateRangeFields,
@@ -79,8 +123,18 @@ export default function PricingPeriodForm({ periodIndex }: Props) {
         <div className='space-y-2'>
           {dateRangeFields.map((field, idx) => (
             <div key={field.id} className='flex items-end gap-3'>
-              <FormDatePicker name={`pricingPeriods.${periodIndex}.dateRanges.${idx}.from`} label='Từ ngày' required />
-              <FormDatePicker name={`pricingPeriods.${periodIndex}.dateRanges.${idx}.to`} label='Đến ngày' required />
+              <FormDatePicker
+                name={`pricingPeriods.${periodIndex}.dateRanges.${idx}.from`}
+                label='Từ ngày'
+                required
+                disabledDates={getFromDisabled(idx)}
+              />
+              <FormDatePicker
+                name={`pricingPeriods.${periodIndex}.dateRanges.${idx}.to`}
+                label='Đến ngày'
+                required
+                disabledDates={getToDisabled(idx)}
+              />
               {dateRangeFields.length > 1 && <ActionButton action='delete' variant='destructive' onClick={() => removeDateRange(idx)} />}
             </div>
           ))}
@@ -158,7 +212,7 @@ export default function PricingPeriodForm({ periodIndex }: Props) {
       {showPriceTable && (
         <div>
           <p className='mb-1 font-semibold text-sm'>Bảng giá theo hạng phòng</p>
-          <p className='mb-3 text-muted-foreground text-xs'>Nhập giá (VNĐ/phòng/đêm) cho từng hạng phòng theo nhóm ngày đã thiết lập.</p>
+          <p className='mb-3 text-muted-foreground text-xs'>Nhập giá cho từng hạng phòng theo nhóm ngày đã thiết lập.</p>
           <div className='overflow-x-auto'>
             <table className='border border-gray-300 w-full text-sm'>
               <thead>

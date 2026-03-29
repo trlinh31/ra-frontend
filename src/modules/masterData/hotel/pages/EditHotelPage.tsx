@@ -20,6 +20,8 @@ export default function EditHotelPage() {
       hotelMockStore.create(mapHotelFormValuesToPayload(values));
     }
 
+    console.log("values", mapHotelFormValuesToPayload(values));
+
     handleCancel();
   };
 
