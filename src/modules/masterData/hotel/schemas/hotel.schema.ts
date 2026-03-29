@@ -1,30 +1,33 @@
 import { z } from "zod";
 
-export const roomCategorySchema = z.object({
+export const roomTypeSchema = z.object({
   name: z.string().min(1, "Trường này là bắt buộc"),
-  quantity: z.number({ error: "Trường này là bắt buộc" }).min(1, "Số lượng phòng phải lớn hơn 0"),
-  area: z.number({ error: "Trường này là bắt buộc" }).min(1, "Diện tích phòng phải lớn hơn 0"),
+  maxGuests: z.number({ error: "Trường này là bắt buộc" }).min(1, "Số lượng khách mỗi phòng phải lớn hơn 0"),
   note: z.string(),
 });
 
-export const roomSchema = z.object({
-  roomCategory: z.string().min(1, "Trường này là bắt buộc"),
-  startDate: z.string().refine(
-    (value) => {
-      const date = new Date(value);
-      return !isNaN(date.getTime());
-    },
-    { message: "Trường này là bắt buộc" }
-  ),
-  endDate: z.string().refine(
-    (value) => {
-      const date = new Date(value);
-      return !isNaN(date.getTime());
-    },
-    { message: "Trường này là bắt buộc" }
-  ),
-  price: z.number({ error: "Trường này là bắt buộc" }).min(1, "Giá tiền phải lớn hơn 0"),
-  currency: z.string().min(1, "Trường này là bắt buộc"),
+const dateRangeSchema = z.object({
+  from: z.string().min(1, "Trường này là bắt buộc"),
+  to: z.string().min(1, "Trường này là bắt buộc"),
+});
+
+const dayGroupSchema = z.object({
+  label: z.string().min(1, "Trường này là bắt buộc"),
+  days: z.array(z.number().min(0).max(6)).min(1, "Phải chọn ít nhất một ngày trong tuần"),
+});
+
+const dayGroupPriceSchema = z.object({
+  price: z.number({ error: "Trường này là bắt buộc" }).min(0, "Giá phải lớn hơn hoặc bằng 0"),
+});
+
+const roomTypePricingSchema = z.object({
+  dayGroupPrices: z.array(dayGroupPriceSchema),
+});
+
+export const pricingPeriodSchema = z.object({
+  dateRanges: z.array(dateRangeSchema).min(1, "Phải có ít nhất một khoảng ngày"),
+  dayGroups: z.array(dayGroupSchema).min(1, "Phải có ít nhất một nhóm ngày"),
+  prices: z.array(roomTypePricingSchema),
 });
 
 export const hotelSchema = z.object({
@@ -34,8 +37,8 @@ export const hotelSchema = z.object({
   country: z.string().min(1, "Trường này là bắt buộc"),
   city: z.string().min(1, "Trường này là bắt buộc"),
   address: z.string().min(1, "Trường này là bắt buộc"),
-  roomCategories: z.array(roomCategorySchema).min(1, "Phải có ít nhất một loại phòng"),
-  rooms: z.array(roomSchema).min(1, "Phải có ít nhất một phòng"),
+  roomTypes: z.array(roomTypeSchema).min(1, "Phải có ít nhất một loại phòng"),
+  pricingPeriods: z.array(pricingPeriodSchema),
   note: z.string(),
   supplier: z.string().min(1, "Trường này là bắt buộc"),
   isActive: z.boolean(),

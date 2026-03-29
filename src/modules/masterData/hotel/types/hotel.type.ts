@@ -1,3 +1,6 @@
+// 0 = CN, 1 = T2, 2 = T3, 3 = T4, 4 = T5, 5 = T6, 6 = T7
+export type DayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+
 export type Hotel = {
   id: string;
   code: string;
@@ -7,23 +10,44 @@ export type Hotel = {
   city: string;
   address: string;
   note: string;
-  roomCategories: RoomCategory[];
-  rooms: Room[];
   supplier: string;
   isActive: boolean;
+  roomTypes: RoomType[];
+  pricingPeriods: PricingPeriod[];
 };
 
-export type RoomCategory = {
+export type RoomType = {
+  id: number;
   name: string;
-  quantity: number;
-  area: number;
+  maxGuests: number;
   note: string;
 };
 
-export type Room = {
-  roomCategory: RoomCategory;
-  startDate: string;
-  endDate: string;
+export type DateRange = {
+  from: string;
+  to: string;
+};
+
+export type DayGroup = {
+  id: string;
+  label: string;
+  days: DayOfWeek[];
+};
+
+export type DayGroupPrice = {
+  dayGroupId: string;
   price: number;
-  currency: string;
+};
+
+export type RoomTypePricing = {
+  roomTypeId: number;
+  dayGroupPrices: DayGroupPrice[];
+};
+
+export type PricingPeriod = {
+  id: string;
+  label: string;
+  dateRanges: DateRange[];
+  dayGroups: DayGroup[];
+  prices: RoomTypePricing[];
 };

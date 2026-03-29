@@ -1,5 +1,5 @@
 import type { HotelFormValues } from "@/modules/masterData/hotel/schemas/hotel.schema";
-import type { Hotel } from "@/modules/masterData/hotel/types/hotel.type";
+import type { DayOfWeek, Hotel } from "@/modules/masterData/hotel/types/hotel.type";
 
 export const mapHotelDataToFormValues = (hotel: Hotel | undefined): HotelFormValues => {
   return {
@@ -9,15 +9,18 @@ export const mapHotelDataToFormValues = (hotel: Hotel | undefined): HotelFormVal
     country: hotel?.country || "",
     city: hotel?.city || "",
     address: hotel?.address || "",
-    rooms:
-      hotel?.rooms.map((room) => ({
-        roomCategory: room.roomCategory.name,
-        startDate: room.startDate,
-        endDate: room.endDate,
-        price: room.price,
-        currency: room.currency,
+    roomTypes:
+      hotel?.roomTypes?.map((rt) => ({
+        name: rt.name,
+        maxGuests: rt.maxGuests,
+        note: rt.note,
       })) || [],
-    roomCategories: hotel?.roomCategories || [],
+    pricingPeriods:
+      hotel?.pricingPeriods?.map((period) => ({
+        dateRanges: period.dateRanges,
+        dayGroups: period.dayGroups.map((dg) => ({ label: dg.label, days: dg.days })),
+        prices: period.prices.map((rtp) => ({ dayGroupPrices: rtp.dayGroupPrices })),
+      })) || [],
     note: hotel?.note || "",
     supplier: hotel?.supplier || "",
     isActive: hotel?.isActive ?? true,
@@ -26,19 +29,37 @@ export const mapHotelDataToFormValues = (hotel: Hotel | undefined): HotelFormVal
 
 export const mapHotelFormValuesToPayload = (formValues: HotelFormValues): Omit<Hotel, "id"> => {
   return {
-    ...formValues,
+    code: formValues.code,
+    name: formValues.name,
     rate: Number(formValues.rate),
-    rooms: formValues.rooms.map((room) => ({
-      roomCategory: formValues.roomCategories.find((type) => type.name === room.roomCategory) || {
-        name: room.roomCategory,
-        quantity: 0,
-        area: 0,
-        note: "",
-      },
-      startDate: room.startDate,
-      endDate: room.endDate,
-      price: room.price,
-      currency: room.currency,
+    country: formValues.country,
+    city: formValues.city,
+    address: formValues.address,
+    roomTypes: formValues.roomTypes.map((rt, idx) => ({
+      id: idx + 1,
+      name: rt.name,
+      maxGuests: rt.maxGuests,
+      note: rt.note,
     })),
+    pricingPeriods: formValues.pricingPeriods.map((period, pIdx) => ({
+      id: String(pIdx + 1),
+      label: period.dateRanges.map((dr) => `${dr.from}–${dr.to}`).join(", "),
+      dateRanges: period.dateRanges,
+      dayGroups: period.dayGroups.map((dg, gIdx) => ({
+        id: String(gIdx + 1),
+        label: dg.label,
+        days: dg.days as DayOfWeek[],
+      })),
+      prices: period.prices.map((rtp, roomIdx) => ({
+        roomTypeId: roomIdx + 1,
+        dayGroupPrices: rtp.dayGroupPrices.map((dgp, gIdx) => ({
+          dayGroupId: String(gIdx + 1),
+          price: dgp.price,
+        })),
+      })),
+    })),
+    note: formValues.note,
+    supplier: formValues.supplier,
+    isActive: formValues.isActive,
   };
 };

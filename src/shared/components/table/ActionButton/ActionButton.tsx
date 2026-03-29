@@ -7,6 +7,8 @@ export interface ActionButtonProps {
   action: Action;
   onClick?: () => void;
   size?: "default" | "xs" | "sm" | "lg" | "icon" | "icon-xs" | "icon-sm" | "icon-lg";
+  variant?: "default" | "link" | "outline" | "secondary" | "ghost" | "destructive";
+  text?: string;
 }
 
 const icons: Record<Action, React.ElementType> = {
@@ -23,12 +25,13 @@ const titles: Record<Action, string> = {
   view: "Xem chi tiết",
 };
 
-export default function ActionButton({ action, onClick, size = "icon-lg" }: ActionButtonProps) {
+export default function ActionButton({ action, onClick, size = "icon-lg", variant = "outline", text }: ActionButtonProps) {
   const Icon = icons[action];
 
   return (
-    <Button type='button' variant='outline' size={size} onClick={onClick} title={titles[action]}>
+    <Button type='button' variant={variant} size={size} onClick={onClick} title={titles[action]}>
       <Icon className='w-4 h-4' />
+      {text && <span>{text}</span>}
     </Button>
   );
 }

@@ -26,7 +26,6 @@ export const transformData = (data: Room[]) => {
         key: room,
         name: room,
         quantity: item.roomCategory.quantity,
-        area: item.roomCategory.area,
         note: item.roomCategory.note,
         currency: item.currency,
         prices: {},

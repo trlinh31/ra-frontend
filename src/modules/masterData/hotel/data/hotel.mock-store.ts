@@ -10,19 +10,19 @@ const initialHotels: Hotel[] = [
     city: "Hanoi",
     address: "19 Lĩnh Nam, Hoàng Mai",
     roomCategories: [
-      { name: "Deluxe Room", quantity: 20, area: 35, note: "2 người" },
-      { name: "Suite", quantity: 5, area: 60, note: "Gia đình" },
+      { name: "Deluxe Room", quantity: 20, note: "2 người" },
+      { name: "Suite", quantity: 5, note: "Gia đình" },
     ],
     rooms: [
       {
-        roomCategory: { name: "Deluxe Room", quantity: 20, area: 35, note: "2 người" },
+        roomCategory: { name: "Deluxe Room", quantity: 20, note: "2 người" },
         startDate: "2026-04-01",
         endDate: "2026-04-01",
         price: 1200000,
         currency: "VND",
       },
       {
-        roomCategory: { name: "Deluxe Room", quantity: 20, area: 35, note: "2 người" },
+        roomCategory: { name: "Deluxe Room", quantity: 20, note: "2 người" },
         startDate: "2026-05-01",
         endDate: "2026-05-31",
         price: 1200000,
@@ -42,10 +42,10 @@ const initialHotels: Hotel[] = [
     country: "Vietnam",
     city: "Da Nang",
     address: "12 Võ Nguyên Giáp",
-    roomCategories: [{ name: "Standard", quantity: 30, area: 28, note: "" }],
+    roomCategories: [{ name: "Standard", quantity: 30, note: "" }],
     rooms: [
       {
-        roomCategory: { name: "Standard", quantity: 30, area: 28, note: "" },
+        roomCategory: { name: "Standard", quantity: 30, note: "" },
         startDate: "2026-05-01",
         endDate: "2026-05-31",
         price: 800000,
@@ -65,10 +65,10 @@ const initialHotels: Hotel[] = [
     country: "Vietnam",
     city: "Nha Trang",
     address: "88 Trần Phú",
-    roomCategories: [{ name: "Ocean View", quantity: 15, area: 45, note: "View biển" }],
+    roomCategories: [{ name: "Ocean View", quantity: 15, note: "View biển" }],
     rooms: [
       {
-        roomCategory: { name: "Ocean View", quantity: 15, area: 45, note: "View biển" },
+        roomCategory: { name: "Ocean View", quantity: 15, note: "View biển" },
         startDate: "2026-06-01",
         endDate: "2026-06-15",
         price: 2500000,
@@ -88,10 +88,10 @@ const initialHotels: Hotel[] = [
     country: "Vietnam",
     city: "Sapa",
     address: "Fansipan Road",
-    roomCategories: [{ name: "Bungalow", quantity: 10, area: 50, note: "View núi" }],
+    roomCategories: [{ name: "Bungalow", quantity: 10, note: "View núi" }],
     rooms: [
       {
-        roomCategory: { name: "Bungalow", quantity: 10, area: 50, note: "View núi" },
+        roomCategory: { name: "Bungalow", quantity: 10, note: "View núi" },
         startDate: "2026-09-01",
         endDate: "2026-09-30",
         price: 1500000,
@@ -111,10 +111,10 @@ const initialHotels: Hotel[] = [
     country: "Vietnam",
     city: "Ho Chi Minh",
     address: "Nguyễn Huệ, Quận 1",
-    roomCategories: [{ name: "Business", quantity: 25, area: 30, note: "Khách công tác" }],
+    roomCategories: [{ name: "Business", quantity: 25, note: "Khách công tác" }],
     rooms: [
       {
-        roomCategory: { name: "Business", quantity: 25, area: 30, note: "Khách công tác" },
+        roomCategory: { name: "Business", quantity: 25, note: "Khách công tác" },
         startDate: "2026-03-15",
         endDate: "2026-04-15",
         price: 1100000,
@@ -134,10 +134,10 @@ const initialHotels: Hotel[] = [
     country: "Thailand",
     city: "Bangkok",
     address: "สุขุมวิท 11",
-    roomCategories: [{ name: "Luxury", quantity: 40, area: 55, note: "" }],
+    roomCategories: [{ name: "Luxury", quantity: 40, note: "" }],
     rooms: [
       {
-        roomCategory: { name: "Luxury", quantity: 40, area: 55, note: "" },
+        roomCategory: { name: "Luxury", quantity: 40, note: "" },
         startDate: "2026-07-01",
         endDate: "2026-07-31",
         price: 120,
@@ -157,10 +157,10 @@ const initialHotels: Hotel[] = [
     country: "Japan",
     city: "Tokyo",
     address: "Shinjuku",
-    roomCategories: [{ name: "Capsule", quantity: 100, area: 10, note: "1 người" }],
+    roomCategories: [{ name: "Capsule", quantity: 100, note: "1 người" }],
     rooms: [
       {
-        roomCategory: { name: "Capsule", quantity: 100, area: 10, note: "1 người" },
+        roomCategory: { name: "Capsule", quantity: 100, note: "1 người" },
         startDate: "2026-04-01",
         endDate: "2026-04-10",
         price: 50,
@@ -180,10 +180,10 @@ const initialHotels: Hotel[] = [
     country: "South Korea",
     city: "Seoul",
     address: "Gangnam",
-    roomCategories: [{ name: "Standard", quantity: 40, area: 25, note: "" }],
+    roomCategories: [{ name: "Standard", quantity: 40, note: "" }],
     rooms: [
       {
-        roomCategory: { name: "Standard", quantity: 40, area: 25, note: "" },
+        roomCategory: { name: "Standard", quantity: 40, note: "" },
         startDate: "2026-08-01",
         endDate: "2026-08-31",
         price: 90,
@@ -203,17 +203,17 @@ const initialHotels: Hotel[] = [
     country: "France",
     city: "Paris",
     address: "Champs-Élysées",
-    roomCategories: [{ name: "Boutique", quantity: 12, area: 35, note: "" }],
+    roomCategories: [{ name: "Boutique", quantity: 12, note: "" }],
     rooms: [
       {
-        roomCategory: { name: "Boutique", quantity: 12, area: 35, note: "" },
+        roomCategory: { name: "Boutique", quantity: 12, note: "" },
         startDate: "2026-06-01",
         endDate: "2026-06-30",
         price: 220,
         currency: "EUR",
       },
       {
-        roomCategory: { name: "Boutique", quantity: 12, area: 35, note: "" },
+        roomCategory: { name: "Boutique", quantity: 12, note: "" },
         startDate: "2026-07-01",
         endDate: "2026-07-31",
         price: 220,
@@ -233,10 +233,10 @@ const initialHotels: Hotel[] = [
     country: "USA",
     city: "New York",
     address: "5th Avenue",
-    roomCategories: [{ name: "Suite", quantity: 20, area: 70, note: "Luxury" }],
+    roomCategories: [{ name: "Suite", quantity: 20, note: "Luxury" }],
     rooms: [
       {
-        roomCategory: { name: "Suite", quantity: 20, area: 70, note: "Luxury" },
+        roomCategory: { name: "Suite", quantity: 20, note: "Luxury" },
         startDate: "2026-12-01",
         endDate: "2026-12-31",
         price: 500,
