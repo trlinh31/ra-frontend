@@ -1,5 +1,6 @@
 import HotelAdditionalInfoSection from "@/modules/masterData/hotel/components/HotelAdditionalInfoSection";
 import HotelBasicInfoSection from "@/modules/masterData/hotel/components/HotelBasicInfoSection";
+import HotelLocationSection from "@/modules/masterData/hotel/components/HotelLocationSection";
 import HotelPricingSection from "@/modules/masterData/hotel/components/HotelPricingSection";
 import HotelRoomTypeSection from "@/modules/masterData/hotel/components/HotelRoomTypeSection";
 import { mapHotelDataToFormValues } from "@/modules/masterData/hotel/mappers/hotel-form.mapper";
@@ -28,6 +29,8 @@ export default function HotelForm({ defaultValues, onSubmit, onCancel, isSubmitt
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+        <HotelLocationSection />
+
         <HotelBasicInfoSection />
 
         <HotelRoomTypeSection />

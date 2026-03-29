@@ -9,7 +9,6 @@ import Section from "@/shared/components/common/Section";
 import FormCurrencyInput from "@/shared/components/form/FormCurrencyInput";
 import FormInput from "@/shared/components/form/FormInput";
 import FormSelect from "@/shared/components/form/FormSelect";
-import FormSwitch from "@/shared/components/form/FormSwitch/FormSwitch";
 import FormTextarea from "@/shared/components/form/FormTextarea";
 import { Button } from "@/shared/components/ui/button";
 import { Form } from "@/shared/components/ui/form";
@@ -42,20 +41,25 @@ export default function TransportationForm({ defaultValues, onSubmit, onCancel, 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
-        <Section title='1. Thông tin cơ bản'>
+        <Section title='1. Địa điểm'>
+          <div className='gap-4 grid grid-cols-1 sm:grid-cols-2'>
+            <FormSelect name='country' options={countriesOptions} label='Quốc gia' required />
+            <FormSelect name='city' options={citiesOptions} label='Thành phố' disabled={!form.watch("country")} required />
+          </div>
+        </Section>
+
+        <Section title='2. Thông tin cơ bản'>
           <div className='gap-4 grid grid-cols-1 sm:grid-cols-2'>
             <FormInput name='code' label='Mã lịch trình' placeholder='VD: TRANS001' required />
             <FormInput name='name' label='Tên lịch trình' placeholder='VD: Đón / Tiễn sân bay Nội Bài' required />
-            <FormSelect name='country' options={countriesOptions} label='Quốc gia' required />
-            <FormSelect name='city' options={citiesOptions} label='Thành phố' disabled={!form.watch("country")} required />
+
             <FormSelect name='supplier' options={suppliersOptions} label='Nhà cung cấp' required />
             <FormCurrencyInput name='km' label='Số KM' placeholder='VD: 50' required />
-            <FormSwitch name='isActive' label='Hoạt động' />
             <FormTextarea name='notes' label='Ghi chú' className='sm:col-span-2' />
           </div>
         </Section>
 
-        <Section title='2. Giá theo sức chứa xe'>
+        <Section title='3. Giá theo sức chứa xe'>
           <VehicleCapacityPriceForm />
         </Section>
 

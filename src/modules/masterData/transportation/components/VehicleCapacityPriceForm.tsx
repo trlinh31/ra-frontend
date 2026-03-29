@@ -44,7 +44,7 @@ export default function VehicleCapacityPriceForm() {
           <FormCurrencyInput name={`vehicleCapacityPrice.${index}.price`} label='Giá' required />
           <div className='flex justify-end items-end gap-2 pb-0.5'>
             <ActionButton action='add' onClick={handleAdd} />
-            <ActionButton action='delete' onClick={() => remove(index)} />
+            <ActionButton action='delete' variant='destructive' onClick={() => remove(index)} />
           </div>
         </div>
       ))}

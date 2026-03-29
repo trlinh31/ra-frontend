@@ -1,5 +1,6 @@
 import GroupTourBasicInfoSection from "@/modules/masterData/groupTour/components/GroupTourBasicInfoSection";
 import GroupTourContentSection from "@/modules/masterData/groupTour/components/GroupTourContentSection";
+import GroupTourLocationSection from "@/modules/masterData/groupTour/components/GroupTourLocationSection";
 import { mapGroupTourDataToFormValues } from "@/modules/masterData/groupTour/mappers/group-tour-form.mapper";
 import { groupTourSchema, type GroupTourFormValues } from "@/modules/masterData/groupTour/schemas/group-tour.schema";
 import type { GroupTour } from "@/modules/masterData/groupTour/types/group-tour.type";
@@ -26,6 +27,7 @@ export default function GroupTourForm({ defaultValues, onSubmit, onCancel, isSub
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+        <GroupTourLocationSection />
         <GroupTourBasicInfoSection />
         <GroupTourContentSection />
 

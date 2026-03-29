@@ -51,9 +51,9 @@ export default function TransportationListPage() {
   const columns: ColumnDef<Transportation>[] = [
     { id: "index", header: "STT", cell: ({ row }) => row.index + 1 },
     { header: "Mã lịch trình", accessorKey: "code" },
-    { header: "Tên lịch trình", accessorKey: "name" },
     { header: "Quốc gia", accessorKey: "country" },
     { header: "Thành phố", accessorKey: "city" },
+    { header: "Tên lịch trình", accessorKey: "name" },
     { header: "Nhà cung cấp", accessorKey: "supplier" },
     { header: "Số KM", accessorKey: "km" },
     {
