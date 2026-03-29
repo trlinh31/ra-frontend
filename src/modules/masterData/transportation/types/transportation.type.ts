@@ -1,27 +1,18 @@
-export type TransportKm = {
-  id: string;
-  code: string;
-  country: string;
-  city: string;
-  category: string;
-  km: number;
+export type VehicleCapacityPrice = {
+  capacity: number;
+  currency: string;
   price: number;
-  notes: string;
-  isActive: boolean;
 };
 
-export type TransportRoute = {
+export type Transportation = {
   id: string;
   code: string;
+  name: string;
   country: string;
-  startLocation: string;
-  endLocation: string;
+  city: string;
+  supplier: string;
+  km: number;
   vehicleCapacityPrice: VehicleCapacityPrice[];
   notes: string;
   isActive: boolean;
-};
-
-export type VehicleCapacityPrice = {
-  capacity: number;
-  price: number;
 };

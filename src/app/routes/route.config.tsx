@@ -9,8 +9,7 @@ import { EditHotelPage, HotelDetailPage, HotelListPage } from "@/modules/masterD
 import EditSupplierPage from "@/modules/masterData/supplier/pages/EditSupplierPage";
 import SupplierListPage from "@/modules/masterData/supplier/pages/SupplierListPage";
 import TransportationListPage from "@/modules/masterData/transportation";
-import EditTransportKmPage from "@/modules/masterData/transportation/pages/EditTransportKmPage";
-import EditTransportRoutePage from "@/modules/masterData/transportation/pages/EditTransportRoutePage";
+import EditTransportationPage from "@/modules/masterData/transportation/pages/EditTransportationPage";
 import VisaFastTrackListPage from "@/modules/masterData/visaFastTrack";
 import EditVisaFastTrackPage from "@/modules/masterData/visaFastTrack/pages/EditVisaFastTrackPage";
 import DayListPage from "@/modules/tour/day";
@@ -97,23 +96,13 @@ export const APP_ROUTES: AppRoute[] = [
             showInSidebar: true,
           },
           {
-            path: PATHS.MASTER_DATA.TRANSPORT_KM_CREATE,
-            element: <EditTransportKmPage />,
+            path: PATHS.MASTER_DATA.TRANSPORTATION_CREATE,
+            element: <EditTransportationPage />,
             showInSidebar: false,
           },
           {
-            path: PATHS.MASTER_DATA.TRANSPORT_KM_EDIT,
-            element: <EditTransportKmPage />,
-            showInSidebar: false,
-          },
-          {
-            path: PATHS.MASTER_DATA.TRANSPORT_ROUTE_CREATE,
-            element: <EditTransportRoutePage />,
-            showInSidebar: false,
-          },
-          {
-            path: PATHS.MASTER_DATA.TRANSPORT_ROUTE_EDIT,
-            element: <EditTransportRoutePage />,
+            path: PATHS.MASTER_DATA.TRANSPORTATION_EDIT,
+            element: <EditTransportationPage />,
             showInSidebar: false,
           },
           {
