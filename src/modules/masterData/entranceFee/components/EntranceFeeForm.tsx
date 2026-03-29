@@ -8,13 +8,13 @@ import FormSwitch from "@/shared/components/form/FormSwitch/FormSwitch";
 import FormTextarea from "@/shared/components/form/FormTextarea";
 import { Button } from "@/shared/components/ui/button";
 import { Form } from "@/shared/components/ui/form";
+import { CURRENCY_OPTIONS } from "@/shared/constants/currency.constant";
 import type { Country } from "@/shared/types/country/country.type";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Save } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { entranceFeeSchema, type EntranceFeeFormValues } from "../schemas/entrance-fee.schema";
-import { VISA_PRICE_UNIT_OPTIONS } from "../../visaFastTrack/constants/visa-price-unit-options.constant";
 
 interface EntranceFeeFormProps {
   defaultValues?: EntranceFee | undefined;
@@ -55,9 +55,9 @@ export default function EntranceFeeForm({ defaultValues, onSubmit, onCancel, isS
           <FormSelect name='country' options={countriesOptions} label='Quốc gia' required />
           <FormSelect name='city' options={citiesOptions} label='Thành phố' disabled={!form.watch("country")} required />
           <FormCurrencyInput name='price' label='Giá tiền' required />
-          <FormSelect name='unitPrice' options={VISA_PRICE_UNIT_OPTIONS} label='Đơn vị tiền tệ' required />
+          <FormSelect name='unitPrice' options={CURRENCY_OPTIONS} label='Đơn vị tiền tệ' required />
           <FormTextarea name='notes' label='Ghi chú' className='sm:col-span-2' />
-          <FormSwitch name='isActive' label='Hoạt động'/>
+          <FormSwitch name='isActive' label='Hoạt động' />
         </div>
 
         <div className='flex justify-start gap-3'>
