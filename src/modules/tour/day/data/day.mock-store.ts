@@ -5,6 +5,8 @@ let _days: Day[] = [
     id: "day1",
     code: "HN-01",
     title: "Hà Nội - Khởi hành",
+    country: "Vietnam",
+    city: "Hanoi",
     description: "Ngày đầu đón khách tại Hà Nội, nhận phòng và tham quan nội thành",
     services: [
       { id: "s1", serviceType: "transport", name: "TRANSR1 - Hanoi → Hanoi (16 chỗ)", quantity: 1, unitPrice: 30000000, currency: "VND", notes: "" },
@@ -16,6 +18,8 @@ let _days: Day[] = [
     id: "day2",
     code: "HAL-01",
     title: "Hạ Long - Tham quan vịnh",
+    country: "Vietnam",
+    city: "Ha Long",
     description: "Di chuyển từ Hà Nội xuống Hạ Long, tham quan vịnh bằng thuyền",
     services: [
       { id: "s4", serviceType: "transport", name: "TRANSR1 - Hanoi → Hanoi (16 chỗ)", quantity: 1, unitPrice: 30000000, currency: "VND", notes: "" },
@@ -26,6 +30,8 @@ let _days: Day[] = [
     id: "day3",
     code: "HN-02",
     title: "Hà Nội - Kết thúc",
+    country: "Vietnam",
+    city: "Hanoi",
     description: "Trở về Hà Nội, tiễn khách tại sân bay",
     services: [
       { id: "s6", serviceType: "transport", name: "TRANSR1 - Hanoi → Hanoi (16 chỗ)", quantity: 1, unitPrice: 30000000, currency: "VND", notes: "" },

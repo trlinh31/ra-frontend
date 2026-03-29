@@ -1,5 +1,5 @@
 import { PATHS } from "@/app/routes/route.constant";
-import DayFilterBar, { type DayFilters } from "@/modules/tour/day/components/DayFilterBar";
+import DayFilterBar from "@/modules/tour/day/components/DayFilterBar";
 import { dayMockStore } from "@/modules/tour/day/data/day.mock-store";
 import type { Day } from "@/modules/tour/day/types/day.type";
 import { AppTable } from "@/shared/components/common/AppTable";
@@ -11,18 +11,23 @@ import { CalendarDays } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+export const DEFAULT_FILTERS = {
+  name: "",
+  country: "",
+  city: "",
+};
+
 export default function DayListPage() {
   const navigate = useNavigate();
   const { confirm } = useConfirm();
   const [days, setDays] = useState<Day[]>(() => dayMockStore.getAll());
-  const [filters, setFilters] = useState<DayFilters>({ search: "" });
+  const [filters, setFilters] = useState<typeof DEFAULT_FILTERS>(DEFAULT_FILTERS);
 
   const filteredDays = useMemo(() => {
-    return days.filter((d) => {
-      if (filters.search) {
-        const q = filters.search.toLowerCase();
-        if (!d.title.toLowerCase().includes(q) && !d.code.toLowerCase().includes(q)) return false;
-      }
+    return days.filter((item) => {
+      if (filters.name && !item.title.toLowerCase().includes(filters.name.toLowerCase())) return false;
+      if (filters.country && item.country !== filters.country) return false;
+      if (filters.city && item.city !== filters.city) return false;
       return true;
     });
   }, [days, filters]);
@@ -45,7 +50,9 @@ export default function DayListPage() {
   const columns: ColumnDef<Day>[] = [
     { id: "index", header: "STT", cell: ({ row }) => row.index + 1 },
     { header: "Mã", accessorKey: "code" },
-    { header: "Tiêu đề", accessorKey: "title" },
+    { header: "Quốc gia", accessorKey: "country" },
+    { header: "Thành phố", accessorKey: "city" },
+    { header: "Tên hành trình", accessorKey: "title" },
     { header: "Mô tả", accessorKey: "description", enableSorting: false },
     {
       id: "serviceCount",
