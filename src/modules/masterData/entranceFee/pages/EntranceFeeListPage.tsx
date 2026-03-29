@@ -12,17 +12,23 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { Ticket } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useCountries } from "../../country/hooks/useCountries";
 
 export default function EntranceFeeListPage() {
   const navigate = useNavigate();
   const { confirm } = useConfirm();
   const [items, setItems] = useState<EntranceFee[]>(() => entranceFeeMockStore.getAllItems());
-  const [filters, setFilters] = useState<EntranceFeeFilters>({ serviceName: "", isActive: "" });
+  const [filters, setFilters] = useState<EntranceFeeFilters>({ serviceName: "", isActive: "", country: "", city: "" });
 
+  const { data: countries } = useCountries();
+  
   const filteredItems = useMemo(() => {
+    
     return items.filter((item) => {
       if (filters.serviceName && !item.serviceName.toLowerCase().includes(filters.serviceName.toLowerCase())) return false;
       if (filters.isActive !== "" && item.isActive !== (filters.isActive === "true")) return false;
+      if (filters.country !== "" && item.country !== filters.country) return false;
+      if (filters.city !== "" && item.city !== filters.city) return false;
       return true;
     });
   }, [items, filters]);
@@ -46,11 +52,12 @@ export default function EntranceFeeListPage() {
 
   const columns: ColumnDef<EntranceFee>[] = [
     { id: "index", header: "STT", cell: ({ row }) => row.index + 1 },
+    { header: "Quốc gia", accessorKey: "country" },  
+    { header: "Thành phố", accessorKey: "city" },
     { header: "Mã", accessorKey: "code" },
     { header: "Tên dịch vụ", accessorKey: "serviceName" },
-    { header: "Quốc gia", accessorKey: "country" },
-    { header: "Thành phố", accessorKey: "city" },
-    { header: "Giá tiền (VNĐ)", accessorKey: "price", cell: ({ row }) => formatNumberVN(row.original.price) },
+    { header: "Giá tiền", accessorKey: "price", cell: ({ row }) => formatNumberVN(row.original.price) },
+    { header: "Đơn vị tiền tệ", accessorKey: "unitPrice" },
     { header: "Ghi chú", accessorKey: "notes", enableSorting: false },
     {
       header: "Hoạt động",
@@ -74,7 +81,7 @@ export default function EntranceFeeListPage() {
   return (
     <div className='space-y-4'>
       <TableToolbar title='Quản lý phí vào cổng' description='Danh sách các phí vào cổng của hệ thống' icon={Ticket} onAdd={handleAdd} />
-      <EntranceFeeFilterBar onFilter={setFilters} />
+      <EntranceFeeFilterBar  countries={countries ?? []} onFilter={setFilters} />
       <AppTable columns={columns} data={filteredItems} />
     </div>
   );

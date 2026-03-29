@@ -7,6 +7,12 @@ export type Flight = {
   airline: string;
   flightTime: string;
   price: number;
+  unitPrice: string;
+  provider: string;
+  fromCountry: string,
+  fromCity: string,
+  toCountry: string,
+  toCity: string,
   notes: string;
   isActive: boolean;
 };

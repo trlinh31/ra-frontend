@@ -6,6 +6,7 @@ export const entranceFeeSchema = z.object({
   country: z.string().min(1, "Vui lòng chọn quốc gia"),
   city: z.string().min(1, "Vui lòng chọn thành phố"),
   price: z.number({ error: "Vui lòng nhập giá tiền" }).min(0, "Giá tiền không được âm"),
+  unitPrice: z.string().min(1, "Vui lòng chọn đơn vị tiền tệ"),
   notes: z.string(),
   isActive: z.boolean(),
 });

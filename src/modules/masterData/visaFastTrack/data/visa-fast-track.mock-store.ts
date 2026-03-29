@@ -4,6 +4,8 @@ let _items: VisaService[] = [
   {
     id: "i1",
     provider: "SB Tân Sơn Nhất",
+    country: "Việt Nam",
+    city: "Hồ Chí Minh",
     // code: "FT01",
     services: [
       {
@@ -28,6 +30,8 @@ let _items: VisaService[] = [
   {
     id: "i2",
     provider: "SB Tân Sơn Nhất",
+    country: "Việt Nam",
+    city: "Hồ Chí Minh",
     // code: "VIPB",
     services: [
       {

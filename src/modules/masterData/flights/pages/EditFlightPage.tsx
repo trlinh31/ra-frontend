@@ -13,6 +13,8 @@ export default function EditFlightPage() {
   const isEdit = Boolean(id);
   const flight = id ? flightMockStore.getById(id) : undefined;
 
+  console.log(flight);
+  
   const handleSubmit = (values: FlightFormValues) => {
     if (isEdit && id) {
       flightMockStore.update(id, mapFlightFormValuesToPayload(values));

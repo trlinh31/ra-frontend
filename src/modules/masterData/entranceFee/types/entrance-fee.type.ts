@@ -5,6 +5,7 @@ export interface EntranceFee {
   country: string;
   city: string;
   price: number;
+  unitPrice: string;
   notes: string;
   isActive: boolean;
 }

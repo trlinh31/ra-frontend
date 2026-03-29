@@ -14,6 +14,7 @@ import { Save } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { entranceFeeSchema, type EntranceFeeFormValues } from "../schemas/entrance-fee.schema";
+import { VISA_PRICE_UNIT_OPTIONS } from "../../visaFastTrack/constants/visa-price-unit-options.constant";
 
 interface EntranceFeeFormProps {
   defaultValues?: EntranceFee | undefined;
@@ -53,9 +54,10 @@ export default function EntranceFeeForm({ defaultValues, onSubmit, onCancel, isS
           <FormInput name='serviceName' label='Tên dịch vụ' required />
           <FormSelect name='country' options={countriesOptions} label='Quốc gia' required />
           <FormSelect name='city' options={citiesOptions} label='Thành phố' disabled={!form.watch("country")} required />
-          <FormCurrencyInput name='price' label='Giá tiền (VNĐ)' required />
-          <FormSwitch name='isActive' label='Hoạt động' />
+          <FormCurrencyInput name='price' label='Giá tiền' required />
+          <FormSelect name='unitPrice' options={VISA_PRICE_UNIT_OPTIONS} label='Đơn vị tiền tệ' required />
           <FormTextarea name='notes' label='Ghi chú' className='sm:col-span-2' />
+          <FormSwitch name='isActive' label='Hoạt động'/>
         </div>
 
         <div className='flex justify-start gap-3'>

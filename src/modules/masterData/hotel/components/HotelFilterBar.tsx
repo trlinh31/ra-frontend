@@ -32,6 +32,8 @@ export default function HotelFilterBar({ countries, onFilter }: HotelFilterBarPr
   const cityOptions = countries.find((c) => c.iso2 === filters.country)?.cities.map((city) => ({ label: city, value: city })) ?? [];
 
   const handleChange = (key: keyof HotelFilters, value: string) => {
+    console.log(value);
+    
     const next = { ...filters, [key]: value };
     setFilters(next);
     onFilter(next);

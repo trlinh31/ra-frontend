@@ -13,6 +13,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { Plane } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useCountries } from "../../country/hooks/useCountries";
 
 export default function FlightListPage() {
   const navigate = useNavigate();
@@ -21,6 +22,8 @@ export default function FlightListPage() {
 
   const [flights, setFlights] = useState<Flight[]>(() => flightMockStore.getAll());
   const [filters, setFilters] = useState<FlightFilters>({ routeCode: "", isActive: "" });
+
+  const { data: countries } = useCountries();
 
   const filteredFlights = useMemo(() => {
     return flights.filter((f) => {
@@ -57,6 +60,11 @@ export default function FlightListPage() {
       header: "STT",
       cell: ({ row }) => row.index + 1,
     },
+     {
+      header: "Tuyến bay",
+      accessorKey: "routeFull",
+      cell: ({ row }) => `${row.original.fromCity} (${row.original.fromCountry}) → ${row.original.toCity} (${row.original.toCountry})`,
+    },
     {
       header: "Mã chuyến bay",
       accessorKey: "code",
@@ -70,14 +78,24 @@ export default function FlightListPage() {
       header: "Hãng bay",
       accessorKey: "airline",
     },
+    
     {
       header: "Thời gian bay",
       accessorKey: "flightTime",
     },
     {
-      header: "Giá bay (VNĐ)",
+      header: "Giá bay",
       accessorKey: "price",
       cell: ({ row }) => formatNumberVN(row.original.price),
+    },
+    
+    {
+      header: "Đơn vị tiền tệ",
+      accessorKey: "unitPrice",
+    },
+     {
+      header: "Nhà cung cấp",
+      accessorKey: "provider",
     },
     {
       header: "Ghi chú",
