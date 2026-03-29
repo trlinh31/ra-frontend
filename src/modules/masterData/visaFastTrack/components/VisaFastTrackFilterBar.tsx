@@ -57,9 +57,9 @@ export default function VisaFastTrackFilterBar({countries, onFilter ,providerOpt
       <div className='min-w-40'>
         <AppSelect options={cityOptions} value={filters.city} onChange={(v) => handleChange("city", v)} placeholder='Thành phố' />
       </div>
-      <div className='min-w-30'>
+      {/* <div className='min-w-30'>
         <AppSelect options={VISA_GROUP_OPTIONS} value={filters.group} onChange={(v) => handleChange("group", v)} placeholder='Nhóm' />
-      </div>
+      </div> */}
       <SearchBox value={filters.serviceName} onChange={(value) => handleChange("serviceName", value)} placeholder='Tìm theo tên dịch vụ...' />
 
       <Button type='button' variant='outline' onClick={handleReset}>

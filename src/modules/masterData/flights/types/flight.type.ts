@@ -1,7 +1,7 @@
 export type Flight = {
   id: string;
-  code: string;
-  airlineCode: string;
+  // code: string;
+  // airlineCode: string;
   origin: string;
   destination: string;
   airline: string;

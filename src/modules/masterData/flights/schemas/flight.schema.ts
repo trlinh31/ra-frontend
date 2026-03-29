@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 export const flightSchema = z.object({
-  code: z.string().min(1, "Vui lòng nhập mã chuyến bay"),
-  airlineCode: z.string().min(1, "Vui lòng nhập mã hãng bay"),
+  // code: z.string().min(1, "Vui lòng nhập mã chuyến bay"),
+  // airlineCode: z.string().min(1, "Vui lòng nhập mã hãng bay"),
   origin: z.string().min(1, "Vui lòng nhập mã điểm đi"),
   destination: z.string().min(1, "Vui lòng nhập mã điểm đến"),
   airline: z.string().min(1, "Vui lòng nhập tên hãng bay"),

@@ -12,7 +12,6 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { Shield } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { supplierMockStore } from "../../supplier/data/supplier.mock-store";
 import { useCountries } from "../../country/hooks/useCountries";
 
 export default function VisaFastTrackListPage() {

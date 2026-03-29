@@ -19,6 +19,7 @@ import { VISA_PRICE_UNIT_OPTIONS } from "../../visaFastTrack/constants/visa-pric
 import { useEffect, useMemo, useState } from "react";
 import { supplierMockStore } from "../../supplier/data/supplier.mock-store";
 import type { Country } from "@/shared/types/country/country.type";
+import { CURRENCY_OPTIONS } from "@/shared/constants/currency.constant";
 
 interface FlightFormProps {
   defaultValues?: Flight | undefined;
@@ -62,24 +63,22 @@ export default function FlightForm({ defaultValues, onSubmit, onCancel, isSubmit
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
         <div className='gap-4 grid'>
-          <FormInput name='airlineCode' label='Mã đường bay' required />
+          <FormSelect name='provider' options={suppliersOptions} label='Nhà cung cấp' required />
           <Section className='grid grid-cols-2 sm:grid-cols-2 gap-4'> 
             <Section >     
               <div className='text-sm text-muted-foreground mb-2'>Điểm khởi hành</div>
-              <FormSelect name='fromCountry' options={countryOptions} label='Quốc gia' required />
-              <FormSelect name='fromCity' options={cityFromOptions} label='Thành phố' disabled={!fromCountry} required />
-              <FormInput name='origin' label='Mã điểm khởi hành' required />
+              <FormSelect name='fromCountry' options={countryOptions} label='Quốc gia' required className="mb-2"/>
+              <FormSelect name='fromCity' options={cityFromOptions} label='Thành phố' disabled={!fromCountry} required  className="mb-2"/>
+              <FormInput name='origin' label='Mã điểm khởi hành' required  className="mb-2"/>
             </Section>
             <Section>  
               <div className='text-sm text-muted-foreground mb-2'>Điểm đến</div>
-              <FormSelect name='toCountry' options={countryOptions} label='Quốc gia' required />
-              <FormSelect name='toCity' options={cityToOptions} label='Thành phố' disabled={!toCountry} required />
-              <FormInput name='destination' label='Mã điểm đến' required />
+              <FormSelect name='toCountry' options={countryOptions} label='Quốc gia' required className="mb-2"/>
+              <FormSelect name='toCity' options={cityToOptions} label='Thành phố' disabled={!toCountry} required className="mb-2"/>
+              <FormInput name='destination' label='Mã điểm đến' required className="mb-2"/>
             </Section>
           </Section>
           <div className="flex gap-4">
-            <FormInput name='code' label='Mã chuyến bay' required />
-
             <FormInput name='airline' label='Hãng bay' required />
 
             <FormTimeInput name='flightTime' label='Thời gian bay' required />
@@ -87,11 +86,8 @@ export default function FlightForm({ defaultValues, onSubmit, onCancel, isSubmit
           <div className="flex gap-4">
             <FormCurrencyInput name='price' label='Giá bay' required />
 
-            <FormSelect name='unitPrice' options={VISA_PRICE_UNIT_OPTIONS} label='Đơn vị tiền tệ' required />
+            <FormSelect name='unitPrice' options={CURRENCY_OPTIONS} label='Đơn vị tiền tệ' required />
           </div>
-          
-
-          <FormSelect name='provider' options={suppliersOptions} label='Nhà cung cấp' required />
 
           <FormTextarea name='notes' label='Ghi chú' />
 
