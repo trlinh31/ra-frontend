@@ -160,14 +160,14 @@ export default function PricingPeriodForm({ periodIndex }: Props) {
           <p className='mb-1 font-semibold text-sm'>Bảng giá theo hạng phòng</p>
           <p className='mb-3 text-muted-foreground text-xs'>Nhập giá (VNĐ/phòng/đêm) cho từng hạng phòng theo nhóm ngày đã thiết lập.</p>
           <div className='overflow-x-auto'>
-            <table className='w-full text-sm'>
+            <table className='border border-gray-300 w-full text-sm'>
               <thead>
                 <tr>
-                  <th className='py-2 pr-4 min-w-40 font-semibold text-left'>Hạng phòng</th>
+                  <th className='px-3 py-2 min-w-40 font-bold text-muted-foreground text-left'>Hạng phòng</th>
                   {dayGroups.map((group, gIdx) => (
                     <th
                       key={gIdx}
-                      className='px-3 py-2 first-of-type:rounded-tl last-of-type:rounded-tr min-w-36 font-bold text-muted-foreground text-center'>
+                      className='px-3 py-2 border border-gray-300 first-of-type:rounded-tl last-of-type:rounded-tr min-w-36 font-bold text-muted-foreground text-center'>
                       {group?.label || `Nhóm ${gIdx + 1}`}
                     </th>
                   ))}
@@ -177,12 +177,12 @@ export default function PricingPeriodForm({ periodIndex }: Props) {
               <tbody>
                 {roomTypes.map((roomType, roomIdx) => (
                   <tr key={roomIdx} className='last:border-0 border-b'>
-                    <td className='py-2 pr-4'>
+                    <td className='px-3 py-2 border border-gray-300'>
                       <p className='font-medium'>{roomType?.name || `Loại phòng ${roomIdx + 1}`}</p>
                       {roomType?.maxGuests > 0 && <p className='text-muted-foreground text-xs'>{roomType.maxGuests} khách</p>}
                     </td>
                     {dayGroups.map((_, groupIdx) => (
-                      <td key={groupIdx} className='p-2'>
+                      <td key={groupIdx} className='p-2 border border-gray-300'>
                         <FormCurrencyInput name={`pricingPeriods.${periodIndex}.prices.${roomIdx}.dayGroupPrices.${groupIdx}.price`} />
                       </td>
                     ))}
