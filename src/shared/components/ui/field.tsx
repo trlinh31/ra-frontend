@@ -67,7 +67,7 @@ function FieldLabel({ className, ...props }: React.ComponentProps<typeof Label>)
     <Label
       data-slot='field-label'
       className={cn(
-        "group/field-label peer/field-label flex gap-2 has-data-checked:bg-primary/5 dark:has-data-checked:bg-primary/10 group-data-[disabled=true]/field:opacity-50 *:data-[slot=field]:p-2.5 has-[>[data-slot=field]]:border has-data-checked:border-primary/30 dark:has-data-checked:border-primary/20 has-[>[data-slot=field]]:rounded-lg w-fit text-sm leading-snug",
+        "group/field-label peer/field-label flex gap-1 has-data-checked:bg-primary/5 dark:has-data-checked:bg-primary/10 group-data-[disabled=true]/field:opacity-50 *:data-[slot=field]:p-2.5 has-[>[data-slot=field]]:border has-data-checked:border-primary/30 dark:has-data-checked:border-primary/20 has-[>[data-slot=field]]:rounded-lg w-fit text-sm leading-snug",
         "has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col",
         className
       )}
@@ -159,7 +159,7 @@ function FieldError({
   }
 
   return (
-    <div role='alert' data-slot='field-error' className={cn("font-normal text-destructive text-sm", className)} {...props}>
+    <div role='alert' data-slot='field-error' className={cn("font-semibold text-destructive text-sm", className)} {...props}>
       {content}
     </div>
   );

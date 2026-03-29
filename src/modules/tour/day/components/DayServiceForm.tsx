@@ -3,7 +3,7 @@ import type { DayFormValues } from "@/modules/tour/day/schemas/day.schema";
 import { CURRENCIES, SERVICE_TYPE_LABELS, SERVICE_TYPES, type ServiceType } from "@/modules/tour/day/types/day.type";
 import AppSelect from "@/shared/components/common/AppSelect";
 import Section from "@/shared/components/common/Section";
-import FormCurrenctyInput from "@/shared/components/form/FormCurrenctyInput";
+import FormCurrencyInput from "@/shared/components/form/FormCurrencyInput";
 import FormInput from "@/shared/components/form/FormInput";
 import ActionButton from "@/shared/components/table/ActionButton";
 import { Button } from "@/shared/components/ui/button";
@@ -87,11 +87,11 @@ function DayServiceRow({ index, onAdd, onRemove }: DayServiceRowProps) {
       </div>
 
       <div>
-        <FormCurrenctyInput name={`services.${index}.quantity`} label='Số lượng' required />
+        <FormCurrencyInput name={`services.${index}.quantity`} label='Số lượng' required />
       </div>
 
       <div>
-        <FormCurrenctyInput name={`services.${index}.unitPrice`} label='Đơn giá' required />
+        <FormCurrencyInput name={`services.${index}.unitPrice`} label='Đơn giá' required />
       </div>
 
       <div>

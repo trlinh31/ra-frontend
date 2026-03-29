@@ -5,8 +5,9 @@ import FlightListPage from "@/modules/masterData/flights";
 import EditFlightPage from "@/modules/masterData/flights/pages/EditFlightPage";
 import GroupTourListPage from "@/modules/masterData/groupTour";
 import EditGroupTourPage from "@/modules/masterData/groupTour/pages/EditGroupTourPage";
-import HotelListPage from "@/modules/masterData/hotel";
-import EditHotelPage from "@/modules/masterData/hotel/pages/EditHotelPage";
+import { EditHotelPage, HotelDetailPage, HotelListPage } from "@/modules/masterData/hotel";
+import EditSupplierPage from "@/modules/masterData/supplier/pages/EditSupplierPage";
+import SupplierListPage from "@/modules/masterData/supplier/pages/SupplierListPage";
 import TransportationListPage from "@/modules/masterData/transportation";
 import EditTransportKmPage from "@/modules/masterData/transportation/pages/EditTransportKmPage";
 import EditTransportRoutePage from "@/modules/masterData/transportation/pages/EditTransportRoutePage";
@@ -17,7 +18,7 @@ import EditDayPage from "@/modules/tour/day/pages/EditDayPage";
 import TourListPage from "@/modules/tour/tour";
 import EditTourPage from "@/modules/tour/tour/pages/EditTourPage";
 import DashboardLayout from "@/shared/layouts/DashboardLayout";
-import { Box, Bus, CalendarDays, Compass, Hotel, LayoutGrid, MapPin, Plane, Shield, Ticket } from "lucide-react";
+import { Box, Bus, CalendarDays, Compass, Container, Hotel, LayoutGrid, MapPin, Plane, Shield, Ticket } from "lucide-react";
 import { Navigate } from "react-router-dom";
 import { PATHS } from "./route.constant";
 import type { AppRoute } from "./route.type";
@@ -47,6 +48,24 @@ export const APP_ROUTES: AppRoute[] = [
         showInSidebar: true,
         children: [
           {
+            path: PATHS.MASTER_DATA.SUPPLIER,
+            title: "Nhà cung cấp",
+            pageTitle: "Quản lý nhà cung cấp",
+            element: <SupplierListPage />,
+            icon: Container,
+            showInSidebar: true,
+          },
+          {
+            path: PATHS.MASTER_DATA.SUPPLIER_CREATE,
+            element: <EditSupplierPage />,
+            showInSidebar: false,
+          },
+          {
+            path: PATHS.MASTER_DATA.SUPPLIER_EDIT,
+            element: <EditSupplierPage />,
+            showInSidebar: false,
+          },
+          {
             path: PATHS.MASTER_DATA.HOTEL,
             title: "Khách sạn",
             pageTitle: "Quản lý khách sạn",
@@ -62,6 +81,11 @@ export const APP_ROUTES: AppRoute[] = [
           {
             path: PATHS.MASTER_DATA.HOTEL_EDIT,
             element: <EditHotelPage />,
+            showInSidebar: false,
+          },
+          {
+            path: PATHS.MASTER_DATA.HOTEL_DETAIL,
+            element: <HotelDetailPage />,
             showInSidebar: false,
           },
           {

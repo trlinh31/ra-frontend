@@ -6,12 +6,33 @@ interface SectionProps {
   children: React.ReactNode;
   className?: string;
   type?: "default" | "dashed";
+  borderColor?: "default" | "red" | "blue" | "green" | "yellow";
+  bgColor?: "default" | "transparent";
 }
 
-export default function Section({ title, children, className, type = "default" }: SectionProps) {
+const bgColorClasses = {
+  default: "bg-section-background",
+  transparent: "bg-transparent",
+};
+
+const borderColorClasses = {
+  default: "border-section-border",
+  red: "border-red-600",
+  blue: "border-blue-600",
+  green: "border-green-600",
+  yellow: "border-yellow-600",
+};
+
+export default function Section({ title, children, className, type = "default", borderColor = "default", bgColor = "default" }: SectionProps) {
   return (
-    <div className={cn("bg-section-background p-5 rounded-[8px]", className, type === "dashed" && "border border-dashed")}>
-      {title && <p className='mb-2 font-medium'>{title}</p>}
+    <div
+      className={cn(
+        "p-5 rounded-[8px]",
+        className,
+        bgColorClasses[bgColor],
+        type === "dashed" && `border border-dashed ${borderColorClasses[borderColor]}`
+      )}>
+      {title && <p className='mb-2 font-bold'>{title}</p>}
       {children}
     </div>
   );

@@ -1,6 +1,5 @@
 import { VISA_GROUP_OPTIONS } from "@/modules/masterData/visaFastTrack/constants/visa-group-options.constant";
 import { VISA_PRICE_UNIT_OPTIONS } from "@/modules/masterData/visaFastTrack/constants/visa-price-unit-options.constant";
-import FormCurrenctyInput from "@/shared/components/form/FormCurrenctyInput";
 import FormInput from "@/shared/components/form/FormInput";
 import FormSelect from "@/shared/components/form/FormSelect";
 import FormTextarea from "@/shared/components/form/FormTextarea";
@@ -9,12 +8,10 @@ import { Button } from "@/shared/components/ui/button";
 import { Save } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
-
-
 export default function VisaServiceForm() {
-  const {control} = useFormContext();
+  const { control } = useFormContext();
 
-  const {fields, append, remove} = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: "services",
   });
@@ -29,9 +26,9 @@ export default function VisaServiceForm() {
       pickupLocation: "",
     });
   };
-  if(fields.length === 0) {
+  if (fields.length === 0) {
     return (
-      <div className='text-center text-muted-foreground'>
+      <div className='text-muted-foreground text-center'>
         <p className='mb-3'>Chưa có dịch vụ nào. Nhấn &quot;Thêm dịch vụ&quot; để bắt đầu.</p>
         <Button type='button' onClick={handleAddService}>
           <Save className='w-4 h-4' />
@@ -40,28 +37,27 @@ export default function VisaServiceForm() {
       </div>
     );
   }
-    return (
-      <div className='space-y-3'>
-        {fields.map((field, index) => (
-          <div key={field.id}>
-            <div  className='flex gap-4 mb-3'>
-              <FormSelect name={`services.${index}.group`} label='Nhóm' options={VISA_GROUP_OPTIONS} required />
-              <FormInput name={`services.${index}.serviceName`} label='Tên dịch vụ' required />
-              <FormCurrenctyInput name={`services.${index}.price`} label='Giá tiền' required />
-              <FormSelect name={`services.${index}.priceUnit`} label='Đơn vị giá' options={VISA_PRICE_UNIT_OPTIONS} required />
-            </div>
-             <FormInput name={`services.${index}.pickupLocation`} label='Địa điểm đón' className="mb-3" />
-             <FormTextarea name={`services.${index}.description`} label='Mô tả' className='sm:col-span-2' />
-          
-
-            <div className='flex justify-start items-start gap-3 mt-3'>
-              <ActionButton action='add' onClick={handleAddService} />
-              <ActionButton action='delete' onClick={() => remove(index)} />
-            </div>
+  return (
+    <div className='space-y-3'>
+      {fields.map((field, index) => (
+        <div key={field.id}>
+          <div className='flex gap-4 mb-3'>
+            <FormSelect name={`services.${index}.group`} label='Nhóm' options={VISA_GROUP_OPTIONS} required />
+            <FormInput name={`services.${index}.serviceName`} label='Tên dịch vụ' required />
+            <FormCurrenctyInput name={`services.${index}.price`} label='Giá tiền' required />
+            <FormSelect name={`services.${index}.priceUnit`} label='Đơn vị giá' options={VISA_PRICE_UNIT_OPTIONS} required />
           </div>
-        ))}
-      </div>
-    );
+          <FormInput name={`services.${index}.pickupLocation`} label='Địa điểm đón' className='mb-3' />
+          <FormTextarea name={`services.${index}.description`} label='Mô tả' className='sm:col-span-2' />
+
+          <div className='flex justify-start items-start gap-3 mt-3'>
+            <ActionButton action='add' onClick={handleAddService} />
+            <ActionButton action='delete' onClick={() => remove(index)} />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
   // return (
   //   <Form {...form}>
   //     <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
