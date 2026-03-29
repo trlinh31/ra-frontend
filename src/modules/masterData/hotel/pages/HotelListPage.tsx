@@ -1,6 +1,5 @@
 import { PATHS } from "@/app/routes/route.constant";
-import { useCountries } from "@/modules/masterData/country/hooks/useCountries";
-import HotelFilterBar, { type HotelFilters } from "@/modules/masterData/hotel/components/HotelFilterBar";
+import HotelFilterBar from "@/modules/masterData/hotel/components/HotelFilterBar";
 import HotelPricingPeriodsTable from "@/modules/masterData/hotel/components/HotelPricingPeriodsTable";
 import { hotelMockStore } from "@/modules/masterData/hotel/data/hotel.mock-store";
 import type { Hotel } from "@/modules/masterData/hotel/types/hotel.type";
@@ -14,12 +13,11 @@ import { HotelIcon, Star } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export const DEFAULT_FILTERS: HotelFilters = {
+export const DEFAULT_FILTERS = {
   name: "",
   rate: "",
   country: "",
   city: "",
-  isActive: "",
 };
 
 export default function HotelListPage() {
@@ -28,9 +26,7 @@ export default function HotelListPage() {
   const { confirm } = useConfirm();
 
   const [hotels, setHotels] = useState<Hotel[]>(() => hotelMockStore.getAll());
-  const [filters, setFilters] = useState<HotelFilters>(DEFAULT_FILTERS);
-
-  const { data: countries } = useCountries();
+  const [filters, setFilters] = useState<typeof DEFAULT_FILTERS>(DEFAULT_FILTERS);
 
   const filteredHotels = useMemo(() => {
     return hotels.filter((h) => {
@@ -141,7 +137,7 @@ export default function HotelListPage() {
   return (
     <div className='space-y-4'>
       <TableToolbar title='Quản lý khách sạn' description='Danh sách các khách sạn của hệ thống' icon={HotelIcon} onAdd={handleAdd} />
-      <HotelFilterBar countries={countries ?? []} onFilter={setFilters} />
+      <HotelFilterBar onFilter={setFilters} />
       <AppTable columns={columns} data={filteredHotels} enableExpanding renderExpandedRow={(hotel) => <HotelPricingPeriodsTable hotel={hotel} />} />
     </div>
   );

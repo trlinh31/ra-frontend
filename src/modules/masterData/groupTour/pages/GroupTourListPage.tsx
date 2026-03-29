@@ -1,5 +1,5 @@
 import { PATHS } from "@/app/routes/route.constant";
-import GroupTourFilterBar, { type GroupTourFilters } from "@/modules/masterData/groupTour/components/GroupTourFilterBar";
+import GroupTourFilterBar from "@/modules/masterData/groupTour/components/GroupTourFilterBar";
 import { groupTourMockStore } from "@/modules/masterData/groupTour/data/group-tour.mock-store";
 import type { GroupTour } from "@/modules/masterData/groupTour/types/group-tour.type";
 import { AppTable } from "@/shared/components/common/AppTable";
@@ -13,16 +13,23 @@ import { MapPin } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+export const DEFAULT_FILTERS = {
+  tourName: "",
+  country: "",
+  city: "",
+};
+
 export default function GroupTourListPage() {
   const navigate = useNavigate();
   const { confirm } = useConfirm();
   const [items, setItems] = useState<GroupTour[]>(() => groupTourMockStore.getAll());
-  const [filters, setFilters] = useState<GroupTourFilters>({ tourName: "", isActive: "" });
+  const [filters, setFilters] = useState<typeof DEFAULT_FILTERS>(DEFAULT_FILTERS);
 
   const filteredItems = useMemo(() => {
     return items.filter((item) => {
       if (filters.tourName && !item.tourName.toLowerCase().includes(filters.tourName.toLowerCase())) return false;
-      if (filters.isActive !== "" && item.isActive !== (filters.isActive === "true")) return false;
+      if (filters.country && item.country !== filters.country) return false;
+      if (filters.city && item.city !== filters.city) return false;
       return true;
     });
   }, [items, filters]);
@@ -45,11 +52,20 @@ export default function GroupTourListPage() {
   const columns: ColumnDef<GroupTour>[] = [
     { id: "index", header: "STT", cell: ({ row }) => row.index + 1 },
     { header: "Mã", accessorKey: "code" },
+    { header: "Quốc gia", accessorKey: "country" },
+    { header: "Thành phố", accessorKey: "city" },
     { header: "Tên tour", accessorKey: "tourName" },
     { header: "Nhà cung cấp", accessorKey: "supplier" },
-    { header: "Giá tiền (VNĐ)", accessorKey: "price", cell: ({ row }) => formatNumberVN(row.original.price) },
-    { header: "Nội dung", accessorKey: "content", enableSorting: false },
-    { header: "Ghi chú", accessorKey: "notes", enableSorting: false },
+    {
+      header: "Giá tiền",
+      accessorKey: "price",
+      cell: ({ row }) => (
+        <span>
+          {formatNumberVN(row.original.price)} {row.original.currency}
+        </span>
+      ),
+    },
+    { header: "Ghi chú", accessorKey: "notes", enableSorting: false, maxSize: 200 },
     {
       header: "Hoạt động",
       accessorKey: "isActive",
@@ -73,7 +89,14 @@ export default function GroupTourListPage() {
     <div className='space-y-4'>
       <TableToolbar title='Quản lý Nhóm Tour' description='Danh sách các nhóm tour của hệ thống' icon={MapPin} onAdd={handleAdd} />
       <GroupTourFilterBar onFilter={setFilters} />
-      <AppTable columns={columns} data={filteredItems} />
+      <AppTable
+        columns={columns}
+        data={filteredItems}
+        enableExpanding
+        renderExpandedRow={(item) => (
+          <div className='px-4 py-3 max-w-none prose prose-sm' dangerouslySetInnerHTML={{ __html: item.content || "<em>Chưa có nội dung.</em>" }} />
+        )}
+      />
     </div>
   );
 }
