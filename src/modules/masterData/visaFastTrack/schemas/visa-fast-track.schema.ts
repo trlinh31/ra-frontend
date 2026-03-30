@@ -11,6 +11,8 @@ export const serviceSchema = z.object({
 export const visaServiceSchema = z.object({
   provider: z.string().min(1, "Vui lòng nhập nhà cung cấp"),
   // code: z.string().min(1, "Vui lòng nhập mã dịch vụ"),
+  country: z.string(),
+  city: z.string(),
   services: z.array(serviceSchema).min(1, "Phải có ít nhất một dịch vụ")
 });
 

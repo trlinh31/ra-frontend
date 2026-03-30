@@ -51,7 +51,13 @@ export default function FlightForm({ defaultValues, onSubmit, onCancel, isSubmit
   
   const toCountry = form.watch("toCountry");
 
-  const countryOptions =  useMemo(() => countries?.map((c) => ({ label: c.country, value: c.country })), [countries]);
+ const countryOptions = useMemo(
+  () => countries?.map((c) => ({
+    label: c.country,
+    value: c.country
+  })) ?? [],
+  [countries]
+);
 
   const cityFromOptions = countries?.find((c) => c.country === fromCountry)?.cities.map((city) => ({ label: city, value: city })) ?? [];
   const cityToOptions = countries?.find((c) => c.country === toCountry)?.cities.map((city) => ({ label: city, value: city })) ?? [];

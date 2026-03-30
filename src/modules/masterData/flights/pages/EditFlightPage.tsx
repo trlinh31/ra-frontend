@@ -33,7 +33,7 @@ export default function EditFlightPage() {
     <div className='space-y-6'>
       <PageHeader
         title={isEdit ? "Cập nhật Chuyến bay" : "Thêm mới Chuyến bay"}
-        description={isEdit ? `Cập nhật thông tin cho Chuyến bay ${flight?.code}` : "Điền thông tin để tạo mới Chuyến bay"}
+        description={isEdit ? `Cập nhật thông tin cho Chuyến bay `: "Điền thông tin để tạo mới Chuyến bay"}
       />
 
       <FlightForm defaultValues={flight} onSubmit={handleSubmit} onCancel={handleCancel} isEdit={isEdit} />

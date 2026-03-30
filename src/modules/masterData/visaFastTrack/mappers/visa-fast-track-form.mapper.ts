@@ -5,7 +5,9 @@ export const mapVisaServiceDataToFormValues = (data: VisaService | undefined): V
   return {
     // code: data?.code ?? "",
     provider: data?.provider ?? "",
-    services: data?.services || []
+    services: data?.services || [],
+    country: data?.country ?? "",
+    city: data?.city ?? "",
   };
 };
 

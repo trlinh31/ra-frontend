@@ -6,6 +6,7 @@ import FormSelect from "@/shared/components/form/FormSelect";
 import FormTextarea from "@/shared/components/form/FormTextarea";
 import ActionButton from "@/shared/components/table/ActionButton";
 import { Button } from "@/shared/components/ui/button";
+import { CURRENCY_OPTIONS } from "@/shared/constants/currency.constant";
 import { Save } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
@@ -46,7 +47,7 @@ export default function VisaServiceForm() {
             <FormSelect name={`services.${index}.group`} label='Nhóm' options={VISA_GROUP_OPTIONS} required />
             <FormInput name={`services.${index}.serviceName`} label='Tên dịch vụ' required />
             <FormCurrencyInput name={`services.${index}.price`} label='Giá tiền' required />
-            <FormSelect name={`services.${index}.priceUnit`} label='Đơn vị giá' options={VISA_PRICE_UNIT_OPTIONS} required />
+            <FormSelect name={`services.${index}.priceUnit`} label='Đơn vị giá' options={CURRENCY_OPTIONS} required />
           </div>
           <FormInput name={`services.${index}.pickupLocation`} label='Địa điểm đón' className='mb-3' />
           <FormTextarea name={`services.${index}.description`} label='Mô tả' className='sm:col-span-2' />
