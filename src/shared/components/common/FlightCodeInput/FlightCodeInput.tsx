@@ -66,8 +66,6 @@ export default function FlightCodeInput({ label, value, onChange, required, plac
           placeholder={placeholder?.airlineCode}
         />
 
-        <span>-</span>
-
         <Input
           ref={refs[1]}
           maxLength={3}
@@ -76,8 +74,6 @@ export default function FlightCodeInput({ label, value, onChange, required, plac
           onKeyDown={(e) => handleKeyDown(1, e)}
           placeholder={placeholder?.origin}
         />
-
-        <span>-</span>
 
         <Input
           ref={refs[2]}

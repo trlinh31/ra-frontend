@@ -1,5 +1,6 @@
 import { VISA_GROUP_OPTIONS } from "@/modules/masterData/visaFastTrack/constants/visa-group-options.constant";
 import { VISA_PRICE_UNIT_OPTIONS } from "@/modules/masterData/visaFastTrack/constants/visa-price-unit-options.constant";
+import FormCurrencyInput from "@/shared/components/form/FormCurrencyInput";
 import FormInput from "@/shared/components/form/FormInput";
 import FormSelect from "@/shared/components/form/FormSelect";
 import FormTextarea from "@/shared/components/form/FormTextarea";
@@ -44,7 +45,7 @@ export default function VisaServiceForm() {
           <div className='flex gap-4 mb-3'>
             <FormSelect name={`services.${index}.group`} label='Nhóm' options={VISA_GROUP_OPTIONS} required />
             <FormInput name={`services.${index}.serviceName`} label='Tên dịch vụ' required />
-            <FormCurrenctyInput name={`services.${index}.price`} label='Giá tiền' required />
+            <FormCurrencyInput name={`services.${index}.price`} label='Giá tiền' required />
             <FormSelect name={`services.${index}.priceUnit`} label='Đơn vị giá' options={VISA_PRICE_UNIT_OPTIONS} required />
           </div>
           <FormInput name={`services.${index}.pickupLocation`} label='Địa điểm đón' className='mb-3' />

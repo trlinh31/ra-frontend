@@ -8,6 +8,7 @@ import FormSwitch from "@/shared/components/form/FormSwitch/FormSwitch";
 import FormTextarea from "@/shared/components/form/FormTextarea";
 import { Button } from "@/shared/components/ui/button";
 import { Form } from "@/shared/components/ui/form";
+import { CURRENCY_OPTIONS } from "@/shared/constants/currency.constant";
 import type { Country } from "@/shared/types/country/country.type";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Save } from "lucide-react";
@@ -53,9 +54,10 @@ export default function EntranceFeeForm({ defaultValues, onSubmit, onCancel, isS
           <FormInput name='serviceName' label='Tên dịch vụ' required />
           <FormSelect name='country' options={countriesOptions} label='Quốc gia' required />
           <FormSelect name='city' options={citiesOptions} label='Thành phố' disabled={!form.watch("country")} required />
-          <FormCurrencyInput name='price' label='Giá tiền (VNĐ)' required />
-          <FormSwitch name='isActive' label='Hoạt động' />
+          <FormCurrencyInput name='price' label='Giá tiền' required />
+          <FormSelect name='unitPrice' options={CURRENCY_OPTIONS} label='Đơn vị tiền tệ' required />
           <FormTextarea name='notes' label='Ghi chú' className='sm:col-span-2' />
+          <FormSwitch name='isActive' label='Hoạt động' />
         </div>
 
         <div className='flex justify-start gap-3'>

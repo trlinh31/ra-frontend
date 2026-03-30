@@ -2,6 +2,8 @@
 export type VisaService = {
   id: string;
   provider: string;
+  country: string;
+  city: string;
   // code: string;
   services: Service[];
 };

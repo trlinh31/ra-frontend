@@ -9,6 +9,7 @@ export const mapEntranceFeeDataToFormValues = (data: EntranceFee | undefined): E
     city: data?.city ?? "",
     price: data?.price ?? 0,
     notes: data?.notes ?? "",
+    unitPrice: data?.unitPrice ?? "",
     isActive: data?.isActive ?? true,
   };
 };

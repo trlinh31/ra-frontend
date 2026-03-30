@@ -13,6 +13,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Save } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { flightSchema, type FlightFormValues } from "../schemas/flight.schema";
+import FormSelect from "@/shared/components/form/FormSelect";
+import { useCountries } from "../../country/hooks/useCountries";
+import { VISA_PRICE_UNIT_OPTIONS } from "../../visaFastTrack/constants/visa-price-unit-options.constant";
+import { useEffect, useMemo, useState } from "react";
+import { supplierMockStore } from "../../supplier/data/supplier.mock-store";
+import type { Country } from "@/shared/types/country/country.type";
+import { CURRENCY_OPTIONS } from "@/shared/constants/currency.constant";
 
 interface FlightFormProps {
   defaultValues?: Flight | undefined;
@@ -23,40 +30,64 @@ interface FlightFormProps {
 }
 
 export default function FlightForm({ defaultValues, onSubmit, onCancel, isSubmitting, isEdit }: FlightFormProps) {
+  
+  console.log(defaultValues);
+  
   const form = useForm<FlightFormValues>({
     resolver: zodResolver(flightSchema),
     defaultValues: mapFlightDataToFormValues(defaultValues),
   });
+  const { data: countries } = useCountries();
 
+  useEffect(() => {
+  if (defaultValues) {
+    form.reset(mapFlightDataToFormValues(defaultValues));
+  }
+}, [defaultValues, countries]);
+
+  
+  const fromCountry = form.watch("fromCountry");
+  console.log(fromCountry);
+  
+  const toCountry = form.watch("toCountry");
+
+  const countryOptions =  useMemo(() => countries?.map((c) => ({ label: c.country, value: c.country })), [countries]);
+
+  const cityFromOptions = countries?.find((c) => c.country === fromCountry)?.cities.map((city) => ({ label: city, value: city })) ?? [];
+  const cityToOptions = countries?.find((c) => c.country === toCountry)?.cities.map((city) => ({ label: city, value: city })) ?? [];
+  
+  const suppliersOptions = useMemo(() => supplierMockStore.getAll().map((supplier) => ({ label: supplier.name, value: supplier.name })), []);
+   
+  
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
-        <div className='gap-4 grid grid-cols-1 sm:grid-cols-2'>
-          <Section className='col-span-2'>
-            <FlightCodeInput
-              label='Mã tuyến đường'
-              value={{ airlineCode: form.watch("airlineCode"), origin: form.watch("origin"), destination: form.watch("destination") }}
-              onChange={(value) => {
-                form.setValue("airlineCode", value.airlineCode);
-                form.setValue("origin", value.origin);
-                form.setValue("destination", value.destination);
-              }}
-              placeholder={{
-                airlineCode: "Nhập mã chuyến bay",
-                origin: "Nhập mã điểm khởi hành",
-                destination: "Nhập mã điểm đến",
-              }}
-              required
-            />
+        <div className='gap-4 grid'>
+          <FormSelect name='provider' options={suppliersOptions} label='Nhà cung cấp' required />
+          <Section className='grid grid-cols-2 sm:grid-cols-2 gap-4'> 
+            <Section >     
+              <div className='text-sm text-muted-foreground mb-2'>Điểm khởi hành</div>
+              <FormSelect name='fromCountry' options={countryOptions} label='Quốc gia' required className="mb-2"/>
+              <FormSelect name='fromCity' options={cityFromOptions} label='Thành phố' disabled={!fromCountry} required  className="mb-2"/>
+              <FormInput name='origin' label='Mã điểm khởi hành' required  className="mb-2"/>
+            </Section>
+            <Section>  
+              <div className='text-sm text-muted-foreground mb-2'>Điểm đến</div>
+              <FormSelect name='toCountry' options={countryOptions} label='Quốc gia' required className="mb-2"/>
+              <FormSelect name='toCity' options={cityToOptions} label='Thành phố' disabled={!toCountry} required className="mb-2"/>
+              <FormInput name='destination' label='Mã điểm đến' required className="mb-2"/>
+            </Section>
           </Section>
+          <div className="flex gap-4">
+            <FormInput name='airline' label='Hãng bay' required />
 
-          <FormInput name='code' label='Mã chuyến bay' required />
+            <FormTimeInput name='flightTime' label='Thời gian bay' required />
+          </div>
+          <div className="flex gap-4">
+            <FormCurrencyInput name='price' label='Giá bay' required />
 
-          <FormInput name='airline' label='Hãng bay' required />
-
-          <FormTimeInput name='flightTime' label='Thời gian bay' required />
-
-          <FormCurrencyInput name='price' label='Giá bay (VNĐ)' required />
+            <FormSelect name='unitPrice' options={CURRENCY_OPTIONS} label='Đơn vị tiền tệ' required />
+          </div>
 
           <FormTextarea name='notes' label='Ghi chú' />
 
