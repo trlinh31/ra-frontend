@@ -5,7 +5,7 @@ export type Hotel = {
   id: string;
   code: string;
   name: string;
-  rate: number;
+  rate: string;
   country: string;
   city: string;
   address: string;
@@ -47,6 +47,7 @@ export type RoomTypePricing = {
 export type PricingPeriod = {
   id: string;
   label: string;
+  currency: string;
   dateRanges: DateRange[];
   dayGroups: DayGroup[];
   prices: RoomTypePricing[];

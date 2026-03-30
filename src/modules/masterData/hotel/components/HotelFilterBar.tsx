@@ -1,39 +1,25 @@
+import { useCountries } from "@/modules/masterData/country/hooks/useCountries";
 import { HOTEL_RATE_OPTIONS } from "@/modules/masterData/hotel/constants/hotel-rate-options.constant";
 import { DEFAULT_FILTERS } from "@/modules/masterData/hotel/pages/HotelListPage";
 import AppSelect from "@/shared/components/common/AppSelect";
 import SearchBox from "@/shared/components/common/SearchBox/SearchBox";
 import { Button } from "@/shared/components/ui/button";
-import type { Country } from "@/shared/types/country/country.type";
 import { RotateCcw } from "lucide-react";
 import { useState } from "react";
 
-export type HotelFilters = {
-  name: string;
-  rate: string;
-  country: string;
-  city: string;
-  isActive: string;
-};
-
-const STATUS_OPTIONS = [
-  { label: "Đang hoạt động", value: "true" },
-  { label: "Ngừng hoạt động", value: "false" },
-];
-
 interface HotelFilterBarProps {
-  countries: Country[];
-  onFilter: (filters: HotelFilters) => void;
+  onFilter: (filters: typeof DEFAULT_FILTERS) => void;
 }
 
-export default function HotelFilterBar({ countries, onFilter }: HotelFilterBarProps) {
-  const [filters, setFilters] = useState<HotelFilters>(DEFAULT_FILTERS);
+export default function HotelFilterBar({ onFilter }: HotelFilterBarProps) {
+  const [filters, setFilters] = useState<typeof DEFAULT_FILTERS>(DEFAULT_FILTERS);
 
-  const countryOptions = countries.map((c) => ({ label: c.country, value: c.iso2 }));
-  const cityOptions = countries.find((c) => c.iso2 === filters.country)?.cities.map((city) => ({ label: city, value: city })) ?? [];
+  const { data: countries } = useCountries();
 
-  const handleChange = (key: keyof HotelFilters, value: string) => {
-    console.log(value);
-    
+  const countryOptions = (countries ?? []).map((c) => ({ label: c.country, value: c.country }));
+  const cityOptions = (countries ?? []).find((c) => c.country === filters.country)?.cities.map((city) => ({ label: city, value: city })) ?? [];
+
+  const handleChange = (key: keyof typeof DEFAULT_FILTERS, value: string) => {
     const next = { ...filters, [key]: value };
     setFilters(next);
     onFilter(next);

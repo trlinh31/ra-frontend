@@ -5,7 +5,10 @@ export const mapGroupTourDataToFormValues = (data: GroupTour | undefined): Group
   return {
     code: data?.code ?? "",
     tourName: data?.tourName ?? "",
+    country: data?.country ?? "",
+    city: data?.city ?? "",
     supplier: data?.supplier ?? "",
+    currency: data?.currency ?? "VND",
     content: data?.content ?? "",
     price: data?.price ?? 0,
     notes: data?.notes ?? "",

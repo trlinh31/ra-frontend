@@ -1,26 +1,23 @@
 import { PATHS } from "@/app/routes/route.constant";
-import { useCountries } from "@/modules/masterData/country/hooks/useCountries";
-import HotelFilterBar, { type HotelFilters } from "@/modules/masterData/hotel/components/HotelFilterBar";
+import HotelFilterBar from "@/modules/masterData/hotel/components/HotelFilterBar";
+import HotelPricingPeriodsTable from "@/modules/masterData/hotel/components/HotelPricingPeriodsTable";
 import { hotelMockStore } from "@/modules/masterData/hotel/data/hotel.mock-store";
-import { getMinMaxPrice } from "@/modules/masterData/hotel/helpers/getMinMaxPrice";
-import type { Hotel, Room } from "@/modules/masterData/hotel/types/hotel.type";
+import type { Hotel } from "@/modules/masterData/hotel/types/hotel.type";
 import { AppTable } from "@/shared/components/common/AppTable";
 import ActionButton from "@/shared/components/table/ActionButton";
 import TableToolbar from "@/shared/components/table/TableToolbar";
 import { Switch } from "@/shared/components/ui/switch";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
-import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
 import type { ColumnDef } from "@tanstack/react-table";
 import { HotelIcon, Star } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export const DEFAULT_FILTERS: HotelFilters = {
+export const DEFAULT_FILTERS = {
   name: "",
   rate: "",
   country: "",
   city: "",
-  isActive: "",
 };
 
 export default function HotelListPage() {
@@ -29,14 +26,12 @@ export default function HotelListPage() {
   const { confirm } = useConfirm();
 
   const [hotels, setHotels] = useState<Hotel[]>(() => hotelMockStore.getAll());
-  const [filters, setFilters] = useState<HotelFilters>(DEFAULT_FILTERS);
-
-  const { data: countries } = useCountries();
+  const [filters, setFilters] = useState<typeof DEFAULT_FILTERS>(DEFAULT_FILTERS);
 
   const filteredHotels = useMemo(() => {
     return hotels.filter((h) => {
       if (filters.name && !h.name.toLowerCase().includes(filters.name.toLowerCase())) return false;
-      if (filters.rate && h.rate !== Number(filters.rate)) return false;
+      if (filters.rate && h.rate !== filters.rate) return false;
       if (filters.country && h.country !== filters.country) return false;
       if (filters.city && h.city !== filters.city) return false;
       return true;
@@ -104,17 +99,17 @@ export default function HotelListPage() {
       id: "roomCount",
       header: "Số phòng",
       enableSorting: false,
-      cell: ({ row }) => row.original.rooms.length,
+      cell: ({ row }) => row.original.roomTypes.length,
     },
-    {
-      id: "priceRange",
-      header: "Khoảng giá",
-      enableSorting: false,
-      cell: ({ row }) => {
-        const { min, max } = getMinMaxPrice(row.original.rooms);
-        return `${formatNumberVN(min)} - ${formatNumberVN(max)}`;
-      },
-    },
+    // {
+    //   id: "priceRange",
+    //   header: "Khoảng giá",
+    //   enableSorting: false,
+    //   cell: ({ row }) => {
+    //     const { min, max } = getMinMaxPrice(row.original.rooms);
+    //     return `${formatNumberVN(min)} - ${formatNumberVN(max)}`;
+    //   },
+    // },
     {
       header: "Nhà cung cấp",
       accessorKey: "supplier",
@@ -142,20 +137,8 @@ export default function HotelListPage() {
   return (
     <div className='space-y-4'>
       <TableToolbar title='Quản lý khách sạn' description='Danh sách các khách sạn của hệ thống' icon={HotelIcon} onAdd={handleAdd} />
-      <HotelFilterBar countries={countries ?? []} onFilter={setFilters} />
-      <AppTable columns={columns} data={filteredHotels} enableExpanding renderExpandedRow={(hotel) => <HotelDetailRow rooms={hotel.rooms} />} />
+      <HotelFilterBar onFilter={setFilters} />
+      <AppTable columns={columns} data={filteredHotels} enableExpanding renderExpandedRow={(hotel) => <HotelPricingPeriodsTable hotel={hotel} />} />
     </div>
   );
 }
-
-const HotelDetailRow = ({ rooms }: { rooms: Room[] }) => {
-  const columns: ColumnDef<Room>[] = [
-    { id: "index", header: "STT", cell: ({ row }) => row.index + 1, enableSorting: false },
-    { header: "Hạng phòng", accessorKey: "roomCategory.name" },
-    { header: "Số lượng", accessorKey: "roomCategory.quantity" },
-    { header: "Diện tích", accessorKey: "roomCategory.area", cell: ({ row }) => `${row.original.roomCategory.area}m²` },
-    { header: "Cơ cấu", accessorKey: "roomCategory.note", enableSorting: false, maxSize: 200 },
-  ];
-
-  return <AppTable columns={columns} data={rooms} enablePagination={false} />;
-};

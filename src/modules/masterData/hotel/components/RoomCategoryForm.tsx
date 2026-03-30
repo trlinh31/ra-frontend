@@ -4,12 +4,11 @@ import FormCurrencyInput from "@/shared/components/form/FormCurrencyInput";
 import FormInput from "@/shared/components/form/FormInput";
 import FormTextarea from "@/shared/components/form/FormTextarea";
 import ActionButton from "@/shared/components/table/ActionButton";
-import { Button } from "@/shared/components/ui/button";
-import { PlusCircle } from "lucide-react";
+import { FieldError } from "@/shared/components/ui/field";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
 export default function RoomCategoryForm() {
-  const { control } = useFormContext<HotelFormValues>();
+  const { control, formState } = useFormContext<HotelFormValues>();
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -29,10 +28,7 @@ export default function RoomCategoryForm() {
       <Section type='dashed' className='text-muted-foreground text-xs text-center'>
         <p className='mb-3'>Phòng trống. Nhấn &quot;Thêm phòng&quot; để bắt đầu.</p>
 
-        <Button type='button' onClick={handleAddRoomCategory}>
-          <PlusCircle className='w-4 h-4' />
-          Thêm phòng
-        </Button>
+        <ActionButton action='add' text='Thêm phòng' variant='default' size='default' onClick={handleAddRoomCategory} />
       </Section>
     );
   }
@@ -46,13 +42,15 @@ export default function RoomCategoryForm() {
             <FormCurrencyInput name={`roomTypes.${index}.maxGuests`} label='Số người tối đa' required />
             <FormTextarea name={`roomTypes.${index}.note`} label='Ghi chú' />
 
-            <div className='flex gap-4'>
+            <div className='flex gap-2'>
               <ActionButton action='add' text='Thêm loại phòng' variant='default' size='default' onClick={handleAddRoomCategory} />
               <ActionButton action='delete' text='Xóa loại phòng' variant='destructive' size='default' onClick={() => remove(index)} />
             </div>
           </div>
         </Section>
       ))}
+
+      {formState.errors.roomTypes?.message && <FieldError errors={[formState.errors.roomTypes]} />}
     </div>
   );
 }

@@ -1,27 +1,25 @@
+import { useCountries } from "@/modules/masterData/country/hooks/useCountries";
+import { DEFAULT_FILTERS } from "@/modules/masterData/transportation/pages/TransportationListPage";
+import AppSelect from "@/shared/components/common/AppSelect";
 import SearchBox from "@/shared/components/common/SearchBox/SearchBox";
 import { Button } from "@/shared/components/ui/button";
-import { CirclePlus, RotateCcw } from "lucide-react";
+import { RotateCcw } from "lucide-react";
 import { useState } from "react";
 
-export type TransportationFilters = {
-  search: string;
-};
-
-const DEFAULT_FILTERS: TransportationFilters = {
-  search: "",
-};
-
 interface TransportationFilterBarProps {
-  onFilter: (filters: TransportationFilters) => void;
-  placeholder?: string;
-  onAdd: () => void;
+  onFilter: (filters: typeof DEFAULT_FILTERS) => void;
 }
 
-export default function TransportationFilterBar({ onFilter, placeholder = "Tìm kiếm...", onAdd }: TransportationFilterBarProps) {
-  const [filters, setFilters] = useState<TransportationFilters>(DEFAULT_FILTERS);
+export default function TransportationFilterBar({ onFilter }: TransportationFilterBarProps) {
+  const [filters, setFilters] = useState<typeof DEFAULT_FILTERS>(DEFAULT_FILTERS);
 
-  const handleChange = (value: string) => {
-    const next = { search: value };
+  const { data: countries } = useCountries();
+
+  const countryOptions = (countries ?? []).map((c) => ({ label: c.country, value: c.country }));
+  const cityOptions = (countries ?? []).find((c) => c.country === filters.country)?.cities.map((city) => ({ label: city, value: city })) ?? [];
+
+  const handleChange = (key: keyof typeof DEFAULT_FILTERS, value: string) => {
+    const next = { ...filters, [key]: value };
     setFilters(next);
     onFilter(next);
   };
@@ -32,19 +30,20 @@ export default function TransportationFilterBar({ onFilter, placeholder = "Tìm 
   };
 
   return (
-    <div className='flex justify-between items-center'>
-      <div className='flex flex-wrap items-end gap-3'>
-        <SearchBox value={filters.search} onChange={handleChange} placeholder={placeholder} />
+    <div className='flex flex-wrap items-end gap-3'>
+      <SearchBox value={filters.name} onChange={(value) => handleChange("name", value)} placeholder='Tìm theo tên lịch trình...' />
 
-        <Button type='button' variant='outline' onClick={handleReset}>
-          <RotateCcw className='w-4 h-4' />
-          Đặt lại
-        </Button>
+      <div className='min-w-40'>
+        <AppSelect options={countryOptions} value={filters.country} onChange={(v) => handleChange("country", v)} placeholder='Quốc gia' />
       </div>
 
-      <Button type='button' size='lg' onClick={onAdd}>
-        <CirclePlus className='w-4 h-4' />
-        Thêm mới
+      <div className='min-w-40'>
+        <AppSelect options={cityOptions} value={filters.city} onChange={(v) => handleChange("city", v)} placeholder='Thành phố' />
+      </div>
+
+      <Button type='button' variant='outline' onClick={handleReset}>
+        <RotateCcw className='w-4 h-4' />
+        Đặt lại
       </Button>
     </div>
   );

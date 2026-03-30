@@ -19,7 +19,8 @@ export default function EditEntranceFeePage() {
     } else {
       entranceFeeMockStore.createItem(mapEntranceFeeFormValuesToPayload(values));
     }
-    navigate(PATHS.MASTER_DATA.ENTRANCE_FEE);
+
+    handleCancel();
   };
 
   const handleCancel = () => navigate(PATHS.MASTER_DATA.ENTRANCE_FEE);

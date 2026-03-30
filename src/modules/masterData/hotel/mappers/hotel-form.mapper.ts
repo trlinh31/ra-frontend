@@ -5,7 +5,7 @@ export const mapHotelDataToFormValues = (hotel: Hotel | undefined): HotelFormVal
   return {
     code: hotel?.code || "",
     name: hotel?.name || "",
-    rate: String(hotel?.rate || ""),
+    rate: hotel?.rate || "",
     country: hotel?.country || "",
     city: hotel?.city || "",
     address: hotel?.address || "",
@@ -17,6 +17,7 @@ export const mapHotelDataToFormValues = (hotel: Hotel | undefined): HotelFormVal
       })) || [],
     pricingPeriods:
       hotel?.pricingPeriods?.map((period) => ({
+        currency: period.currency || "VND",
         dateRanges: period.dateRanges,
         dayGroups: period.dayGroups.map((dg) => ({ label: dg.label, days: dg.days })),
         prices: period.prices.map((rtp) => ({ dayGroupPrices: rtp.dayGroupPrices })),
@@ -31,7 +32,7 @@ export const mapHotelFormValuesToPayload = (formValues: HotelFormValues): Omit<H
   return {
     code: formValues.code,
     name: formValues.name,
-    rate: Number(formValues.rate),
+    rate: formValues.rate,
     country: formValues.country,
     city: formValues.city,
     address: formValues.address,
@@ -43,7 +44,8 @@ export const mapHotelFormValuesToPayload = (formValues: HotelFormValues): Omit<H
     })),
     pricingPeriods: formValues.pricingPeriods.map((period, pIdx) => ({
       id: String(pIdx + 1),
-      label: period.dateRanges.map((dr) => `${dr.from}–${dr.to}`).join(", "),
+      label: period.dateRanges.map((dr) => `${dr.from}-${dr.to}`).join(", "),
+      currency: period.currency,
       dateRanges: period.dateRanges,
       dayGroups: period.dayGroups.map((dg, gIdx) => ({
         id: String(gIdx + 1),

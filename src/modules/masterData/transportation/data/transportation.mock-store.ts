@@ -1,69 +1,85 @@
-import type { TransportKm, TransportRoute } from "../types/transportation.type";
+import type { Transportation } from "../types/transportation.type";
 
-let _kmItems: TransportKm[] = [
+let _items: Transportation[] = [
   {
-    id: "k1",
-    code: "TRANS1",
+    id: "1",
+    code: "TRANS001",
+    name: "Đón / Tiễn sân bay Nội Bài – Hà Nội",
     country: "Vietnam",
     city: "Hanoi",
-    category: "Đón / tiễn sân bay",
-    km: 30,
-    price: 20000000,
-    notes: "Riêng xe 35s, 45s tính 200km",
+    supplier: "Công ty TNHH Thiết Bị Du Lịch Ánh Dương",
+    km: 45,
+    vehicleCapacityPrice: [
+      { capacity: 4, currency: "VND", price: 600000 },
+      { capacity: 7, currency: "VND", price: 900000 },
+      { capacity: 16, currency: "VND", price: 1800000 },
+      { capacity: 35, currency: "VND", price: 3500000 },
+    ],
+    notes: "Giá áp dụng cho chuyến bay không delay. Chuyến bay delay trên 3 tiếng sẽ tính thêm phụ phí.",
     isActive: true,
   },
   {
-    id: "k2",
-    code: "TRANS2",
+    id: "2",
+    code: "TRANS002",
+    name: "Hà Nội – Hạ Long",
     country: "Vietnam",
     city: "Hanoi",
-    category: "Đón hoặc tiễn sbay - chuyến bay delay từ 3 -5 tiếng (Quá 5 tiếng tính thành 2 chuyến )",
-    km: 130,
-    price: 40000000,
-    notes: "",
-    isActive: false,
-  },
-];
-
-let _routeItems: TransportRoute[] = [
-  {
-    id: "r1",
-    code: "TRANSR1",
-    country: "Vietnam",
-    startLocation: "Hanoi",
-    endLocation: "Hanoi",
+    supplier: "Công ty Du Lịch Sao Việt",
+    km: 165,
     vehicleCapacityPrice: [
-      { capacity: 4, price: 10000000 },
-      { capacity: 7, price: 15000000 },
-      { capacity: 16, price: 30000000 },
+      { capacity: 4, currency: "VND", price: 1200000 },
+      { capacity: 7, currency: "VND", price: 1800000 },
+      { capacity: 16, currency: "VND", price: 3200000 },
+      { capacity: 35, currency: "VND", price: 5500000 },
+      { capacity: 45, currency: "VND", price: 6800000 },
     ],
     notes: "",
     isActive: true,
   },
   {
-    id: "r2",
-    code: "TRANSR2",
+    id: "3",
+    code: "TRANS003",
+    name: "Đón / Tiễn sân bay Đà Nẵng – Trung tâm",
     country: "Vietnam",
-    startLocation: "Hanoi",
-    endLocation: "Hanoi",
+    city: "Da Nang",
+    supplier: "Công ty Du Lịch Quốc Tế Thái Bình Dương",
+    km: 5,
     vehicleCapacityPrice: [
-      { capacity: 4, price: 10000000 },
-      { capacity: 7, price: 15000000 },
-      { capacity: 16, price: 30000000 },
+      { capacity: 4, currency: "VND", price: 250000 },
+      { capacity: 7, currency: "VND", price: 380000 },
+      { capacity: 16, currency: "VND", price: 750000 },
     ],
-    notes: "",
-    isActive: false,
+    notes: "Phục vụ 24/7.",
+    isActive: true,
   },
   {
-    id: "r3",
-    code: "TRANSR3",
-    country: "Vietnam",
-    startLocation: "Hanoi",
-    endLocation: "Hanoi",
+    id: "4",
+    code: "TRANS004",
+    name: "Bangkok – Pattaya Transfer",
+    country: "Thailand",
+    city: "Bangkok",
+    supplier: "Công ty TNHH Thiết Bị Du Lịch Ánh Dương",
+    km: 145,
     vehicleCapacityPrice: [
-      { capacity: 4, price: 10000000 },
-      { capacity: 7, price: 15000000 },
-      { capacity: 16, price: 30000000 },
+      { capacity: 4, currency: "THB", price: 2800 },
+      { capacity: 9, currency: "THB", price: 4500 },
+      { capacity: 25, currency: "THB", price: 9000 },
+    ],
+    notes: "Thời gian di chuyển khoảng 1.5 – 2 giờ.",
+    isActive: true,
+  },
+  {
+    id: "5",
+    code: "TRANS005",
+    name: "Sân bay Changi – Singapore City",
+    country: "Singapore",
+    city: "Singapore",
+    supplier: "Công ty Du Lịch Quốc Tế Thái Bình Dương",
+    km: 20,
+    vehicleCapacityPrice: [
+      { capacity: 4, currency: "SGD", price: 65 },
+      { capacity: 7, currency: "SGD", price: 95 },
+      { capacity: 13, currency: "SGD", price: 160 },
     ],
     notes: "",
     isActive: false,
@@ -71,35 +87,19 @@ let _routeItems: TransportRoute[] = [
 ];
 
 export const transportMockStore = {
-  getAllKmItems: (): TransportKm[] => [..._kmItems],
-  getKmItemById: (id: string) => _kmItems.find((i) => i.id === id),
-  createKmItem: (data: Omit<TransportKm, "id">): TransportKm => {
-    const item: TransportKm = { ...data, id: `k${Date.now()}` };
-    _kmItems = [..._kmItems, item];
+  getAll: (): Transportation[] => [..._items],
+  getById: (id: string) => _items.find((i) => i.id === id),
+  create: (data: Omit<Transportation, "id">): Transportation => {
+    const item: Transportation = { ...data, id: String(Date.now()) };
+    _items = [..._items, item];
     return item;
   },
-  updateKmItem: (id: string, data: Omit<TransportKm, "id">): TransportKm => {
-    const item: TransportKm = { ...data, id };
-    _kmItems = _kmItems.map((i) => (i.id === id ? item : i));
+  update: (id: string, data: Omit<Transportation, "id">): Transportation => {
+    const item: Transportation = { ...data, id };
+    _items = _items.map((i) => (i.id === id ? item : i));
     return item;
   },
-  deleteKmItem: (id: string): void => {
-    _kmItems = _kmItems.filter((i) => i.id !== id);
-  },
-
-  getAllRouteItems: (): TransportRoute[] => [..._routeItems],
-  getRouteItemById: (id: string) => _routeItems.find((i) => i.id === id),
-  createRouteItem: (data: Omit<TransportRoute, "id">): TransportRoute => {
-    const item: TransportRoute = { ...data, id: `r${Date.now()}` };
-    _routeItems = [..._routeItems, item];
-    return item;
-  },
-  updateRouteItem: (id: string, data: Omit<TransportRoute, "id">): TransportRoute => {
-    const item: TransportRoute = { ...data, id };
-    _routeItems = _routeItems.map((i) => (i.id === id ? item : i));
-    return item;
-  },
-  deleteRouteItem: (id: string): void => {
-    _routeItems = _routeItems.filter((i) => i.id !== id);
+  delete: (id: string): void => {
+    _items = _items.filter((i) => i.id !== id);
   },
 };

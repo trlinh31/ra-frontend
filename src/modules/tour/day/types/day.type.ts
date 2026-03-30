@@ -14,6 +14,13 @@ export const SERVICE_TYPE_LABELS: Record<ServiceType, string> = {
 export const CURRENCIES = ["VND", "USD"] as const;
 export type Currency = (typeof CURRENCIES)[number];
 
+export type HotelServiceDetail = {
+  hotelId: string;
+  pricingPeriodId: string;
+  dayGroupId: string;
+  roomTypeId: number;
+};
+
 export type DayService = {
   id: string;
   serviceType: ServiceType;
@@ -22,12 +29,15 @@ export type DayService = {
   unitPrice: number;
   currency: Currency;
   notes: string;
+  hotelDetail?: HotelServiceDetail;
 };
 
 export type Day = {
   id: string;
   code: string;
   title: string;
+  country: string;
+  city: string;
   description: string;
   services: DayService[];
 };

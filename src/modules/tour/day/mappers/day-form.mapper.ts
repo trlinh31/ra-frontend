@@ -5,6 +5,8 @@ export const mapDayDataToFormValues = (data: Day | undefined): DayFormValues => 
   return {
     code: data?.code ?? "",
     title: data?.title ?? "",
+    country: data?.country ?? "",
+    city: data?.city ?? "",
     description: data?.description ?? "",
     services:
       data?.services.map((s) => ({
@@ -14,6 +16,7 @@ export const mapDayDataToFormValues = (data: Day | undefined): DayFormValues => 
         unitPrice: s.unitPrice,
         currency: s.currency,
         notes: s.notes,
+        ...(s.hotelDetail ? { hotelDetail: s.hotelDetail } : {}),
       })) ?? [],
   };
 };
@@ -22,6 +25,8 @@ export const mapDayFormValuesToPayload = (values: DayFormValues): Omit<Day, "id"
   return {
     code: values.code,
     title: values.title,
+    country: values.country,
+    city: values.city,
     description: values.description ?? "",
     services: values.services.map((s, i) => ({
       id: `s${Date.now()}-${i}`,
@@ -31,6 +36,7 @@ export const mapDayFormValuesToPayload = (values: DayFormValues): Omit<Day, "id"
       unitPrice: s.unitPrice,
       currency: s.currency,
       notes: s.notes ?? "",
+      ...(s.hotelDetail ? { hotelDetail: s.hotelDetail } : {}),
     })),
   };
 };

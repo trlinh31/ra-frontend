@@ -1,5 +1,5 @@
 import { PATHS } from "@/app/routes/route.constant";
-import SupplierFilterBar, { type SupplierFilters } from "@/modules/masterData/supplier/components/SupplierFilterBar";
+import SupplierFilterBar from "@/modules/masterData/supplier/components/SupplierFilterBar";
 import { supplierMockStore } from "@/modules/masterData/supplier/data/supplier.mock-store";
 import type { Supplier } from "@/modules/masterData/supplier/types/supplier.type";
 import { AppTable } from "@/shared/components/common/AppTable";
@@ -12,17 +12,24 @@ import { ContainerIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+export const DEFAULT_FILTERS = {
+  name: "",
+  country: "",
+  city: "",
+};
+
 export default function SupplierListPage() {
   const navigate = useNavigate();
   const { confirm } = useConfirm();
 
   const [suppliers, setSuppliers] = useState<Supplier[]>(() => supplierMockStore.getAll());
-  const [filters, setFilters] = useState<SupplierFilters>({ name: "", isActive: "" });
+  const [filters, setFilters] = useState<typeof DEFAULT_FILTERS>(DEFAULT_FILTERS);
 
   const filteredSuppliers = useMemo(() => {
     return suppliers.filter((item) => {
       if (filters.name && !item.name.toLowerCase().includes(filters.name.toLowerCase())) return false;
-      if (filters.isActive !== "" && item.isActive !== (filters.isActive === "true")) return false;
+      if (filters.country && item.country !== filters.country) return false;
+      if (filters.city && item.city !== filters.city) return false;
       return true;
     });
   }, [suppliers, filters]);
@@ -49,9 +56,9 @@ export default function SupplierListPage() {
   const columns: ColumnDef<Supplier>[] = [
     { id: "index", header: "STT", cell: ({ row }) => row.index + 1 },
     { header: "Mã nhà cung cấp", accessorKey: "code" },
-    { header: "Tên nhà cung cấp", accessorKey: "name" },
     { header: "Quốc gia", accessorKey: "country" },
     { header: "Thành phố", accessorKey: "city" },
+    { header: "Tên nhà cung cấp", accessorKey: "name" },
     { header: "Mã số thuế", accessorKey: "taxCode" },
     { header: "Email", accessorKey: "email" },
     { header: "Số điện thoại", accessorKey: "phone" },

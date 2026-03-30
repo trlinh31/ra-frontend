@@ -19,7 +19,8 @@ export default function EditGroupTourPage() {
     } else {
       groupTourMockStore.create(mapGroupTourFormValuesToPayload(values));
     }
-    navigate(PATHS.MASTER_DATA.GROUP_TOUR);
+
+    handleCancel();
   };
 
   const handleCancel = () => navigate(PATHS.MASTER_DATA.GROUP_TOUR);

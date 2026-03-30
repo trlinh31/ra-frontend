@@ -1,6 +1,3 @@
-// import AppButton from "@/shared/components/common/AppButton";
-// import AppPagination from "@/shared/components/common/AppPagination";
-// import AppSelect from "@/shared/components/common/AppSelect";
 import AppPagination from "@/shared/components/common/AppPagination";
 import AppSelect from "@/shared/components/common/AppSelect";
 import { Checkbox } from "@/shared/components/ui/checkbox";
