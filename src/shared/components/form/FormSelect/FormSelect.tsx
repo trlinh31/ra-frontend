@@ -11,35 +11,37 @@ interface FormSelectProps {
   className?: string;
   placeholder?: string;
   disabled?: boolean;
+  onChange?: (value: string | number | SelectOption) => void;
 }
 
-export default function FormSelect({ name, options, label, required = false, className, placeholder, disabled }: FormSelectProps) {
+export default function FormSelect({ name, options, label, required = false, className, placeholder, disabled, onChange }: FormSelectProps) {
   const { control } = useFormContext();
 
   return (
     <Controller
       name={name}
       control={control}
-      render={({ field, fieldState }) => (
-        <Field data-invalid={fieldState.invalid} className={className}>
-          {label && (
-            <FieldLabel htmlFor={name}>
-              {label}
-              {required && <span className='text-red-500'>*</span>}
-            </FieldLabel>
-          )}
+      render={({ field, fieldState }) => {
+        const handleChange = (value: string | number | SelectOption) => {
+          field.onChange(value);
+          onChange?.(value);
+        };
 
-          <AppSelect
-            options={options}
-            value={field.value}
-            onChange={(value) => field.onChange(value)}
-            placeholder={placeholder}
-            disabled={disabled}
-          />
+        return (
+          <Field data-invalid={fieldState.invalid} className={className}>
+            {label && (
+              <FieldLabel htmlFor={name}>
+                {label}
+                {required && <span className='text-red-500'>*</span>}
+              </FieldLabel>
+            )}
 
-          {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-        </Field>
-      )}
+            <AppSelect options={options} value={field.value} onChange={handleChange} placeholder={placeholder} disabled={disabled} />
+
+            {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+          </Field>
+        );
+      }}
     />
   );
 }

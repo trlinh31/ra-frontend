@@ -15,7 +15,6 @@ export const mapDayDataToFormValues = (data: Day | undefined): DayFormValues => 
         quantity: s.quantity,
         unitPrice: s.unitPrice,
         currency: s.currency,
-        notes: s.notes,
         ...(s.hotelDetail ? { hotelDetail: s.hotelDetail } : {}),
       })) ?? [],
   };
@@ -35,7 +34,6 @@ export const mapDayFormValuesToPayload = (values: DayFormValues): Omit<Day, "id"
       quantity: s.quantity,
       unitPrice: s.unitPrice,
       currency: s.currency,
-      notes: s.notes ?? "",
       ...(s.hotelDetail ? { hotelDetail: s.hotelDetail } : {}),
     })),
   };

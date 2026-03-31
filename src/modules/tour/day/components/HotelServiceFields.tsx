@@ -1,37 +1,37 @@
+import { useCities } from "@/modules/masterData/country/hooks/useCities";
+import { useCountries } from "@/modules/masterData/country/hooks/useCountries";
 import { hotelMockStore } from "@/modules/masterData/hotel/data/hotel.mock-store";
+import type { DayFormValues } from "@/modules/tour/day/schemas/day.schema";
 import AppSelect from "@/shared/components/common/AppSelect";
-import { Field, FieldError, FieldLabel } from "@/shared/components/ui/field";
+import FormSelect from "@/shared/components/form/FormSelect";
+import { Field, FieldLabel } from "@/shared/components/ui/field";
+import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Controller, useFormContext, useWatch } from "react-hook-form";
+import { useFormContext, useWatch } from "react-hook-form";
 
 interface HotelServiceFieldsProps {
   index: number;
 }
 
 export default function HotelServiceFields({ index }: HotelServiceFieldsProps) {
-  const { control, setValue } = useFormContext();
+  const { control, setValue } = useFormContext<DayFormValues>();
 
   const [filterCountry, setFilterCountry] = useState("");
   const [filterCity, setFilterCity] = useState("");
   const [filterRate, setFilterRate] = useState("");
 
-  const hotelId = useWatch({ control, name: `services.${index}.hotelDetail.hotelId` }) as string;
-  const pricingPeriodId = useWatch({ control, name: `services.${index}.hotelDetail.pricingPeriodId` }) as string;
-  const dayGroupId = useWatch({ control, name: `services.${index}.hotelDetail.dayGroupId` }) as string;
-  const roomTypeId = useWatch({ control, name: `services.${index}.hotelDetail.roomTypeId` }) as number;
+  const hotelId = useWatch({ control, name: `services.${index}.hotelDetail.hotelId` });
+  const pricingPeriodId = useWatch({ control, name: `services.${index}.hotelDetail.pricingPeriodId` });
+  const dayGroupId = useWatch({ control, name: `services.${index}.hotelDetail.dayGroupId` });
+  const roomTypeId = useWatch({ control, name: `services.${index}.hotelDetail.roomTypeId` });
 
   const allHotels = useMemo(() => hotelMockStore.getAll(), []);
 
-  const countryOptions = useMemo(() => {
-    const countries = [...new Set(allHotels.map((h) => h.country))];
-    return countries.map((c) => ({ label: c, value: c }));
-  }, [allHotels]);
+  const { data: countries = [] } = useCountries();
+  const countryOptions = useMemo(() => countries.map((c) => ({ label: c.country, value: c.country })), [countries]);
 
-  const cityOptions = useMemo(() => {
-    if (!filterCountry) return [];
-    const cities = [...new Set(allHotels.filter((h) => h.country === filterCountry).map((h) => h.city))];
-    return cities.map((c) => ({ label: c, value: c }));
-  }, [allHotels, filterCountry]);
+  const { data: cities = [] } = useCities(filterCountry);
+  const cityOptions = useMemo(() => cities.map((city) => ({ label: city, value: city })), [cities]);
 
   const rateOptions = useMemo(() => {
     let hotels = allHotels;
@@ -58,19 +58,19 @@ export default function HotelServiceFields({ index }: HotelServiceFieldsProps) {
 
   const selectedPeriod = useMemo(() => selectedHotel?.pricingPeriods.find((p) => p.id === pricingPeriodId), [selectedHotel, pricingPeriodId]);
 
-  const dayGroupOptions = useMemo(() => {
-    if (!selectedPeriod) return [];
-    return selectedPeriod.dayGroups.map((g) => ({ label: g.label, value: g.id }));
-  }, [selectedPeriod]);
-
   const roomTypeOptions = useMemo(() => {
     if (!selectedHotel) return [];
     return selectedHotel.roomTypes.map((rt) => ({ label: rt.name, value: String(rt.id) }));
   }, [selectedHotel]);
 
+  const dayGroupOptions = useMemo(() => {
+    if (!selectedPeriod) return [];
+    return selectedPeriod.dayGroups.map((g) => ({ label: g.label, value: g.id }));
+  }, [selectedPeriod]);
+
   const computedPrice = useMemo(() => {
     if (!selectedPeriod || !dayGroupId || !roomTypeId) return null;
-    const pricing = selectedPeriod.prices.find((p) => p.roomTypeId === roomTypeId);
+    const pricing = selectedPeriod.prices.find((p) => String(p.roomTypeId) === roomTypeId);
     if (!pricing) return null;
     const dgPrice = pricing.dayGroupPrices.find((dgp) => dgp.dayGroupId === dayGroupId);
     if (!dgPrice) return null;
@@ -78,25 +78,30 @@ export default function HotelServiceFields({ index }: HotelServiceFieldsProps) {
   }, [selectedPeriod, dayGroupId, roomTypeId]);
 
   const prevPriceKeyRef = useRef<string | null>(null);
+
   useEffect(() => {
     const key = computedPrice ? `${computedPrice.price}-${computedPrice.currency}` : null;
     if (key === prevPriceKeyRef.current) return;
     prevPriceKeyRef.current = key;
-
     if (computedPrice) {
       setValue(`services.${index}.unitPrice`, computedPrice.price, { shouldValidate: true });
       setValue(`services.${index}.currency`, computedPrice.currency, { shouldValidate: true });
     } else {
       setValue(`services.${index}.unitPrice`, 0);
+      setValue(`services.${index}.currency`, "");
     }
   }, [computedPrice, index, setValue]);
 
   const prevHotelIdRef = useRef<string | undefined>(undefined);
+
   useEffect(() => {
     if (hotelId === prevHotelIdRef.current) return;
     prevHotelIdRef.current = hotelId;
     if (selectedHotel) {
       setValue(`services.${index}.name`, selectedHotel.name);
+      setFilterCountry(selectedHotel.country);
+      setFilterCity(selectedHotel.city);
+      setFilterRate(selectedHotel.rate);
     }
   }, [selectedHotel, hotelId, index, setValue]);
 
@@ -106,7 +111,7 @@ export default function HotelServiceFields({ index }: HotelServiceFieldsProps) {
     }
     setValue(`services.${index}.hotelDetail.pricingPeriodId`, "");
     setValue(`services.${index}.hotelDetail.dayGroupId`, "");
-    setValue(`services.${index}.hotelDetail.roomTypeId`, 0);
+    setValue(`services.${index}.hotelDetail.roomTypeId`, "");
   };
 
   return (
@@ -158,97 +163,40 @@ export default function HotelServiceFields({ index }: HotelServiceFieldsProps) {
       </div>
 
       <div className='gap-3 grid grid-cols-1 sm:grid-cols-2'>
-        <Controller
-          control={control}
+        <FormSelect
           name={`services.${index}.hotelDetail.hotelId`}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel>
-                Khách sạn <span className='text-red-500'>*</span>
-              </FieldLabel>
-              <AppSelect
-                options={hotelOptions}
-                value={field.value || ""}
-                onChange={(v) => {
-                  field.onChange(v);
-                  setValue(`services.${index}.hotelDetail.pricingPeriodId`, "");
-                  setValue(`services.${index}.hotelDetail.dayGroupId`, "");
-                  setValue(`services.${index}.hotelDetail.roomTypeId`, 0);
-                }}
-                placeholder='Chọn khách sạn'
-                disabled={!filterCountry}
-              />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
+          label='Khách sạn'
+          options={hotelOptions}
+          onChange={() => {
+            setValue(`services.${index}.hotelDetail.pricingPeriodId`, "");
+            setValue(`services.${index}.hotelDetail.dayGroupId`, "");
+            setValue(`services.${index}.hotelDetail.roomTypeId`, "");
+          }}
+          placeholder='Chọn khách sạn'
         />
 
-        <Controller
-          control={control}
+        <FormSelect
           name={`services.${index}.hotelDetail.pricingPeriodId`}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel>
-                Khoảng ngày <span className='text-red-500'>*</span>
-              </FieldLabel>
-              <AppSelect
-                options={pricingPeriodOptions}
-                value={field.value || ""}
-                onChange={(v) => {
-                  field.onChange(v);
-                  setValue(`services.${index}.hotelDetail.dayGroupId`, "");
-                  setValue(`services.${index}.hotelDetail.roomTypeId`, 0);
-                }}
-                placeholder='Chọn khoảng ngày'
-                disabled={!hotelId}
-              />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
+          label='Khoảng ngày'
+          options={pricingPeriodOptions}
+          onChange={() => {
+            setValue(`services.${index}.hotelDetail.dayGroupId`, "");
+            setValue(`services.${index}.hotelDetail.roomTypeId`, "");
+          }}
+          placeholder='Chọn khoảng ngày'
         />
       </div>
 
       <div className='gap-3 grid grid-cols-1 sm:grid-cols-2'>
-        <Controller
-          control={control}
-          name={`services.${index}.hotelDetail.dayGroupId`}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel>
-                Nhóm ngày <span className='text-red-500'>*</span>
-              </FieldLabel>
-              <AppSelect
-                options={dayGroupOptions}
-                value={field.value || ""}
-                onChange={field.onChange}
-                placeholder='Chọn nhóm ngày'
-                disabled={!pricingPeriodId}
-              />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-
-        <Controller
-          control={control}
-          name={`services.${index}.hotelDetail.roomTypeId`}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel>
-                Hạng phòng <span className='text-red-500'>*</span>
-              </FieldLabel>
-              <AppSelect
-                options={roomTypeOptions}
-                value={field.value ? String(field.value) : ""}
-                onChange={(v) => field.onChange(v ? Number(v) : 0)}
-                placeholder='Chọn hạng phòng'
-                disabled={!pricingPeriodId}
-              />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
+        <FormSelect name={`services.${index}.hotelDetail.roomTypeId`} label='Hạng phòng' options={roomTypeOptions} placeholder='Chọn hạng phòng' />
+        <FormSelect name={`services.${index}.hotelDetail.dayGroupId`} label='Nhóm ngày' options={dayGroupOptions} placeholder='Chọn nhóm ngày' />
       </div>
+
+      {computedPrice && (
+        <p className='font-semibold text-green-600 text-lg'>
+          Giá: {formatNumberVN(computedPrice.price)} {computedPrice.currency}
+        </p>
+      )}
     </div>
   );
 }

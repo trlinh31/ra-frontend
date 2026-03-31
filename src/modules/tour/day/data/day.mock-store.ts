@@ -1,41 +1,27 @@
-import type { Day } from "../types/day.type";
+import { ServiceType, type Day } from "../types/day.type";
 
 let _days: Day[] = [
   {
     id: "day1",
     code: "HN-01",
-    title: "Hà Nội - Khởi hành",
+    title: "Day 1 - Hà Nội",
     country: "Vietnam",
     city: "Hanoi",
-    description: "Ngày đầu đón khách tại Hà Nội, nhận phòng và tham quan nội thành",
+    description: "",
     services: [
-      { id: "s1", serviceType: "transport", name: "TRANSR1 - Hanoi → Hanoi (16 chỗ)", quantity: 1, unitPrice: 30000000, currency: "VND", notes: "" },
-      { id: "s2", serviceType: "hotel", name: "Khách sạn Ánh Dương", quantity: 1, unitPrice: 500000, currency: "VND", notes: "Bao gồm ăn sáng" },
-      { id: "s3", serviceType: "flight", name: "VNA-HAN-DAD", quantity: 1, unitPrice: 150000, currency: "VND", notes: "" },
-    ],
-  },
-  {
-    id: "day2",
-    code: "HAL-01",
-    title: "Hạ Long - Tham quan vịnh",
-    country: "Vietnam",
-    city: "Ha Long",
-    description: "Di chuyển từ Hà Nội xuống Hạ Long, tham quan vịnh bằng thuyền",
-    services: [
-      { id: "s4", serviceType: "transport", name: "TRANSR1 - Hanoi → Hanoi (16 chỗ)", quantity: 1, unitPrice: 30000000, currency: "VND", notes: "" },
-      { id: "s5", serviceType: "hotel", name: "Khách sạn Ánh Dương", quantity: 1, unitPrice: 500000, currency: "VND", notes: "Bao gồm ăn sáng" },
-    ],
-  },
-  {
-    id: "day3",
-    code: "HN-02",
-    title: "Hà Nội - Kết thúc",
-    country: "Vietnam",
-    city: "Hanoi",
-    description: "Trở về Hà Nội, tiễn khách tại sân bay",
-    services: [
-      { id: "s6", serviceType: "transport", name: "TRANSR1 - Hanoi → Hanoi (16 chỗ)", quantity: 1, unitPrice: 30000000, currency: "VND", notes: "" },
-      { id: "s7", serviceType: "flight", name: "VNA-HAN-DAD", quantity: 1, unitPrice: 150000, currency: "VND", notes: "" },
+      {
+        id: "service1",
+        serviceType: ServiceType.HOTEL,
+        name: "Khách sạn Ánh Dương",
+        unitPrice: 850000,
+        currency: "VND",
+        hotelDetail: {
+          hotelId: "1",
+          pricingPeriodId: "1",
+          dayGroupId: "2",
+          roomTypeId: "1",
+        },
+      },
     ],
   },
 ];

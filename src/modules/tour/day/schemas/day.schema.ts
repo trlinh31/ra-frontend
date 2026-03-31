@@ -1,19 +1,19 @@
+import { ServiceType } from "@/modules/tour/day/types/day.type";
 import { z } from "zod";
-import { CURRENCIES, SERVICE_TYPES } from "../types/day.type";
 
 export const hotelServiceDetailSchema = z.object({
   hotelId: z.string().min(1, "Vui lòng chọn khách sạn"),
   pricingPeriodId: z.string().min(1, "Vui lòng chọn giai đoạn giá"),
   dayGroupId: z.string().min(1, "Vui lòng chọn nhóm ngày"),
-  roomTypeId: z.number({ error: "Vui lòng chọn hạng phòng" }).min(1, "Vui lòng chọn hạng phòng"),
+  roomTypeId: z.string().min(1, "Vui lòng chọn hạng phòng"),
 });
 
 export const dayServiceSchema = z.object({
-  serviceType: z.enum(SERVICE_TYPES, { error: "Vui lòng chọn loại dịch vụ" }),
+  serviceType: z.enum(ServiceType, { error: "Vui lòng chọn loại dịch vụ" }),
   name: z.string().min(1, "Vui lòng nhập tên dịch vụ"),
   quantity: z.number({ error: "Vui lòng nhập số lượng" }).min(1, "Tối thiểu 1"),
   unitPrice: z.number({ error: "Vui lòng nhập đơn giá" }).min(0, "Giá không được âm"),
-  currency: z.enum(CURRENCIES),
+  currency: z.string().min(1, "Vui lòng chọn loại tiền tệ"),
   notes: z.string(),
   hotelDetail: hotelServiceDetailSchema.optional(),
 });

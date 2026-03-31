@@ -1,7 +1,6 @@
 import { PATHS } from "@/app/routes/route.constant";
 import DayForm from "@/modules/tour/day/components/DayForm";
 import { dayMockStore } from "@/modules/tour/day/data/day.mock-store";
-import { mapDayFormValuesToPayload } from "@/modules/tour/day/mappers/day-form.mapper";
 import type { DayFormValues } from "@/modules/tour/day/schemas/day.schema";
 import PageHeader from "@/shared/components/common/PageHeader";
 import { Button } from "@/shared/components/ui/button";
@@ -15,15 +14,14 @@ export default function EditDayPage() {
   const isEdit = Boolean(id);
   const day = id ? dayMockStore.getById(id) : undefined;
 
-  console.log("day :>> ", day);
-
   const handleSubmit = (values: DayFormValues) => {
-    if (isEdit && id) {
-      dayMockStore.update(id, mapDayFormValuesToPayload(values));
-    } else {
-      dayMockStore.create(mapDayFormValuesToPayload(values));
-    }
-    handleCancel();
+    // if (isEdit && id) {
+    //   dayMockStore.update(id, mapDayFormValuesToPayload(values));
+    // } else {
+    //   dayMockStore.create(mapDayFormValuesToPayload(values));
+    // }
+    // handleCancel();
+    console.log("values", values);
   };
 
   const handleCancel = () => navigate(PATHS.TOUR.DAYS);
