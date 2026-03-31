@@ -8,10 +8,8 @@ import DayServiceRow from "./DayServiceRow";
 const DEFAULT_HOTEL_SERVICE: DayServiceFormValues = {
   serviceType: ServiceType.HOTEL,
   name: "",
-  quantity: 1,
   unitPrice: 0,
   currency: "",
-  notes: "",
   hotelDetail: {
     hotelId: "",
     pricingPeriodId: "",

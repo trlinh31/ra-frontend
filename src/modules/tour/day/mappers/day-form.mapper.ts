@@ -12,7 +12,6 @@ export const mapDayDataToFormValues = (data: Day | undefined): DayFormValues => 
       data?.services.map((s) => ({
         serviceType: s.serviceType,
         name: s.name,
-        quantity: s.quantity,
         unitPrice: s.unitPrice,
         currency: s.currency,
         ...(s.hotelDetail ? { hotelDetail: s.hotelDetail } : {}),
@@ -20,21 +19,21 @@ export const mapDayDataToFormValues = (data: Day | undefined): DayFormValues => 
   };
 };
 
-export const mapDayFormValuesToPayload = (values: DayFormValues): Omit<Day, "id"> => {
+export const mapDayFormValuesToPayload = (values: DayFormValues) => {
   return {
-    code: values.code,
-    title: values.title,
-    country: values.country,
-    city: values.city,
-    description: values.description ?? "",
-    services: values.services.map((s, i) => ({
-      id: `s${Date.now()}-${i}`,
-      serviceType: s.serviceType,
-      name: s.name,
-      quantity: s.quantity,
-      unitPrice: s.unitPrice,
-      currency: s.currency,
-      ...(s.hotelDetail ? { hotelDetail: s.hotelDetail } : {}),
-    })),
+    // code: values.code,
+    // title: values.title,
+    // country: values.country,
+    // city: values.city,
+    // description: values.description ?? "",
+    // services: values.services.map((s, i) => ({
+    //   id: `s${Date.now()}-${i}`,
+    //   serviceType: s.serviceType,
+    //   name: s.name,
+    //   quantity: s.quantity,
+    //   unitPrice: s.unitPrice,
+    //   currency: s.currency,
+    //   ...(s.hotelDetail ? { hotelDetail: s.hotelDetail } : {}),
+    // })),
   };
 };
