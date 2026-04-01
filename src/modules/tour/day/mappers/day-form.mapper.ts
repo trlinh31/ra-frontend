@@ -19,7 +19,7 @@ export const mapDayDataToFormValues = (data: Day | undefined): DayFormValues => 
   };
 };
 
-export const mapDayFormValuesToPayload = (values: DayFormValues): Omit<Day, "id"> => {
+export const mapDayFormValuesToPayload = (values: DayFormValues) => {
   return {
     code: values.code,
     title: values.title,

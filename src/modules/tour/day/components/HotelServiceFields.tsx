@@ -114,6 +114,10 @@ export default function HotelServiceFields({ index }: HotelServiceFieldsProps) {
     setValue(`services.${index}.hotelDetail.roomTypeId`, "");
   };
 
+  useEffect(() => {
+    console.log(`[${index}] filterCountry:`, filterCountry);
+  }, [filterCountry, index]);
+
   return (
     <div className='space-y-3 mt-1 pt-3 border-t'>
       <div className='gap-3 grid grid-cols-1 sm:grid-cols-3'>
