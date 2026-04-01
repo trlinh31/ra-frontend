@@ -1,13 +1,5 @@
-import { mapTourDataToFormValues } from "@/modules/tour/tour/mappers/tour-form.mapper";
-import { tourSchema, type TourFormValues } from "@/modules/tour/tour/schemas/tour.schema";
+import { type TourFormValues } from "@/modules/tour/tour/schemas/tour.schema";
 import type { Tour } from "@/modules/tour/tour/types/tour.type";
-import FormInput from "@/shared/components/form/FormInput";
-import FormTextarea from "@/shared/components/form/FormTextarea";
-import { Button } from "@/shared/components/ui/button";
-import { Form } from "@/shared/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Save } from "lucide-react";
-import { useForm } from "react-hook-form";
 
 interface TourFormProps {
   defaultValues?: Tour | undefined;
@@ -32,9 +24,11 @@ export default function TourForm({ defaultValues, onSubmit, onCancel, isSubmitti
     //       <FormTextarea name='description' label='Mô tả' className='sm:col-span-2' />
     //     </div>
 
-        {/* <Section title='Lịch trình ngày'>
+    {
+      /* <Section title='Lịch trình ngày'>
           <TourDayForm />
-        </Section> */}
+        </Section> */
+    }
 
     //     <div className='flex justify-start gap-3'>
     //       <Button type='button' variant='outline' size='lg' onClick={onCancel}>
@@ -47,6 +41,5 @@ export default function TourForm({ defaultValues, onSubmit, onCancel, isSubmitti
     //     </div>
     //   </form>
     // </Form>
-    <></>
   );
 }
