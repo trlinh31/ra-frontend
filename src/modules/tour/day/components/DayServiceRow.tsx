@@ -5,6 +5,7 @@ import ActionButton from "@/shared/components/table/ActionButton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { Controller, useFormContext } from "react-hook-form";
 import HotelServiceFields from "./HotelServiceFields";
+import TransportServiceFields from "./TransportServiceFields";
 
 interface DayServiceRowProps {
   index: number;
@@ -37,6 +38,10 @@ export default function DayServiceRow({ index, onRemove }: DayServiceRowProps) {
 
             <TabsContent value={ServiceType.HOTEL}>
               <HotelServiceFields index={index} />
+            </TabsContent>
+
+            <TabsContent value={ServiceType.TRANSPORT}>
+              <TransportServiceFields index={index} />
             </TabsContent>
           </Tabs>
         )}

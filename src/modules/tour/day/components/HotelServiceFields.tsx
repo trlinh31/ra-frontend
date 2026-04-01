@@ -115,8 +115,8 @@ export default function HotelServiceFields({ index }: HotelServiceFieldsProps) {
   };
 
   useEffect(() => {
-    console.log(`[${index}] filterCountry:`, filterCountry);
-  }, [filterCountry, index]);
+    console.log(selectedHotel);
+  }, [selectedHotel]);
 
   return (
     <div className='space-y-3 mt-1 pt-3 border-t'>
@@ -127,6 +127,7 @@ export default function HotelServiceFields({ index }: HotelServiceFieldsProps) {
             options={countryOptions}
             value={filterCountry}
             onChange={(v) => {
+              console.log("123", 123);
               setFilterCountry(v);
               setFilterCity("");
               setFilterRate("");

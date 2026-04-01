@@ -16,6 +16,10 @@ const DEFAULT_HOTEL_SERVICE: DayServiceFormValues = {
     dayGroupId: "",
     roomTypeId: "",
   },
+  transportDetail: {
+    transportId: "",
+    capacity: "",
+  },
 };
 
 export default function DayServicesSection() {

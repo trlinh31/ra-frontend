@@ -15,6 +15,7 @@ export const mapDayDataToFormValues = (data: Day | undefined): DayFormValues => 
         unitPrice: s.unitPrice,
         currency: s.currency,
         ...(s.hotelDetail ? { hotelDetail: s.hotelDetail } : {}),
+        ...(s.transportDetail ? { transportDetail: s.transportDetail } : {}),
       })) ?? [],
   };
 };
@@ -33,6 +34,7 @@ export const mapDayFormValuesToPayload = (values: DayFormValues) => {
       unitPrice: s.unitPrice,
       currency: s.currency,
       ...(s.hotelDetail ? { hotelDetail: s.hotelDetail } : {}),
+      ...(s.transportDetail ? { transportDetail: s.transportDetail } : {}),
     })),
   };
 };

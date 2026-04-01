@@ -35,7 +35,10 @@ export default function AppSelect({
 
   return (
     <Select
-      onValueChange={onChange}
+      onValueChange={(v) => {
+        if (!v && value) return;
+        onChange?.(v);
+      }}
       value={value}
       disabled={disabled}
       onOpenChange={(open) => {

@@ -53,6 +53,10 @@ export type DayService = {
     dayGroupId: string;
     roomTypeId: string;
   };
+  transportDetail?: {
+    transportId: string;
+    capacity: string;
+  };
 };
 
 export type Day = {
