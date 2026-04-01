@@ -12,7 +12,6 @@ export const mapDayDataToFormValues = (data: Day | undefined): DayFormValues => 
       data?.services.map((s) => ({
         serviceType: s.serviceType,
         name: s.name,
-        quantity: s.quantity,
         unitPrice: s.unitPrice,
         currency: s.currency,
         ...(s.hotelDetail ? { hotelDetail: s.hotelDetail } : {}),
@@ -31,7 +30,6 @@ export const mapDayFormValuesToPayload = (values: DayFormValues): Omit<Day, "id"
       id: `s${Date.now()}-${i}`,
       serviceType: s.serviceType,
       name: s.name,
-      quantity: s.quantity,
       unitPrice: s.unitPrice,
       currency: s.currency,
       ...(s.hotelDetail ? { hotelDetail: s.hotelDetail } : {}),

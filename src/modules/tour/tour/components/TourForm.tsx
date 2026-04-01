@@ -1,8 +1,6 @@
-import TourDayForm from "@/modules/tour/tour/components/TourDayForm";
 import { mapTourDataToFormValues } from "@/modules/tour/tour/mappers/tour-form.mapper";
 import { tourSchema, type TourFormValues } from "@/modules/tour/tour/schemas/tour.schema";
 import type { Tour } from "@/modules/tour/tour/types/tour.type";
-import Section from "@/shared/components/common/Section";
 import FormInput from "@/shared/components/form/FormInput";
 import FormTextarea from "@/shared/components/form/FormTextarea";
 import { Button } from "@/shared/components/ui/button";
@@ -34,9 +32,9 @@ export default function TourForm({ defaultValues, onSubmit, onCancel, isSubmitti
           <FormTextarea name='description' label='Mô tả' className='sm:col-span-2' />
         </div>
 
-        <Section title='Lịch trình ngày'>
+        {/* <Section title='Lịch trình ngày'>
           <TourDayForm />
-        </Section>
+        </Section> */}
 
         <div className='flex justify-start gap-3'>
           <Button type='button' variant='outline' size='lg' onClick={onCancel}>

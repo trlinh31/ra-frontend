@@ -11,10 +11,8 @@ export const hotelServiceDetailSchema = z.object({
 export const dayServiceSchema = z.object({
   serviceType: z.enum(ServiceType, { error: "Vui lòng chọn loại dịch vụ" }),
   name: z.string().min(1, "Vui lòng nhập tên dịch vụ"),
-  quantity: z.number({ error: "Vui lòng nhập số lượng" }).min(1, "Tối thiểu 1"),
   unitPrice: z.number({ error: "Vui lòng nhập đơn giá" }).min(0, "Giá không được âm"),
   currency: z.string().min(1, "Vui lòng chọn loại tiền tệ"),
-  notes: z.string(),
   hotelDetail: hotelServiceDetailSchema.optional(),
 });
 
