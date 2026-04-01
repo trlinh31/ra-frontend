@@ -1,5 +1,4 @@
 import { PATHS } from "@/app/routes/route.constant";
-import TourForm from "@/modules/tour/tour/components/TourForm";
 import { tourMockStore } from "@/modules/tour/tour/data/tour.mock-store";
 import { mapTourFormValuesToPayload } from "@/modules/tour/tour/mappers/tour-form.mapper";
 import type { TourFormValues } from "@/modules/tour/tour/schemas/tour.schema";
@@ -44,7 +43,7 @@ export default function EditTourPage() {
         title={isEdit ? "Cập nhật Tour" : "Thêm mới Tour"}
         description={isEdit ? `Cập nhật thông tin tour ${tour?.code} - ${tour?.name}` : "Điền thông tin để tạo mới tour du lịch"}
       />
-      <TourForm defaultValues={tour} onSubmit={handleSubmit} onCancel={handleCancel} isEdit={isEdit} />
+      {/* <TourForm defaultValues={tour} onSubmit={handleSubmit} onCancel={handleCancel} isEdit={isEdit} /> */}
     </div>
   );
 }
