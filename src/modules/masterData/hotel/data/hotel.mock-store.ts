@@ -19,31 +19,13 @@ const initialHotels: Hotel[] = [
         id: "1",
         label: "2026-01-01 - 2026-03-31",
         currency: "VND",
-        dateRanges: [{ from: "2026-01-01", to: "2026-03-31" }],
-        dayGroups: [
-          { id: "1", label: "T2-T6", days: [1, 2, 3, 4, 5] },
-          { id: "2", label: "T7-CN", days: [6, 0] },
-        ],
-        prices: [
+        dateRanges: [
           {
-            roomTypeId: 1,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 700000 },
-              { dayGroupId: "2", price: 850000 },
-            ],
-          },
-          {
-            roomTypeId: 2,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 1050000 },
-              { dayGroupId: "2", price: 1300000 },
-            ],
-          },
-          {
-            roomTypeId: 3,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 3000000 },
-              { dayGroupId: "2", price: 3600000 },
+            from: "2026-01-01",
+            to: "2026-03-31",
+            dayGroups: [
+              { id: "1", label: "T2-T6", days: [1, 2, 3, 4, 5], price: 700000, roomTypeId: 1 },
+              { id: "2", label: "T7-CN", days: [6, 0], price: 850000, roomTypeId: 1 },
             ],
           },
         ],
@@ -52,31 +34,13 @@ const initialHotels: Hotel[] = [
         id: "2",
         label: "2026-04-01 - 2026-06-30",
         currency: "VND",
-        dateRanges: [{ from: "2026-04-01", to: "2026-06-30" }],
-        dayGroups: [
-          { id: "1", label: "T2-T6", days: [1, 2, 3, 4, 5] },
-          { id: "2", label: "T7-CN", days: [6, 0] },
-        ],
-        prices: [
+        dateRanges: [
           {
-            roomTypeId: 1,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 800000 },
-              { dayGroupId: "2", price: 950000 },
-            ],
-          },
-          {
-            roomTypeId: 2,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 1200000 },
-              { dayGroupId: "2", price: 1500000 },
-            ],
-          },
-          {
-            roomTypeId: 3,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 3500000 },
-              { dayGroupId: "2", price: 4200000 },
+            from: "2026-04-01",
+            to: "2026-06-30",
+            dayGroups: [
+              { id: "1", label: "T2-T6", days: [1, 2, 3, 4, 5], price: 800000, roomTypeId: 1 },
+              { id: "2", label: "T7-CN", days: [6, 0], price: 950000, roomTypeId: 1 },
             ],
           },
         ],
@@ -85,31 +49,13 @@ const initialHotels: Hotel[] = [
         id: "3",
         label: "2026-07-01 - 2026-09-30",
         currency: "VND",
-        dateRanges: [{ from: "2026-07-01", to: "2026-09-30" }],
-        dayGroups: [
-          { id: "1", label: "T2-T6", days: [1, 2, 3, 4, 5] },
-          { id: "2", label: "T7-CN", days: [6, 0] },
-        ],
-        prices: [
+        dateRanges: [
           {
-            roomTypeId: 1,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 850000 },
-              { dayGroupId: "2", price: 1000000 },
-            ],
-          },
-          {
-            roomTypeId: 2,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 1300000 },
-              { dayGroupId: "2", price: 1600000 },
-            ],
-          },
-          {
-            roomTypeId: 3,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 3800000 },
-              { dayGroupId: "2", price: 4500000 },
+            from: "2026-07-01",
+            to: "2026-09-30",
+            dayGroups: [
+              { id: "1", label: "T2-T6", days: [1, 2, 3, 4, 5], price: 850000, roomTypeId: 1 },
+              { id: "2", label: "T7-CN", days: [6, 0], price: 1000000, roomTypeId: 1 },
             ],
           },
         ],
@@ -118,31 +64,13 @@ const initialHotels: Hotel[] = [
         id: "4",
         label: "2026-10-01 - 2026-12-31",
         currency: "VND",
-        dateRanges: [{ from: "2026-10-01", to: "2026-12-31" }],
-        dayGroups: [
-          { id: "1", label: "T2-T6", days: [1, 2, 3, 4, 5] },
-          { id: "2", label: "T7-CN", days: [6, 0] },
-        ],
-        prices: [
+        dateRanges: [
           {
-            roomTypeId: 1,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 820000 },
-              { dayGroupId: "2", price: 980000 },
-            ],
-          },
-          {
-            roomTypeId: 2,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 1250000 },
-              { dayGroupId: "2", price: 1550000 },
-            ],
-          },
-          {
-            roomTypeId: 3,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 3600000 },
-              { dayGroupId: "2", price: 4300000 },
+            from: "2026-10-01",
+            to: "2026-12-31",
+            dayGroups: [
+              { id: "1", label: "T2-T6", days: [1, 2, 3, 4, 5], price: 820000, roomTypeId: 1 },
+              { id: "2", label: "T7-CN", days: [6, 0], price: 980000, roomTypeId: 1 },
             ],
           },
         ],
@@ -169,24 +97,13 @@ const initialHotels: Hotel[] = [
         id: "1",
         label: "2026-04-01 - 2026-09-30",
         currency: "VND",
-        dateRanges: [{ from: "2026-04-01", to: "2026-09-30" }],
-        dayGroups: [
-          { id: "1", label: "T2-T6", days: [1, 2, 3, 4, 5] },
-          { id: "2", label: "T7-CN", days: [6, 0] },
-        ],
-        prices: [
+        dateRanges: [
           {
-            roomTypeId: 1,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 950000 },
-              { dayGroupId: "2", price: 1100000 },
-            ],
-          },
-          {
-            roomTypeId: 2,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 1400000 },
-              { dayGroupId: "2", price: 1700000 },
+            from: "2026-04-01",
+            to: "2026-09-30",
+            dayGroups: [
+              { id: "1", label: "T2-T6", days: [1, 2, 3, 4, 5], price: 950000, roomTypeId: 1 },
+              { id: "2", label: "T7-CN", days: [6, 0], price: 1100000, roomTypeId: 1 },
             ],
           },
         ],
@@ -214,31 +131,13 @@ const initialHotels: Hotel[] = [
         id: "1",
         label: "2026-04-01 - 2026-08-31 (Mùa cao điểm)",
         currency: "VND",
-        dateRanges: [{ from: "2026-04-01", to: "2026-08-31" }],
-        dayGroups: [
-          { id: "1", label: "T2-T5", days: [1, 2, 3, 4] },
-          { id: "2", label: "T6-CN", days: [5, 6, 0] },
-        ],
-        prices: [
+        dateRanges: [
           {
-            roomTypeId: 1,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 2200000 },
-              { dayGroupId: "2", price: 2800000 },
-            ],
-          },
-          {
-            roomTypeId: 2,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 1800000 },
-              { dayGroupId: "2", price: 2200000 },
-            ],
-          },
-          {
-            roomTypeId: 3,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 4500000 },
-              { dayGroupId: "2", price: 5500000 },
+            from: "2026-04-01",
+            to: "2026-08-31",
+            dayGroups: [
+              { id: "1", label: "T2-T5", days: [1, 2, 3, 4], price: 2200000, roomTypeId: 1 },
+              { id: "2", label: "T6-CN", days: [5, 6, 0], price: 2800000, roomTypeId: 1 },
             ],
           },
         ],
@@ -247,31 +146,13 @@ const initialHotels: Hotel[] = [
         id: "2",
         label: "2026-09-01 - 2026-12-31 (Mùa thấp điểm)",
         currency: "VND",
-        dateRanges: [{ from: "2026-09-01", to: "2026-12-31" }],
-        dayGroups: [
-          { id: "1", label: "T2-T5", days: [1, 2, 3, 4] },
-          { id: "2", label: "T6-CN", days: [5, 6, 0] },
-        ],
-        prices: [
+        dateRanges: [
           {
-            roomTypeId: 1,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 1600000 },
-              { dayGroupId: "2", price: 2000000 },
-            ],
-          },
-          {
-            roomTypeId: 2,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 1300000 },
-              { dayGroupId: "2", price: 1600000 },
-            ],
-          },
-          {
-            roomTypeId: 3,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 3200000 },
-              { dayGroupId: "2", price: 3900000 },
+            from: "2026-09-01",
+            to: "2026-12-31",
+            dayGroups: [
+              { id: "1", label: "T2-T5", days: [1, 2, 3, 4], price: 1600000, roomTypeId: 1 },
+              { id: "2", label: "T6-CN", days: [5, 6, 0], price: 2000000, roomTypeId: 1 },
             ],
           },
         ],
@@ -281,22 +162,15 @@ const initialHotels: Hotel[] = [
         label: "2026-12-24 - 2026-12-26, 2026-12-31 - 2027-01-02 (Lễ Giáng sinh & Tết Dương lịch)",
         currency: "VND",
         dateRanges: [
-          { from: "2026-12-24", to: "2026-12-26" },
-          { from: "2026-12-31", to: "2027-01-02" },
-        ],
-        dayGroups: [{ id: "1", label: "Tất cả ngày lễ", days: [0, 1, 2, 3, 4, 5, 6] }],
-        prices: [
           {
-            roomTypeId: 1,
-            dayGroupPrices: [{ dayGroupId: "1", price: 3500000 }],
+            from: "2026-12-24",
+            to: "2026-12-26",
+            dayGroups: [{ id: "1", label: "Tất cả ngày lễ", days: [0, 1, 2, 3, 4, 5, 6], price: 3500000, roomTypeId: 1 }],
           },
           {
-            roomTypeId: 2,
-            dayGroupPrices: [{ dayGroupId: "1", price: 2800000 }],
-          },
-          {
-            roomTypeId: 3,
-            dayGroupPrices: [{ dayGroupId: "1", price: 8000000 }],
+            from: "2026-12-31",
+            to: "2027-01-02",
+            dayGroups: [{ id: "1", label: "Tất cả ngày lễ", days: [0, 1, 2, 3, 4, 5, 6], price: 3500000, roomTypeId: 1 }],
           },
         ],
       },
@@ -322,11 +196,12 @@ const initialHotels: Hotel[] = [
         id: "1",
         label: "2026-04-01 - 2026-12-31",
         currency: "VND",
-        dateRanges: [{ from: "2026-04-01", to: "2026-12-31" }],
-        dayGroups: [{ id: "1", label: "Tất cả ngày", days: [0, 1, 2, 3, 4, 5, 6] }],
-        prices: [
-          { roomTypeId: 1, dayGroupPrices: [{ dayGroupId: "1", price: 1100000 }] },
-          { roomTypeId: 2, dayGroupPrices: [{ dayGroupId: "1", price: 2800000 }] },
+        dateRanges: [
+          {
+            from: "2026-04-01",
+            to: "2026-12-31",
+            dayGroups: [{ id: "1", label: "Tất cả ngày", days: [0, 1, 2, 3, 4, 5, 6], price: 1100000, roomTypeId: 1 }],
+          },
         ],
       },
     ],
@@ -352,31 +227,13 @@ const initialHotels: Hotel[] = [
         id: "1",
         label: "2026-04-01 - 2026-07-31",
         currency: "VND",
-        dateRanges: [{ from: "2026-04-01", to: "2026-07-31" }],
-        dayGroups: [
-          { id: "1", label: "T2-T6", days: [1, 2, 3, 4, 5] },
-          { id: "2", label: "T7-CN", days: [6, 0] },
-        ],
-        prices: [
+        dateRanges: [
           {
-            roomTypeId: 1,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 900000 },
-              { dayGroupId: "2", price: 1100000 },
-            ],
-          },
-          {
-            roomTypeId: 2,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 1500000 },
-              { dayGroupId: "2", price: 1900000 },
-            ],
-          },
-          {
-            roomTypeId: 3,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 2800000 },
-              { dayGroupId: "2", price: 3500000 },
+            from: "2026-04-01",
+            to: "2026-07-31",
+            dayGroups: [
+              { id: "1", label: "T2-T6", days: [1, 2, 3, 4, 5], price: 900000, roomTypeId: 1 },
+              { id: "2", label: "T7-CN", days: [6, 0], price: 1100000, roomTypeId: 1 },
             ],
           },
         ],
@@ -385,31 +242,13 @@ const initialHotels: Hotel[] = [
         id: "2",
         label: "2026-08-01 - 2026-10-31",
         currency: "VND",
-        dateRanges: [{ from: "2026-08-01", to: "2026-10-31" }],
-        dayGroups: [
-          { id: "1", label: "T2-T6", days: [1, 2, 3, 4, 5] },
-          { id: "2", label: "T7-CN", days: [6, 0] },
-        ],
-        prices: [
+        dateRanges: [
           {
-            roomTypeId: 1,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 750000 },
-              { dayGroupId: "2", price: 900000 },
-            ],
-          },
-          {
-            roomTypeId: 2,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 1200000 },
-              { dayGroupId: "2", price: 1500000 },
-            ],
-          },
-          {
-            roomTypeId: 3,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 2300000 },
-              { dayGroupId: "2", price: 2900000 },
+            from: "2026-08-01",
+            to: "2026-10-31",
+            dayGroups: [
+              { id: "1", label: "T2-T6", days: [1, 2, 3, 4, 5], price: 750000, roomTypeId: 1 },
+              { id: "2", label: "T7-CN", days: [6, 0], price: 900000, roomTypeId: 1 },
             ],
           },
         ],
@@ -418,31 +257,13 @@ const initialHotels: Hotel[] = [
         id: "3",
         label: "2026-11-01 - 2027-03-31",
         currency: "VND",
-        dateRanges: [{ from: "2026-11-01", to: "2027-03-31" }],
-        dayGroups: [
-          { id: "1", label: "T2-T6", days: [1, 2, 3, 4, 5] },
-          { id: "2", label: "T7-CN", days: [6, 0] },
-        ],
-        prices: [
+        dateRanges: [
           {
-            roomTypeId: 1,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 820000 },
-              { dayGroupId: "2", price: 980000 },
-            ],
-          },
-          {
-            roomTypeId: 2,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 1350000 },
-              { dayGroupId: "2", price: 1700000 },
-            ],
-          },
-          {
-            roomTypeId: 3,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 2600000 },
-              { dayGroupId: "2", price: 3200000 },
+            from: "2026-11-01",
+            to: "2027-03-31",
+            dayGroups: [
+              { id: "1", label: "T2-T6", days: [1, 2, 3, 4, 5], price: 820000, roomTypeId: 1 },
+              { id: "2", label: "T7-CN", days: [6, 0], price: 980000, roomTypeId: 1 },
             ],
           },
         ],
@@ -469,11 +290,12 @@ const initialHotels: Hotel[] = [
         id: "1",
         label: "2026-04-01 - 2026-12-31",
         currency: "VND",
-        dateRanges: [{ from: "2026-04-01", to: "2026-12-31" }],
-        dayGroups: [{ id: "1", label: "Tất cả ngày", days: [0, 1, 2, 3, 4, 5, 6] }],
-        prices: [
-          { roomTypeId: 1, dayGroupPrices: [{ dayGroupId: "1", price: 650000 }] },
-          { roomTypeId: 2, dayGroupPrices: [{ dayGroupId: "1", price: 950000 }] },
+        dateRanges: [
+          {
+            from: "2026-04-01",
+            to: "2026-12-31",
+            dayGroups: [{ id: "1", label: "Tất cả ngày", days: [0, 1, 2, 3, 4, 5, 6], price: 650000, roomTypeId: 1 }],
+          },
         ],
       },
     ],
@@ -499,31 +321,13 @@ const initialHotels: Hotel[] = [
         id: "1",
         label: "2026-04-01 - 2026-12-31",
         currency: "VND",
-        dateRanges: [{ from: "2026-04-01", to: "2026-12-31" }],
-        dayGroups: [
-          { id: "1", label: "T2-T5", days: [1, 2, 3, 4] },
-          { id: "2", label: "T6-CN", days: [5, 6, 0] },
-        ],
-        prices: [
+        dateRanges: [
           {
-            roomTypeId: 1,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 1100000 },
-              { dayGroupId: "2", price: 1350000 },
-            ],
-          },
-          {
-            roomTypeId: 2,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 1600000 },
-              { dayGroupId: "2", price: 2000000 },
-            ],
-          },
-          {
-            roomTypeId: 3,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 4000000 },
-              { dayGroupId: "2", price: 5000000 },
+            from: "2026-04-01",
+            to: "2026-12-31",
+            dayGroups: [
+              { id: "1", label: "T2-T5", days: [1, 2, 3, 4], price: 1100000, roomTypeId: 1 },
+              { id: "2", label: "T6-CN", days: [5, 6, 0], price: 1350000, roomTypeId: 1 },
             ],
           },
         ],
@@ -551,31 +355,13 @@ const initialHotels: Hotel[] = [
         id: "1",
         label: "2026-11-01 - 2027-04-30 (Mùa khô)",
         currency: "VND",
-        dateRanges: [{ from: "2026-11-01", to: "2027-04-30" }],
-        dayGroups: [
-          { id: "1", label: "T2-T5", days: [1, 2, 3, 4] },
-          { id: "2", label: "T6-CN", days: [5, 6, 0] },
-        ],
-        prices: [
+        dateRanges: [
           {
-            roomTypeId: 1,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 2500000 },
-              { dayGroupId: "2", price: 3200000 },
-            ],
-          },
-          {
-            roomTypeId: 2,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 3800000 },
-              { dayGroupId: "2", price: 4800000 },
-            ],
-          },
-          {
-            roomTypeId: 3,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 12000000 },
-              { dayGroupId: "2", price: 15000000 },
+            from: "2026-11-01",
+            to: "2027-04-30",
+            dayGroups: [
+              { id: "1", label: "T2-T5", days: [1, 2, 3, 4], price: 2500000, roomTypeId: 1 },
+              { id: "2", label: "T6-CN", days: [5, 6, 0], price: 3200000, roomTypeId: 1 },
             ],
           },
         ],
@@ -602,11 +388,12 @@ const initialHotels: Hotel[] = [
         id: "1",
         label: "2026-04-01 - 2026-12-31",
         currency: "VND",
-        dateRanges: [{ from: "2026-04-01", to: "2026-12-31" }],
-        dayGroups: [{ id: "1", label: "Tất cả ngày", days: [0, 1, 2, 3, 4, 5, 6] }],
-        prices: [
-          { roomTypeId: 1, dayGroupPrices: [{ dayGroupId: "1", price: 550000 }] },
-          { roomTypeId: 2, dayGroupPrices: [{ dayGroupId: "1", price: 750000 }] },
+        dateRanges: [
+          {
+            from: "2026-04-01",
+            to: "2026-12-31",
+            dayGroups: [{ id: "1", label: "Tất cả ngày", days: [0, 1, 2, 3, 4, 5, 6], price: 550000, roomTypeId: 1 }],
+          },
         ],
       },
     ],
@@ -632,31 +419,13 @@ const initialHotels: Hotel[] = [
         id: "1",
         label: "2026-04-01 - 2026-12-31",
         currency: "VND",
-        dateRanges: [{ from: "2026-04-01", to: "2026-12-31" }],
-        dayGroups: [
-          { id: "1", label: "T2-T6", days: [1, 2, 3, 4, 5] },
-          { id: "2", label: "T7-CN", days: [6, 0] },
-        ],
-        prices: [
+        dateRanges: [
           {
-            roomTypeId: 1,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 1300000 },
-              { dayGroupId: "2", price: 1600000 },
-            ],
-          },
-          {
-            roomTypeId: 2,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 2000000 },
-              { dayGroupId: "2", price: 2400000 },
-            ],
-          },
-          {
-            roomTypeId: 3,
-            dayGroupPrices: [
-              { dayGroupId: "1", price: 5500000 },
-              { dayGroupId: "2", price: 6800000 },
+            from: "2026-04-01",
+            to: "2026-12-31",
+            dayGroups: [
+              { id: "1", label: "T2-T6", days: [1, 2, 3, 4, 5], price: 1300000, roomTypeId: 1 },
+              { id: "2", label: "T7-CN", days: [6, 0], price: 1600000, roomTypeId: 1 },
             ],
           },
         ],

@@ -26,22 +26,15 @@ export type RoomType = {
 export type DateRange = {
   from: string;
   to: string;
+  dayGroups: DayGroup[];
 };
 
 export type DayGroup = {
   id: string;
   label: string;
   days: DayOfWeek[];
-};
-
-export type DayGroupPrice = {
-  dayGroupId: string;
   price: number;
-};
-
-export type RoomTypePricing = {
   roomTypeId: number;
-  dayGroupPrices: DayGroupPrice[];
 };
 
 export type PricingPeriod = {
@@ -49,6 +42,4 @@ export type PricingPeriod = {
   label: string;
   currency: string;
   dateRanges: DateRange[];
-  dayGroups: DayGroup[];
-  prices: RoomTypePricing[];
 };

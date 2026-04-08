@@ -8,26 +8,16 @@ import { CalendarDays } from "lucide-react";
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
 
 export default function HotelPricingForm() {
-  const { control, getValues, formState } = useFormContext<HotelFormValues>();
+  const { control, formState } = useFormContext<HotelFormValues>();
 
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "pricingPeriods",
-  });
+  const { fields, append, remove } = useFieldArray({ control, name: "pricingPeriods" });
 
-  const roomTypes = useWatch({ control, name: "roomTypes" }) ?? [];
+  const watchedPeriods = useWatch({ control, name: "pricingPeriods" }) ?? [];
 
   const handleAddPeriod = () => {
-    const dayGroupCount = 1;
-    const initialPrices = roomTypes.map(() => ({
-      dayGroupPrices: Array.from({ length: dayGroupCount }, () => ({ price: undefined as unknown as number })),
-    }));
-
     append({
       currency: "VND",
-      dateRanges: [{ from: "", to: "" }],
-      dayGroups: [{ label: "", days: [] }],
-      prices: initialPrices,
+      dateRanges: [{ from: "", to: "", dayGroups: [{ label: "", days: [], price: undefined as unknown as number }] }],
     });
   };
 
@@ -44,7 +34,7 @@ export default function HotelPricingForm() {
   return (
     <div className='space-y-4'>
       {fields.map((field, periodIndex) => {
-        const period = getValues(`pricingPeriods.${periodIndex}`);
+        const period = watchedPeriods[periodIndex];
         const hasDateRanges = period?.dateRanges?.some((dr) => dr.from && dr.to);
         const headerLabel = hasDateRanges
           ? period.dateRanges

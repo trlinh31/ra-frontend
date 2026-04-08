@@ -91,56 +91,47 @@ export default function HotelPricingPeriodsTable({ hotel }: HotelPricingPeriodsT
                 </CollapsibleTrigger>
 
                 <CollapsibleContent>
-                  <div className='mt-2 overflow-x-auto'>
-                    <table className='border border-border w-full text-center'>
-                      <thead>
-                        <tr className='bg-slate-700 text-primary-foreground'>
-                          <th className='px-3 py-3 border border-border font-semibold text-sm' rowSpan={2}>
-                            STT
-                          </th>
-                          <th className='px-3 py-3 border border-border font-semibold text-sm text-left' rowSpan={2}>
-                            Hạng phòng
-                          </th>
-                          <th className='px-3 py-3 border border-border font-semibold text-sm' rowSpan={2}>
-                            Số khách
-                          </th>
-                          <th className='px-3 py-3 border border-border font-semibold text-sm text-left' rowSpan={2}>
-                            Ghi chú
-                          </th>
-                          <th className='px-3 py-3 border border-border font-semibold text-sm' colSpan={period.dayGroups.length}>
-                            Giá phòng ưu đãi ({period.currency}/ phòng/ đêm)
-                          </th>
-                        </tr>
-                        <tr className='bg-slate-700 text-primary-foreground'>
-                          {period.dayGroups.map((dg) => (
-                            <th key={dg.id} className='px-3 py-3 border border-border min-w-36 font-semibold text-sm'>
-                              {dg.label}
-                            </th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {hotel.roomTypes.map((roomType, index) => {
-                          const roomPricing = period.prices.find((p) => p.roomTypeId === roomType.id);
-                          return (
-                            <tr key={roomType.id} className='even:bg-muted/40'>
-                              <td className='px-3 py-3 border border-border text-sm'>{index + 1}</td>
-                              <td className='px-3 py-3 border border-border font-medium text-sm text-left'>{roomType.name}</td>
-                              <td className='px-3 py-3 border border-border text-sm'>{roomType.maxGuests}</td>
-                              <td className='px-3 py-3 border border-border text-sm text-left'>{roomType.note}</td>
-                              {period.dayGroups.map((dg, dgIdx) => {
-                                const price = roomPricing?.dayGroupPrices[dgIdx]?.price;
-                                return (
-                                  <td key={dg.id} className='px-3 py-3 border border-border text-sm'>
-                                    {price != null && price > 0 ? formatNumberVN(price) : "N/A"}
-                                  </td>
-                                );
-                              })}
+                  <div className='space-y-3 mt-2'>
+                    {period.dateRanges.map((dr, drIdx) => (
+                      <div key={drIdx} className='overflow-x-auto'>
+                        <p className='px-1 pb-1 font-medium text-muted-foreground text-sm'>
+                          {formatDate(new Date(dr.from), "dd/MM/yyyy")} → {formatDate(new Date(dr.to), "dd/MM/yyyy")}
+                        </p>
+                        <table className='border border-border w-full text-center'>
+                          <thead>
+                            <tr className='bg-slate-700 text-primary-foreground'>
+                              <th className='px-3 py-3 border border-border font-semibold text-sm text-left'>Loại phòng</th>
+                              <th className='px-3 py-3 border border-border font-semibold text-sm text-left'>Nhóm thứ</th>
+                              <th className='px-3 py-3 border border-border font-semibold text-sm text-left'>Ngày áp dụng</th>
+                              <th className='px-3 py-3 border border-border min-w-36 font-semibold text-sm'>Giá ({period.currency}/ đêm)</th>
                             </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
+                          </thead>
+                          <tbody>
+                            {dr.dayGroups.map((dg, dgIdx) => {
+                              const roomType = hotel.roomTypes.find((rt) => rt.id === dg.roomTypeId);
+                              return (
+                                <tr key={dgIdx} className='even:bg-muted/40'>
+                                  <td className='px-3 py-3 border border-border font-medium text-sm text-left'>
+                                    {roomType?.name ?? <span className='text-muted-foreground italic'>—</span>}
+                                  </td>
+                                  <td className='px-3 py-3 border border-border font-medium text-sm text-left'>{dg.label}</td>
+                                  <td className='px-3 py-3 border border-border text-sm text-left'>
+                                    {dg.days
+                                      .slice()
+                                      .sort((a, b) => a - b)
+                                      .map((d) => ["CN", "T2", "T3", "T4", "T5", "T6", "T7"][d])
+                                      .join(", ")}
+                                  </td>
+                                  <td className='px-3 py-3 border border-border text-sm'>
+                                    {dg.price != null && dg.price > 0 ? formatNumberVN(dg.price) : "N/A"}
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+                    ))}
                   </div>
                 </CollapsibleContent>
               </Collapsible>

@@ -6,29 +6,22 @@ export const roomTypeSchema = z.object({
   note: z.string(),
 });
 
-const dateRangeSchema = z.object({
-  from: z.string().min(1, "Trường này là bắt buộc"),
-  to: z.string().min(1, "Trường này là bắt buộc"),
-});
-
 const dayGroupSchema = z.object({
   label: z.string().min(1, "Trường này là bắt buộc"),
   days: z.array(z.number().min(0).max(6)).min(1, "Phải chọn ít nhất một ngày trong tuần"),
-});
-
-const dayGroupPriceSchema = z.object({
   price: z.number({ error: "Trường này là bắt buộc" }).min(0, "Giá phải lớn hơn hoặc bằng 0"),
+  roomTypeIndex: z.string().min(1, "Trường này là bắt buộc"),
 });
 
-const roomTypePricingSchema = z.object({
-  dayGroupPrices: z.array(dayGroupPriceSchema),
+const dateRangeSchema = z.object({
+  from: z.string().min(1, "Trường này là bắt buộc"),
+  to: z.string().min(1, "Trường này là bắt buộc"),
+  dayGroups: z.array(dayGroupSchema).min(1, "Phải có ít nhất một nhóm ngày"),
 });
 
 export const pricingPeriodSchema = z.object({
   currency: z.string().min(1, "Trường này là bắt buộc"),
   dateRanges: z.array(dateRangeSchema).min(1, "Phải có ít nhất một khoảng ngày"),
-  dayGroups: z.array(dayGroupSchema).min(1, "Phải có ít nhất một nhóm ngày"),
-  prices: z.array(roomTypePricingSchema),
 });
 
 export const hotelSchema = z.object({
