@@ -117,7 +117,7 @@ export default function PricingPeriodForm({ periodIndex }: PricingPeriodFormProp
             appendDateRange({
               from: "",
               to: "",
-              dayGroups: [{ label: "", days: [], price: undefined as unknown as number }],
+              dayGroups: [{ label: "", days: [], price: undefined as unknown as number, roomTypeIndex: "" }],
             })
           }
         />

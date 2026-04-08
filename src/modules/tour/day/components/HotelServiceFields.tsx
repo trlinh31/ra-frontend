@@ -63,19 +63,21 @@ export default function HotelServiceFields({ index }: HotelServiceFieldsProps) {
     return selectedHotel.roomTypes.map((rt) => ({ label: rt.name, value: String(rt.id) }));
   }, [selectedHotel]);
 
+  const allDayGroups = useMemo(() => selectedPeriod?.dateRanges.flatMap((dr) => dr.dayGroups) ?? [], [selectedPeriod]);
+
   const dayGroupOptions = useMemo(() => {
     if (!selectedPeriod) return [];
-    return selectedPeriod.dayGroups.map((g) => ({ label: g.label, value: g.id }));
-  }, [selectedPeriod]);
+    const filtered = roomTypeId ? allDayGroups.filter((g) => String(g.roomTypeId) === roomTypeId) : allDayGroups;
+    const seen = new Set<string>();
+    return filtered.filter((g) => (seen.has(g.id) ? false : seen.add(g.id))).map((g) => ({ label: g.label, value: g.id }));
+  }, [selectedPeriod, allDayGroups, roomTypeId]);
 
   const computedPrice = useMemo(() => {
     if (!selectedPeriod || !dayGroupId || !roomTypeId) return null;
-    const pricing = selectedPeriod.prices.find((p) => String(p.roomTypeId) === roomTypeId);
-    if (!pricing) return null;
-    const dgPrice = pricing.dayGroupPrices.find((dgp) => dgp.dayGroupId === dayGroupId);
-    if (!dgPrice) return null;
-    return { price: dgPrice.price, currency: selectedPeriod.currency };
-  }, [selectedPeriod, dayGroupId, roomTypeId]);
+    const dg = allDayGroups.find((g) => g.id === dayGroupId && String(g.roomTypeId) === roomTypeId);
+    if (!dg) return null;
+    return { price: dg.price, currency: selectedPeriod.currency };
+  }, [selectedPeriod, allDayGroups, dayGroupId, roomTypeId]);
 
   const prevPriceKeyRef = useRef<string | null>(null);
 
@@ -113,10 +115,6 @@ export default function HotelServiceFields({ index }: HotelServiceFieldsProps) {
     setValue(`services.${index}.hotelDetail.dayGroupId`, "");
     setValue(`services.${index}.hotelDetail.roomTypeId`, "");
   };
-
-  useEffect(() => {
-    console.log(selectedHotel);
-  }, [selectedHotel]);
 
   return (
     <div className='space-y-3 mt-1 pt-3 border-t'>

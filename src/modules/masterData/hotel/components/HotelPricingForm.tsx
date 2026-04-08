@@ -17,7 +17,7 @@ export default function HotelPricingForm() {
   const handleAddPeriod = () => {
     append({
       currency: "VND",
-      dateRanges: [{ from: "", to: "", dayGroups: [{ label: "", days: [], price: undefined as unknown as number }] }],
+      dateRanges: [{ from: "", to: "", dayGroups: [{ label: "", days: [], price: undefined as unknown as number, roomTypeIndex: "" }] }],
     });
   };
 
