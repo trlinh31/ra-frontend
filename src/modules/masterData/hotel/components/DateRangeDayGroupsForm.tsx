@@ -17,7 +17,7 @@ const DAY_LABELS: Record<number, string> = {
   6: "T7",
 };
 
-const ALL_DAYS = [0, 1, 2, 3, 4, 5, 6] as const;
+const ALL_DAYS = [1, 2, 3, 4, 5, 6, 0] as const;
 
 interface DateRangeDayGroupsFormProps {
   periodIndex: number;
@@ -77,7 +77,7 @@ export default function DateRangeDayGroupsForm({ periodIndex, rangeIndex }: Date
                   name={`pricingPeriods.${periodIndex}.dateRanges.${rangeIndex}.dayGroups.${groupIdx}.days`}
                   render={({ field: f, fieldState }) => (
                     <div>
-                      <div className='flex flex-wrap gap-1.5'>
+                      <div className='flex flex-wrap gap-1'>
                         {ALL_DAYS.map((day) => {
                           const selected = (f.value as number[]).includes(day);
                           return (
