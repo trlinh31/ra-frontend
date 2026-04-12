@@ -210,7 +210,7 @@ export const APP_ROUTES: AppRoute[] = [
             pageTitle: "Quản lý danh sách tour",
             element: <TourListPage />,
             icon: Compass,
-            showInSidebar: false,
+            showInSidebar: true,
           },
           {
             path: PATHS.TOUR.TOUR_CREATE,

@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 const groupTourDayGroupSchema = z.object({
+  id: z.string(),
   label: z.string().min(1, "Trường này là bắt buộc"),
   days: z.array(z.number().min(0).max(6)).min(1, "Phải chọn ít nhất một ngày trong tuần"),
   price: z.number({ error: "Trường này là bắt buộc" }).min(0, "Giá phải lớn hơn hoặc bằng 0"),
@@ -13,6 +14,8 @@ const groupTourDateRangeSchema = z.object({
 });
 
 export const groupTourPricingPeriodSchema = z.object({
+  id: z.string(),
+  label: z.string(),
   currency: z.string().min(1, "Trường này là bắt buộc"),
   dateRanges: z.array(groupTourDateRangeSchema).min(1, "Phải có ít nhất một khoảng ngày"),
 });

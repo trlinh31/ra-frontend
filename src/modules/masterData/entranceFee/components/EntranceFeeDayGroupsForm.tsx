@@ -105,7 +105,7 @@ export default function EntranceFeeDayGroupsForm({ periodIndex, rangeIndex }: En
         text='Thêm nhóm thứ'
         variant='default'
         size='default'
-        onClick={() => appendDayGroup({ label: "", days: [], price: undefined as unknown as number })}
+        onClick={() => appendDayGroup({ id: crypto.randomUUID(), label: "", days: [], price: undefined as unknown as number })}
       />
 
       {rangeErrors?.dayGroups?.message && <FieldError errors={[rangeErrors.dayGroups]} />}

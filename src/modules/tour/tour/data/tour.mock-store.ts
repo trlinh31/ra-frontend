@@ -6,6 +6,8 @@ let _tours: Tour[] = [
     code: "HN-HAL-3N2D",
     name: "Hà Nội - Hạ Long 3 Ngày 2 Đêm",
     description: "Hành trình khám phá Hà Nội và vịnh Hạ Long kỳ vĩ",
+    content: "<p>Chào mừng quý khách đến với hành trình khám phá <strong>Hà Nội – Hạ Long</strong> tuyệt vời!</p>",
+    numberOfPeople: 10,
     days: [
       { dayId: "day1", order: 1 },
       { dayId: "day2", order: 2 },
@@ -17,6 +19,8 @@ let _tours: Tour[] = [
     code: "HN-2N1D",
     name: "Hà Nội City Tour 2 Ngày 1 Đêm",
     description: "Khám phá thủ đô Hà Nội trong 2 ngày",
+    content: "<p>Trải nghiệm <strong>Hà Nội</strong> – thành phố ngàn năm văn hiến.</p>",
+    numberOfPeople: 15,
     days: [
       { dayId: "day1", order: 1 },
       { dayId: "day2", order: 2 },

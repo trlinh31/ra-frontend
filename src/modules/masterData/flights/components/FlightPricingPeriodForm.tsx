@@ -117,7 +117,7 @@ export default function FlightPricingPeriodForm({ periodIndex }: FlightPricingPe
             appendDateRange({
               from: "",
               to: "",
-              dayGroups: [{ label: "", days: [], price: undefined as unknown as number }],
+              dayGroups: [{ id: crypto.randomUUID(), label: "", days: [], price: undefined as unknown as number }],
             })
           }
         />

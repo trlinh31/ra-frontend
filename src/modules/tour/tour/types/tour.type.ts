@@ -8,5 +8,7 @@ export type Tour = {
   code: string;
   name: string;
   description: string;
+  content: string;
+  numberOfPeople: number;
   days: TourDay[];
 };

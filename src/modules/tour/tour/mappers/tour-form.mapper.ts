@@ -5,6 +5,8 @@ export const mapTourDataToFormValues = (data: Tour | undefined): TourFormValues 
   code: data?.code ?? "",
   name: data?.name ?? "",
   description: data?.description ?? "",
+  content: data?.content ?? "",
+  numberOfPeople: data?.numberOfPeople ?? 1,
   days: data?.days.map((d) => ({ dayId: d.dayId, order: d.order })) ?? [],
 });
 
@@ -12,5 +14,7 @@ export const mapTourFormValuesToPayload = (values: TourFormValues): Omit<Tour, "
   code: values.code,
   name: values.name,
   description: values.description ?? "",
+  content: values.content ?? "",
+  numberOfPeople: values.numberOfPeople,
   days: values.days.map((d, i) => ({ dayId: d.dayId, order: i + 1 })),
 });

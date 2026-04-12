@@ -16,8 +16,10 @@ export default function EntranceFeePricingForm() {
 
   const handleAddPeriod = () => {
     append({
+      id: crypto.randomUUID(),
+      label: "",
       currency: "VND",
-      dateRanges: [{ from: "", to: "", dayGroups: [{ label: "", days: [], price: undefined as unknown as number }] }],
+      dateRanges: [{ from: "", to: "", dayGroups: [{ id: crypto.randomUUID(), label: "", days: [], price: undefined as unknown as number }] }],
     });
   };
 

@@ -1,4 +1,5 @@
 import { PATHS } from "@/app/routes/route.constant";
+import TourDaysTable from "@/modules/tour/tour/components/TourDaysTable";
 import TourFilterBar, { type TourFilters } from "@/modules/tour/tour/components/TourFilterBar";
 import { tourMockStore } from "@/modules/tour/tour/data/tour.mock-store";
 import type { Tour } from "@/modules/tour/tour/types/tour.type";
@@ -70,7 +71,7 @@ export default function TourListPage() {
     <div className='space-y-4'>
       <TableToolbar title='Quản lý tour' description='Danh sách các tour du lịch của hệ thống' icon={Map} onAdd={handleAdd} />
       <TourFilterBar onFilter={setFilters} />
-      <AppTable columns={columns} data={filteredTours} />
+      <AppTable columns={columns} data={filteredTours} enableExpanding renderExpandedRow={(item) => <TourDaysTable item={item} />} />
     </div>
   );
 }
