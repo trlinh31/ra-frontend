@@ -1,3 +1,23 @@
+export type GroupTourDayGroup = {
+  id: string;
+  label: string;
+  days: number[];
+  price: number;
+};
+
+export type GroupTourDateRange = {
+  from: string;
+  to: string;
+  dayGroups: GroupTourDayGroup[];
+};
+
+export type GroupTourPricingPeriod = {
+  id: string;
+  label: string;
+  currency: string;
+  dateRanges: GroupTourDateRange[];
+};
+
 export type GroupTour = {
   id: string;
   code: string;
@@ -5,9 +25,8 @@ export type GroupTour = {
   country: string;
   city: string;
   supplier: string;
-  currency: string;
   content: string;
-  price: number;
   notes: string;
   isActive: boolean;
+  pricingPeriods: GroupTourPricingPeriod[];
 };

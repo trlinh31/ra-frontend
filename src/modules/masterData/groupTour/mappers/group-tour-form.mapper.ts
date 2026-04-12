@@ -8,11 +8,10 @@ export const mapGroupTourDataToFormValues = (data: GroupTour | undefined): Group
     country: data?.country ?? "",
     city: data?.city ?? "",
     supplier: data?.supplier ?? "",
-    currency: data?.currency ?? "VND",
     content: data?.content ?? "",
-    price: data?.price ?? 0,
     notes: data?.notes ?? "",
     isActive: data?.isActive ?? true,
+    pricingPeriods: data?.pricingPeriods ?? [],
   };
 };
 

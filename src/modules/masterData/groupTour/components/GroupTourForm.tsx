@@ -1,9 +1,11 @@
 import GroupTourBasicInfoSection from "@/modules/masterData/groupTour/components/GroupTourBasicInfoSection";
 import GroupTourContentSection from "@/modules/masterData/groupTour/components/GroupTourContentSection";
 import GroupTourLocationSection from "@/modules/masterData/groupTour/components/GroupTourLocationSection";
+import GroupTourPricingForm from "@/modules/masterData/groupTour/components/GroupTourPricingForm";
 import { mapGroupTourDataToFormValues } from "@/modules/masterData/groupTour/mappers/group-tour-form.mapper";
 import { groupTourSchema, type GroupTourFormValues } from "@/modules/masterData/groupTour/schemas/group-tour.schema";
 import type { GroupTour } from "@/modules/masterData/groupTour/types/group-tour.type";
+import Section from "@/shared/components/common/Section";
 import { Button } from "@/shared/components/ui/button";
 import { Form } from "@/shared/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,6 +31,9 @@ export default function GroupTourForm({ defaultValues, onSubmit, onCancel, isSub
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
         <GroupTourLocationSection />
         <GroupTourBasicInfoSection />
+        <Section title='3. Bảng giá'>
+          <GroupTourPricingForm />
+        </Section>
         <GroupTourContentSection />
 
         <div className='flex justify-start gap-3'>

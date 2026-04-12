@@ -13,6 +13,29 @@ export const transportServiceDetailSchema = z.object({
   capacity: z.string().min(1, "Vui lòng chọn sức chứa"),
 });
 
+export const visaServiceDetailSchema = z.object({
+  providerId: z.string().min(1, "Vui lòng chọn nhà cung cấp"),
+  serviceName: z.string().min(1, "Vui lòng chọn dịch vụ"),
+});
+
+export const groupTourServiceDetailSchema = z.object({
+  groupTourId: z.string().min(1, "Vui lòng chọn nhóm tour"),
+  pricingPeriodId: z.string().min(1, "Vui lòng chọn giai đoạn giá"),
+  dayGroupId: z.string().min(1, "Vui lòng chọn nhóm ngày"),
+});
+
+export const entranceFeeServiceDetailSchema = z.object({
+  entranceFeeId: z.string().min(1, "Vui lòng chọn phí vào cổng"),
+  pricingPeriodId: z.string().min(1, "Vui lòng chọn giai đoạn giá"),
+  dayGroupId: z.string().min(1, "Vui lòng chọn nhóm ngày"),
+});
+
+export const flightServiceDetailSchema = z.object({
+  flightId: z.string().min(1, "Vui lòng chọn chuyến bay"),
+  pricingPeriodId: z.string().min(1, "Vui lòng chọn giai đoạn giá"),
+  dayGroupId: z.string().min(1, "Vui lòng chọn nhóm ngày"),
+});
+
 export const dayServiceSchema = z.object({
   serviceType: z.enum(ServiceType, { error: "Vui lòng chọn loại dịch vụ" }),
   name: z.string().min(1, "Vui lòng nhập tên dịch vụ"),
@@ -20,6 +43,10 @@ export const dayServiceSchema = z.object({
   currency: z.string().min(1, "Vui lòng chọn loại tiền tệ"),
   hotelDetail: hotelServiceDetailSchema.optional(),
   transportDetail: transportServiceDetailSchema.optional(),
+  groupTourDetail: groupTourServiceDetailSchema.optional(),
+  visaDetail: visaServiceDetailSchema.optional(),
+  entranceFeeDetail: entranceFeeServiceDetailSchema.optional(),
+  flightDetail: flightServiceDetailSchema.optional(),
 });
 
 export type HotelServiceDetailFormValues = z.infer<typeof hotelServiceDetailSchema>;

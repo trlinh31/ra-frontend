@@ -8,7 +8,6 @@ let _tours: GroupTour[] = [
     country: "Vietnam",
     city: "Hanoi",
     supplier: "Công ty TNHH Thiết Bị Du Lịch Ánh Dương",
-    currency: "VND",
     content: `<h1>Lịch trình Tour Hà Nội - Hạ Long 3 ngày 2 đêm</h1>
 <h2>Ngày 1: Hà Nội - Vịnh Hạ Long</h2>
 <ul>
@@ -35,7 +34,38 @@ let _tours: GroupTour[] = [
   <li><strong>11:30</strong> - Lên xe trở về Hà Nội.</li>
   <li><strong>16:00</strong> - Về đến Hà Nội, kết thúc chương trình.</li>
 </ul>`,
-    price: 4500000,
+    pricingPeriods: [
+      {
+        id: "gt1-p1",
+        label: "Mùa thường",
+        currency: "VND",
+        dateRanges: [
+          {
+            from: "2026-01-01",
+            to: "2026-06-30",
+            dayGroups: [
+              { id: "gt1-dg1", label: "T2 - T6", days: [1, 2, 3, 4, 5], price: 4500000 },
+              { id: "gt1-dg2", label: "Cuối tuần", days: [6, 0], price: 5500000 },
+            ],
+          },
+        ],
+      },
+      {
+        id: "gt1-p2",
+        label: "Mùa cao điểm",
+        currency: "VND",
+        dateRanges: [
+          {
+            from: "2026-07-01",
+            to: "2026-12-31",
+            dayGroups: [
+              { id: "gt1-dg3", label: "T2 - T6", days: [1, 2, 3, 4, 5], price: 5800000 },
+              { id: "gt1-dg4", label: "Cuối tuần", days: [6, 0], price: 7000000 },
+            ],
+          },
+        ],
+      },
+    ],
     notes: "Bao gồm xe đưa đón, khách sạn 3 sao, ăn sáng và 2 bữa chính mỗi ngày.",
     isActive: true,
   },
@@ -46,7 +76,6 @@ let _tours: GroupTour[] = [
     country: "Vietnam",
     city: "Da Nang",
     supplier: "Công ty TNHH Thiết Bị Du Lịch Ánh Dương",
-    currency: "VND",
     content: `<h1>Lịch trình Tour Đà Nẵng - Hội An - Bà Nà Hills 4 ngày 3 đêm</h1>
 <h2>Ngày 1: Đến Đà Nẵng</h2>
 <ul>
@@ -81,7 +110,23 @@ let _tours: GroupTour[] = [
   <li><strong>12:00</strong> - Ăn trưa, trả phòng.</li>
   <li><strong>14:00</strong> - Tiễn khách tại sân bay Đà Nẵng, kết thúc hành trình.</li>
 </ul>`,
-    price: 6800000,
+    pricingPeriods: [
+      {
+        id: "gt2-p1",
+        label: "Mùa thường",
+        currency: "VND",
+        dateRanges: [
+          {
+            from: "2026-01-01",
+            to: "2026-12-31",
+            dayGroups: [
+              { id: "gt2-dg1", label: "T2 - T5", days: [1, 2, 3, 4], price: 6800000 },
+              { id: "gt2-dg2", label: "T6 - CN", days: [5, 6, 0], price: 8500000 },
+            ],
+          },
+        ],
+      },
+    ],
     notes: "Bao gồm vé máy bay khứ hồi từ Hà Nội, cáp treo Bà Nà Hills, khách sạn 4 sao.",
     isActive: true,
   },
@@ -92,7 +137,6 @@ let _tours: GroupTour[] = [
     country: "Vietnam",
     city: "Phu Quoc",
     supplier: "Công ty Du Lịch Sao Việt",
-    currency: "VND",
     content: `<h1>Lịch trình Tour Phú Quốc 3 ngày 2 đêm</h1>
 <h2>Ngày 1: Khám phá miền Bắc đảo</h2>
 <ul>
@@ -119,7 +163,7 @@ let _tours: GroupTour[] = [
   <li><strong>13:00</strong> - Ăn trưa, trả phòng.</li>
   <li><strong>15:00</strong> - Ra sân bay, kết thúc chương trình.</li>
 </ul>`,
-    price: 5200000,
+    pricingPeriods: [],
     notes: "Bao gồm vé tàu 4 đảo, lặn ngắm san hô, BBQ hải sản, resort 4 sao.",
     isActive: true,
   },
@@ -130,7 +174,6 @@ let _tours: GroupTour[] = [
     country: "Vietnam",
     city: "Lao Cai",
     supplier: "Công ty Du Lịch Sao Việt",
-    currency: "VND",
     content: `<h1>Lịch trình Tour Sapa - Fansipan 3 ngày 2 đêm</h1>
 <h2>Ngày 1: Hà Nội - Sapa</h2>
 <ul>
@@ -153,7 +196,7 @@ let _tours: GroupTour[] = [
   <li><strong>15:00</strong> - Xuống ga Lào Cai, lên tàu trở về Hà Nội.</li>
   <li><strong>21:00</strong> - Đến Hà Nội, kết thúc hành trình.</li>
 </ul>`,
-    price: 3800000,
+    pricingPeriods: [],
     notes: "Bao gồm tàu hỏa khứ hồi, vé cáp treo Fansipan, khách sạn 3 sao, hướng dẫn viên địa phương.",
     isActive: true,
   },
@@ -164,7 +207,6 @@ let _tours: GroupTour[] = [
     country: "Thailand",
     city: "Bangkok",
     supplier: "Công ty TNHH Thiết Bị Du Lịch Ánh Dương",
-    currency: "THB",
     content: `<h1>Lịch trình Tour Bangkok - Pattaya 5 ngày 4 đêm</h1>
 <h2>Ngày 1: Hà Nội - Bangkok</h2>
 <ul>
@@ -202,7 +244,7 @@ let _tours: GroupTour[] = [
   <li><strong>07:00</strong> - Ăn sáng, trả phòng, di chuyển ra sân bay Bangkok.</li>
   <li><strong>14:00</strong> - Bay về Hà Nội, kết thúc hành trình.</li>
 </ul>`,
-    price: 12500000,
+    pricingPeriods: [],
     notes: "Bao gồm vé máy bay, khách sạn 4 sao, visa Thái Lan, vé tham quan các điểm, show Tiffany.",
     isActive: true,
   },
@@ -213,7 +255,6 @@ let _tours: GroupTour[] = [
     country: "Singapore",
     city: "Singapore",
     supplier: "Công ty Du Lịch Quốc Tế Thái Bình Dương",
-    currency: "SGD",
     content: `<h1>Lịch trình Tour Singapore - Malaysia 6 ngày 5 đêm</h1>
 <h2>Ngày 1: Hà Nội - Singapore</h2>
 <ul>
@@ -257,7 +298,7 @@ let _tours: GroupTour[] = [
   <li><strong>12:00</strong> - Ra sân bay KLIA, bay về Hà Nội.</li>
   <li><strong>18:00</strong> - Về đến Hà Nội, kết thúc hành trình.</li>
 </ul>`,
-    price: 18900000,
+    pricingPeriods: [],
     notes: "Bao gồm vé máy bay, visa Malaysia, khách sạn 4 sao, xe coach Singapore-KL, vé Universal Studios.",
     isActive: true,
   },
@@ -268,7 +309,6 @@ let _tours: GroupTour[] = [
     country: "Japan",
     city: "Tokyo",
     supplier: "Công ty Du Lịch Quốc Tế Thái Bình Dương",
-    currency: "JPY",
     content: `<h1>Lịch trình Tour Nhật Bản 7 ngày 6 đêm</h1>
 <h2>Ngày 1: Hà Nội - Tokyo</h2>
 <ul>
@@ -316,7 +356,7 @@ let _tours: GroupTour[] = [
   <li><strong>09:00</strong> - Trả phòng, ra sân bay Kansai.</li>
   <li><strong>12:00</strong> - Bay về Hà Nội, kết thúc hành trình đáng nhớ.</li>
 </ul>`,
-    price: 32000000,
+    pricingPeriods: [],
     notes: "Bao gồm vé máy bay, vé Shinkansen, khách sạn 4 sao, onsen, bữa ăn theo lịch trình, hướng dẫn viên tiếng Việt.",
     isActive: true,
   },
@@ -327,7 +367,6 @@ let _tours: GroupTour[] = [
     country: "Vietnam",
     city: "Ho Chi Minh City",
     supplier: "Công ty Du Lịch Sao Việt",
-    currency: "VND",
     content: `<h1>Lịch trình Tour HCM - Mũi Né 3 ngày 2 đêm</h1>
 <h2>Ngày 1: HCM - Mũi Né</h2>
 <ul>
@@ -354,7 +393,7 @@ let _tours: GroupTour[] = [
   <li><strong>11:00</strong> - Trả phòng, lên xe trở về HCM.</li>
   <li><strong>16:00</strong> - Về đến HCM, kết thúc tour.</li>
 </ul>`,
-    price: 2900000,
+    pricingPeriods: [],
     notes: "Bao gồm xe đưa đón, resort 3 sao ven biển, BBQ hải sản, tour jeep đồi cát.",
     isActive: true,
   },
@@ -365,7 +404,6 @@ let _tours: GroupTour[] = [
     country: "France",
     city: "Paris",
     supplier: "Công ty Du Lịch Quốc Tế Thái Bình Dương",
-    currency: "EUR",
     content: `<h1>Lịch trình Tour Châu Âu 3 quốc gia 10 ngày 9 đêm</h1>
 <h2>Ngày 1-2: Paris - Kinh đô Ánh Sáng</h2>
 <ul>
@@ -406,7 +444,7 @@ let _tours: GroupTour[] = [
   <li>Mua sắm đặc sản: socola, rượu vang, túi da, nước hoa.</li>
   <li>Ra sân bay bay về Hà Nội, kết thúc hành trình châu Âu đáng nhớ.</li>
 </ul>`,
-    price: 68000000,
+    pricingPeriods: [],
     notes: "Bao gồm vé máy bay, visa Schengen, khách sạn 4 sao, xe coach liên tỉnh, hướng dẫn viên tiếng Việt xuyên suốt.",
     isActive: true,
   },
@@ -417,7 +455,6 @@ let _tours: GroupTour[] = [
     country: "Vietnam",
     city: "Nha Trang",
     supplier: "Công ty Du Lịch Sao Việt",
-    currency: "VND",
     content: `<h1>Lịch trình Tour Nha Trang - Đà Lạt 5 ngày 4 đêm</h1>
 <h2>Ngày 1: Đến Nha Trang</h2>
 <ul>
@@ -456,7 +493,7 @@ let _tours: GroupTour[] = [
   <li><strong>10:00</strong> - Mua đặc sản: atisô, mứt hoa quả, cà phê, rượu vang Đà Lạt.</li>
   <li><strong>12:00</strong> - Ra sân bay Liên Khương, kết thúc tour.</li>
 </ul>`,
-    price: 7500000,
+    pricingPeriods: [],
     notes: "Bao gồm vé máy bay, lặn biển Hòn Mun, tắm bùn, khách sạn 3-4 sao, 2 bữa chính mỗi ngày.",
     isActive: true,
   },

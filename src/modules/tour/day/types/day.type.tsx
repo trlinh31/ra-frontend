@@ -57,6 +57,25 @@ export type DayService = {
     transportId: string;
     capacity: string;
   };
+  groupTourDetail?: {
+    groupTourId: string;
+    pricingPeriodId: string;
+    dayGroupId: string;
+  };
+  visaDetail?: {
+    providerId: string;
+    serviceName: string;
+  };
+  entranceFeeDetail?: {
+    entranceFeeId: string;
+    pricingPeriodId: string;
+    dayGroupId: string;
+  };
+  flightDetail?: {
+    flightId: string;
+    pricingPeriodId: string;
+    dayGroupId: string;
+  };
 };
 
 export type Day = {

@@ -1,5 +1,6 @@
 import { PATHS } from "@/app/routes/route.constant";
 import GroupTourFilterBar from "@/modules/masterData/groupTour/components/GroupTourFilterBar";
+import GroupTourPricingPeriodsTable from "@/modules/masterData/groupTour/components/GroupTourPricingPeriodsTable";
 import { groupTourMockStore } from "@/modules/masterData/groupTour/data/group-tour.mock-store";
 import type { GroupTour } from "@/modules/masterData/groupTour/types/group-tour.type";
 import { AppTable } from "@/shared/components/common/AppTable";
@@ -7,7 +8,6 @@ import ActionButton from "@/shared/components/table/ActionButton";
 import TableToolbar from "@/shared/components/table/TableToolbar";
 import { Switch } from "@/shared/components/ui/switch";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
-import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
 import type { ColumnDef } from "@tanstack/react-table";
 import { MapPin } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -56,15 +56,6 @@ export default function GroupTourListPage() {
     { header: "Thành phố", accessorKey: "city" },
     { header: "Tên tour", accessorKey: "tourName" },
     { header: "Nhà cung cấp", accessorKey: "supplier" },
-    {
-      header: "Giá tiền",
-      accessorKey: "price",
-      cell: ({ row }) => (
-        <span>
-          {formatNumberVN(row.original.price)} {row.original.currency}
-        </span>
-      ),
-    },
     { header: "Ghi chú", accessorKey: "notes", enableSorting: false, maxSize: 200 },
     {
       header: "Hoạt động",
@@ -94,7 +85,10 @@ export default function GroupTourListPage() {
         data={filteredItems}
         enableExpanding
         renderExpandedRow={(item) => (
-          <div className='px-4 py-3 max-w-none prose prose-sm' dangerouslySetInnerHTML={{ __html: item.content || "<em>Chưa có nội dung.</em>" }} />
+          <div className='space-y-4'>
+            <GroupTourPricingPeriodsTable item={item} />
+            {item.content && <div className='px-4 py-3 max-w-none prose prose-sm' dangerouslySetInnerHTML={{ __html: item.content }} />}
+          </div>
         )}
       />
     </div>

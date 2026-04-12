@@ -9,15 +9,14 @@ export const mapFlightDataToFormValues = (flight: Flight | undefined): FlightFor
     destination: flight?.destination || "",
     airline: flight?.airline || "",
     flightTime: flight?.flightTime || "",
-    price: flight?.price || 0,
     notes: flight?.notes || "",
-    unitPrice: flight?.unitPrice || "",
     provider: flight?.provider || "",
     fromCountry: flight?.fromCountry || "",
     fromCity: flight?.fromCity || "",
     toCountry: flight?.toCountry || "",
     toCity: flight?.toCity || "",
     isActive: flight?.isActive || false,
+    pricingPeriods: flight?.pricingPeriods ?? [],
   };
 };
 

@@ -1,14 +1,14 @@
 import { countryApi } from "@/modules/masterData/country/api/country.api";
+import EntranceFeePricingForm from "@/modules/masterData/entranceFee/components/EntranceFeePricingForm";
 import { mapEntranceFeeDataToFormValues } from "@/modules/masterData/entranceFee/mappers/entrance-fee-form.mapper";
 import type { EntranceFee } from "@/modules/masterData/entranceFee/types/entrance-fee.type";
-import FormCurrencyInput from "@/shared/components/form/FormCurrencyInput";
+import Section from "@/shared/components/common/Section";
 import FormInput from "@/shared/components/form/FormInput";
 import FormSelect from "@/shared/components/form/FormSelect";
 import FormSwitch from "@/shared/components/form/FormSwitch/FormSwitch";
 import FormTextarea from "@/shared/components/form/FormTextarea";
 import { Button } from "@/shared/components/ui/button";
 import { Form } from "@/shared/components/ui/form";
-import { CURRENCY_OPTIONS } from "@/shared/constants/currency.constant";
 import type { Country } from "@/shared/types/country/country.type";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Save } from "lucide-react";
@@ -49,16 +49,20 @@ export default function EntranceFeeForm({ defaultValues, onSubmit, onCancel, isS
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
-        <div className='gap-4 grid grid-cols-1 sm:grid-cols-2'>
-          <FormInput name='code' label='Mã phí vào cổng' required />
-          <FormInput name='serviceName' label='Tên dịch vụ' required />
-          <FormSelect name='country' options={countriesOptions} label='Quốc gia' required />
-          <FormSelect name='city' options={citiesOptions} label='Thành phố' disabled={!form.watch("country")} required />
-          <FormCurrencyInput name='price' label='Giá tiền' required />
-          <FormSelect name='unitPrice' options={CURRENCY_OPTIONS} label='Đơn vị tiền tệ' required />
-          <FormTextarea name='notes' label='Ghi chú' className='sm:col-span-2' />
-          <FormSwitch name='isActive' label='Hoạt động' />
-        </div>
+        <Section title='1. Thông tin cơ bản'>
+          <div className='gap-4 grid grid-cols-1 sm:grid-cols-2'>
+            <FormInput name='code' label='Mã phí vào cổng' required />
+            <FormInput name='serviceName' label='Tên dịch vụ' required />
+            <FormSelect name='country' options={countriesOptions} label='Quốc gia' required />
+            <FormSelect name='city' options={citiesOptions} label='Thành phố' disabled={!form.watch("country")} required />
+            <FormTextarea name='notes' label='Ghi chú' className='sm:col-span-2' />
+            <FormSwitch name='isActive' label='Hoạt động' />
+          </div>
+        </Section>
+
+        <Section title='2. Bảng giá'>
+          <EntranceFeePricingForm />
+        </Section>
 
         <div className='flex justify-start gap-3'>
           <Button type='button' variant='outline' size='lg' onClick={onCancel}>

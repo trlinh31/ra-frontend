@@ -1,5 +1,6 @@
 import { PATHS } from "@/app/routes/route.constant";
 import DayFilterBar from "@/modules/tour/day/components/DayFilterBar";
+import DayServicesTable from "@/modules/tour/day/components/DayServicesTable";
 import { dayMockStore } from "@/modules/tour/day/data/day.mock-store";
 import type { Day } from "@/modules/tour/day/types/day.type";
 import { AppTable } from "@/shared/components/common/AppTable";
@@ -77,7 +78,7 @@ export default function DayListPage() {
     <div className='space-y-4'>
       <TableToolbar title='Quản lý ngày hành trình' description='Danh sách các ngày hành trình của hệ thống' icon={CalendarDays} onAdd={handleAdd} />
       <DayFilterBar onFilter={setFilters} />
-      <AppTable columns={columns} data={filteredDays} />
+      <AppTable columns={columns} data={filteredDays} enableExpanding renderExpandedRow={(item) => <DayServicesTable item={item} />} />
     </div>
   );
 }

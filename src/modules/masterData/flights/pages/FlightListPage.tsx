@@ -1,14 +1,13 @@
 import { PATHS } from "@/app/routes/route.constant";
 import FlightFilterBar, { type FlightFilters } from "@/modules/masterData/flights/components/FlightFilterBar";
+import FlightPricingPeriodsTable from "@/modules/masterData/flights/components/FlightPricingPeriodsTable";
 import { flightMockStore } from "@/modules/masterData/flights/data/flight.mock-store";
-import { getRouteCode } from "@/modules/masterData/flights/helpers/getRouteCode";
 import type { Flight } from "@/modules/masterData/flights/types/flight.type";
 import { AppTable } from "@/shared/components/common/AppTable";
 import ActionButton from "@/shared/components/table/ActionButton";
 import TableToolbar from "@/shared/components/table/TableToolbar";
 import { Switch } from "@/shared/components/ui/switch";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
-import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Plane } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -21,7 +20,7 @@ export default function FlightListPage() {
   const { confirm } = useConfirm();
 
   const [flights, setFlights] = useState<Flight[]>(() => flightMockStore.getAll());
-  const [filters, setFilters] = useState<FlightFilters>({fromCountry: "", toCountry: "", fromCity: "", toCity: "", provider: "", airline: "" });
+  const [filters, setFilters] = useState<FlightFilters>({ fromCountry: "", toCountry: "", fromCity: "", toCity: "", provider: "", airline: "" });
 
   const { data: countries } = useCountries();
 
@@ -83,8 +82,8 @@ export default function FlightListPage() {
       header: "STT",
       cell: ({ row }) => row.index + 1,
     },
-     
-     {
+
+    {
       header: "Tuyến bay",
       accessorKey: "routeFull",
       cell: ({ row }) => `${row.original.fromCity} (${row.original.fromCountry}) → ${row.original.toCity} (${row.original.toCountry})`,
@@ -106,22 +105,12 @@ export default function FlightListPage() {
       header: "Hãng bay",
       accessorKey: "airline",
     },
-    
+
     {
       header: "Thời gian bay",
       accessorKey: "flightTime",
     },
-    {
-      header: "Giá bay",
-      accessorKey: "price",
-      cell: ({ row }) => formatNumberVN(row.original.price),
-    },
-    
-    {
-      header: "Đơn vị tiền tệ",
-      accessorKey: "unitPrice",
-    },
-    
+
     {
       header: "Ghi chú",
       accessorKey: "notes",
@@ -153,7 +142,12 @@ export default function FlightListPage() {
 
       <FlightFilterBar countries={countries ?? []} onFilter={setFilters} providerOptions={providerOptions} airlineOptions={airlineOptions} />
 
-      <AppTable columns={columns} data={filteredFlights} />
+      <AppTable
+        columns={columns}
+        data={filteredFlights}
+        enableExpanding
+        renderExpandedRow={(flight) => <FlightPricingPeriodsTable flight={flight} />}
+      />
     </div>
   );
 }

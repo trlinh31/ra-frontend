@@ -96,21 +96,6 @@ export default function HotelListPage() {
       ),
     },
     {
-      id: "roomCount",
-      header: "Số phòng",
-      enableSorting: false,
-      cell: ({ row }) => row.original.roomTypes.length,
-    },
-    // {
-    //   id: "priceRange",
-    //   header: "Khoảng giá",
-    //   enableSorting: false,
-    //   cell: ({ row }) => {
-    //     const { min, max } = getMinMaxPrice(row.original.rooms);
-    //     return `${formatNumberVN(min)} - ${formatNumberVN(max)}`;
-    //   },
-    // },
-    {
       header: "Nhà cung cấp",
       accessorKey: "supplier",
     },

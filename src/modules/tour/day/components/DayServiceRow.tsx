@@ -4,8 +4,12 @@ import Section from "@/shared/components/common/Section";
 import ActionButton from "@/shared/components/table/ActionButton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { Controller, useFormContext } from "react-hook-form";
+import EntranceFeeServiceFields from "./EntranceFeeServiceFields";
+import FlightServiceFields from "./FlightServiceFields";
+import GroupTourServiceFields from "./GroupTourServiceFields";
 import HotelServiceFields from "./HotelServiceFields";
 import TransportServiceFields from "./TransportServiceFields";
+import VisaServiceFields from "./VisaServiceFields";
 
 interface DayServiceRowProps {
   index: number;
@@ -42,6 +46,22 @@ export default function DayServiceRow({ index, onRemove }: DayServiceRowProps) {
 
             <TabsContent value={ServiceType.TRANSPORT}>
               <TransportServiceFields index={index} />
+            </TabsContent>
+
+            <TabsContent value={ServiceType.GROUP_TOUR}>
+              <GroupTourServiceFields index={index} />
+            </TabsContent>
+
+            <TabsContent value={ServiceType.VISA}>
+              <VisaServiceFields index={index} />
+            </TabsContent>
+
+            <TabsContent value={ServiceType.ENTRANCE_FEE}>
+              <EntranceFeeServiceFields index={index} />
+            </TabsContent>
+
+            <TabsContent value={ServiceType.FLIGHT}>
+              <FlightServiceFields index={index} />
             </TabsContent>
           </Tabs>
         )}

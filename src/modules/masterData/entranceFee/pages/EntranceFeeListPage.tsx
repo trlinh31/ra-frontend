@@ -1,5 +1,7 @@
 import { PATHS } from "@/app/routes/route.constant";
+import { useCountries } from "@/modules/masterData/country/hooks/useCountries";
 import EntranceFeeFilterBar, { type EntranceFeeFilters } from "@/modules/masterData/entranceFee/components/EntranceFeeFilterBar";
+import EntranceFeePricingPeriodsTable from "@/modules/masterData/entranceFee/components/EntranceFeePricingPeriodsTable";
 import { entranceFeeMockStore } from "@/modules/masterData/entranceFee/data/entrance-fee.mock-store";
 import type { EntranceFee } from "@/modules/masterData/entranceFee/types/entrance-fee.type";
 import { AppTable } from "@/shared/components/common/AppTable";
@@ -7,12 +9,10 @@ import ActionButton from "@/shared/components/table/ActionButton";
 import TableToolbar from "@/shared/components/table/TableToolbar";
 import { Switch } from "@/shared/components/ui/switch";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
-import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Ticket } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useCountries } from "../../country/hooks/useCountries";
 
 export default function EntranceFeeListPage() {
   const navigate = useNavigate();
@@ -21,9 +21,8 @@ export default function EntranceFeeListPage() {
   const [filters, setFilters] = useState<EntranceFeeFilters>({ serviceName: "", isActive: "", country: "", city: "" });
 
   const { data: countries } = useCountries();
-  
+
   const filteredItems = useMemo(() => {
-    
     return items.filter((item) => {
       if (filters.serviceName && !item.serviceName.toLowerCase().includes(filters.serviceName.toLowerCase())) return false;
       if (filters.isActive !== "" && item.isActive !== (filters.isActive === "true")) return false;
@@ -52,12 +51,11 @@ export default function EntranceFeeListPage() {
 
   const columns: ColumnDef<EntranceFee>[] = [
     { id: "index", header: "STT", cell: ({ row }) => row.index + 1 },
-    { header: "Quốc gia", accessorKey: "country" },  
+    { header: "Quốc gia", accessorKey: "country" },
     { header: "Thành phố", accessorKey: "city" },
     { header: "Mã", accessorKey: "code" },
     { header: "Tên dịch vụ", accessorKey: "serviceName" },
-    { header: "Giá tiền", accessorKey: "price", cell: ({ row }) => formatNumberVN(row.original.price) },
-    { header: "Đơn vị tiền tệ", accessorKey: "unitPrice" },
+
     { header: "Ghi chú", accessorKey: "notes", enableSorting: false },
     {
       header: "Hoạt động",
@@ -81,8 +79,8 @@ export default function EntranceFeeListPage() {
   return (
     <div className='space-y-4'>
       <TableToolbar title='Quản lý phí vào cổng' description='Danh sách các phí vào cổng của hệ thống' icon={Ticket} onAdd={handleAdd} />
-      <EntranceFeeFilterBar  countries={countries ?? []} onFilter={setFilters} />
-      <AppTable columns={columns} data={filteredItems} />
+      <EntranceFeeFilterBar countries={countries ?? []} onFilter={setFilters} />
+      <AppTable columns={columns} data={filteredItems} enableExpanding renderExpandedRow={(item) => <EntranceFeePricingPeriodsTable item={item} />} />
     </div>
   );
 }

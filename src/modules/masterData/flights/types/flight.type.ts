@@ -1,3 +1,23 @@
+export type FlightDayGroup = {
+  id: string;
+  label: string;
+  days: number[];
+  price: number;
+};
+
+export type FlightDateRange = {
+  from: string;
+  to: string;
+  dayGroups: FlightDayGroup[];
+};
+
+export type FlightPricingPeriod = {
+  id: string;
+  label: string;
+  currency: string;
+  dateRanges: FlightDateRange[];
+};
+
 export type Flight = {
   id: string;
   // code: string;
@@ -6,13 +26,12 @@ export type Flight = {
   destination: string;
   airline: string;
   flightTime: string;
-  price: number;
-  unitPrice: string;
   provider: string;
-  fromCountry: string,
-  fromCity: string,
-  toCountry: string,
-  toCity: string,
+  fromCountry: string;
+  fromCity: string;
+  toCountry: string;
+  toCity: string;
   notes: string;
   isActive: boolean;
+  pricingPeriods: FlightPricingPeriod[];
 };
