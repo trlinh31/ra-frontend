@@ -2,7 +2,8 @@ export interface EntranceFeeDayGroup {
   id: string;
   label: string;
   days: number[];
-  price: number;
+  adultPrice: number;
+  childPrice: number;
 }
 
 export interface EntranceFeeDateRange {

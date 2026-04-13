@@ -19,16 +19,16 @@ let _items: EntranceFee[] = [
             from: "2026-01-01",
             to: "2026-06-30",
             dayGroups: [
-              { id: "ef1-dg1", label: "T2-T6", days: [1, 2, 3, 4, 5], price: 300000 },
-              { id: "ef1-dg2", label: "Cuối tuần", days: [6, 0], price: 380000 },
+              { id: "ef1-dg1", label: "T2-T6", days: [1, 2, 3, 4, 5], adultPrice: 300000, childPrice: 150000 },
+              { id: "ef1-dg2", label: "Cuối tuần", days: [6, 0], adultPrice: 380000, childPrice: 190000 },
             ],
           },
           {
             from: "2026-07-01",
             to: "2026-12-31",
             dayGroups: [
-              { id: "ef1-dg3", label: "T2-T6", days: [1, 2, 3, 4, 5], price: 320000 },
-              { id: "ef1-dg4", label: "Cuối tuần", days: [6, 0], price: 400000 },
+              { id: "ef1-dg3", label: "T2-T6", days: [1, 2, 3, 4, 5], adultPrice: 320000, childPrice: 160000 },
+              { id: "ef1-dg4", label: "Cuối tuần", days: [6, 0], adultPrice: 400000, childPrice: 200000 },
             ],
           },
         ],
@@ -52,7 +52,7 @@ let _items: EntranceFee[] = [
           {
             from: "2026-01-01",
             to: "2026-12-31",
-            dayGroups: [{ id: "ef2-dg1", label: "Cả tuần", days: [0, 1, 2, 3, 4, 5, 6], price: 120000 }],
+            dayGroups: [{ id: "ef2-dg1", label: "Cả tuần", days: [0, 1, 2, 3, 4, 5, 6], adultPrice: 120000, childPrice: 60000 }],
           },
         ],
       },

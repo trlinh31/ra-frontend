@@ -59,21 +59,25 @@ export default function EntranceFeeServiceFields({ index }: EntranceFeeServiceFi
     if (!selectedPeriod || !dayGroupId) return null;
     const dg = allDayGroups.find((g) => g.id === dayGroupId);
     if (!dg) return null;
-    return { price: dg.price, currency: selectedPeriod.currency };
+    return { adultPrice: dg.adultPrice, childPrice: dg.childPrice, currency: selectedPeriod.currency };
   }, [selectedPeriod, allDayGroups, dayGroupId]);
 
   const prevPriceKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
-    const key = computedPrice ? `${computedPrice.price}-${computedPrice.currency}` : null;
+    const key = computedPrice ? `${computedPrice.adultPrice}-${computedPrice.childPrice}-${computedPrice.currency}` : null;
     if (key === prevPriceKeyRef.current) return;
     prevPriceKeyRef.current = key;
     if (computedPrice) {
-      setValue(`services.${index}.unitPrice`, computedPrice.price, { shouldValidate: true });
+      setValue(`services.${index}.unitPrice`, computedPrice.adultPrice, { shouldValidate: true });
       setValue(`services.${index}.currency`, computedPrice.currency, { shouldValidate: true });
+      setValue(`services.${index}.entranceFeeDetail.adultPrice`, computedPrice.adultPrice);
+      setValue(`services.${index}.entranceFeeDetail.childPrice`, computedPrice.childPrice);
     } else {
       setValue(`services.${index}.unitPrice`, 0);
       setValue(`services.${index}.currency`, "");
+      setValue(`services.${index}.entranceFeeDetail.adultPrice`, undefined);
+      setValue(`services.${index}.entranceFeeDetail.childPrice`, undefined);
     }
   }, [computedPrice, index, setValue]);
 
@@ -160,9 +164,14 @@ export default function EntranceFeeServiceFields({ index }: EntranceFeeServiceFi
       </div>
 
       {computedPrice && (
-        <p className='font-semibold text-green-600 text-lg'>
-          Giá: {formatNumberVN(computedPrice.price)} {computedPrice.currency}
-        </p>
+        <div className='flex flex-wrap gap-4 font-semibold text-green-600 text-sm'>
+          <span>
+            Người lớn: {formatNumberVN(computedPrice.adultPrice)} {computedPrice.currency}
+          </span>
+          <span>
+            Trẻ em: {formatNumberVN(computedPrice.childPrice)} {computedPrice.currency}
+          </span>
+        </div>
       )}
     </div>
   );

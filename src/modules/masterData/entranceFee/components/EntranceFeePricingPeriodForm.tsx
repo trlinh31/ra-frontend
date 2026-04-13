@@ -117,7 +117,15 @@ export default function EntranceFeePricingPeriodForm({ periodIndex }: EntranceFe
             appendDateRange({
               from: "",
               to: "",
-              dayGroups: [{ id: crypto.randomUUID(), label: "", days: [], price: undefined as unknown as number }],
+              dayGroups: [
+                {
+                  id: crypto.randomUUID(),
+                  label: "",
+                  days: [],
+                  adultPrice: undefined as unknown as number,
+                  childPrice: undefined as unknown as number,
+                },
+              ],
             })
           }
         />

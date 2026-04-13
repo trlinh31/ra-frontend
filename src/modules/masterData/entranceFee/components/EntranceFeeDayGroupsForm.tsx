@@ -44,7 +44,7 @@ export default function EntranceFeeDayGroupsForm({ periodIndex, rangeIndex }: En
       <div className='space-y-2'>
         {dayGroupFields.map((field, groupIdx) => (
           <Section key={field.id} type='dashed' borderColor='red' title={`Nhóm thứ #${groupIdx + 1}`} className='relative'>
-            <div className='items-start gap-4 grid grid-cols-1 sm:grid-cols-3'>
+            <div className='items-start gap-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'>
               <FormInput
                 name={`pricingPeriods.${periodIndex}.dateRanges.${rangeIndex}.dayGroups.${groupIdx}.label`}
                 label='Tên nhóm'
@@ -87,8 +87,14 @@ export default function EntranceFeeDayGroupsForm({ periodIndex, rangeIndex }: En
               </section>
 
               <FormCurrencyInput
-                name={`pricingPeriods.${periodIndex}.dateRanges.${rangeIndex}.dayGroups.${groupIdx}.price`}
-                label='Giá vé'
+                name={`pricingPeriods.${periodIndex}.dateRanges.${rangeIndex}.dayGroups.${groupIdx}.adultPrice`}
+                label='Giá người lớn'
+                required
+              />
+
+              <FormCurrencyInput
+                name={`pricingPeriods.${periodIndex}.dateRanges.${rangeIndex}.dayGroups.${groupIdx}.childPrice`}
+                label='Giá trẻ em'
                 required
               />
             </div>
@@ -105,7 +111,15 @@ export default function EntranceFeeDayGroupsForm({ periodIndex, rangeIndex }: En
         text='Thêm nhóm thứ'
         variant='default'
         size='default'
-        onClick={() => appendDayGroup({ id: crypto.randomUUID(), label: "", days: [], price: undefined as unknown as number })}
+        onClick={() =>
+          appendDayGroup({
+            id: crypto.randomUUID(),
+            label: "",
+            days: [],
+            adultPrice: undefined as unknown as number,
+            childPrice: undefined as unknown as number,
+          })
+        }
       />
 
       {rangeErrors?.dayGroups?.message && <FieldError errors={[rangeErrors.dayGroups]} />}

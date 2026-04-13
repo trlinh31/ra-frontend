@@ -1,4 +1,4 @@
-import { SERVICE_TYPE_CONFIG, type Day } from "@/modules/tour/day/types/day.type";
+import { SERVICE_TYPE_CONFIG, ServiceType, type Day } from "@/modules/tour/day/types/day.type";
 import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
 
 interface DayServicesTableProps {
@@ -35,7 +35,16 @@ export default function DayServicesTable({ item }: DayServicesTableProps) {
                 </td>
                 <td className='px-3 py-2 border'>{svc.name}</td>
                 <td className='px-3 py-2 border font-medium text-green-600 text-right'>
-                  {svc.unitPrice ? (
+                  {svc.serviceType === ServiceType.ENTRANCE_FEE && svc.entranceFeeDetail?.adultPrice != null ? (
+                    <div className='space-y-0.5'>
+                      <div>
+                        NL: {formatNumberVN(svc.entranceFeeDetail.adultPrice)} {svc.currency}
+                      </div>
+                      <div>
+                        TE: {formatNumberVN(svc.entranceFeeDetail.childPrice ?? 0)} {svc.currency}
+                      </div>
+                    </div>
+                  ) : svc.unitPrice ? (
                     `${formatNumberVN(svc.unitPrice)} ${svc.currency}`
                   ) : (
                     <span className='font-normal text-muted-foreground italic'>Chưa có</span>

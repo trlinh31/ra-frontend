@@ -1,5 +1,5 @@
 import { dayMockStore } from "@/modules/tour/day/data/day.mock-store";
-import { SERVICE_TYPE_CONFIG } from "@/modules/tour/day/types/day.type";
+import { SERVICE_TYPE_CONFIG, ServiceType } from "@/modules/tour/day/types/day.type";
 import type { Tour } from "@/modules/tour/tour/types/tour.type";
 import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
 import { useMemo } from "react";
@@ -73,7 +73,20 @@ export default function TourDaysTable({ item }: TourDaysTableProps) {
                         </td>
                         <td className='px-3 py-1.5'>{svc.name}</td>
                         <td className='px-3 py-1.5 font-medium text-green-600 text-right whitespace-nowrap'>
-                          {svc.unitPrice ? `${formatNumberVN(svc.unitPrice)} ${svc.currency}` : "—"}
+                          {svc.serviceType === ServiceType.ENTRANCE_FEE && svc.entranceFeeDetail?.adultPrice != null ? (
+                            <div className='space-y-0.5 text-xs'>
+                              <div>
+                                NL: {formatNumberVN(svc.entranceFeeDetail.adultPrice)} {svc.currency}
+                              </div>
+                              <div>
+                                TE: {formatNumberVN(svc.entranceFeeDetail.childPrice ?? 0)} {svc.currency}
+                              </div>
+                            </div>
+                          ) : svc.unitPrice ? (
+                            `${formatNumberVN(svc.unitPrice)} ${svc.currency}`
+                          ) : (
+                            "—"
+                          )}
                         </td>
                       </tr>
                     );

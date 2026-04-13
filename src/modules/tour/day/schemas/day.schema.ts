@@ -28,6 +28,8 @@ export const entranceFeeServiceDetailSchema = z.object({
   entranceFeeId: z.string().min(1, "Vui lòng chọn phí vào cổng"),
   pricingPeriodId: z.string().min(1, "Vui lòng chọn giai đoạn giá"),
   dayGroupId: z.string().min(1, "Vui lòng chọn nhóm ngày"),
+  adultPrice: z.number().optional(),
+  childPrice: z.number().optional(),
 });
 
 export const flightServiceDetailSchema = z.object({

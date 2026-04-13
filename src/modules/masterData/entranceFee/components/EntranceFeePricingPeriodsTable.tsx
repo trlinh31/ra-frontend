@@ -102,7 +102,8 @@ export default function EntranceFeePricingPeriodsTable({ item }: EntranceFeePric
                             <tr className='bg-slate-700 text-primary-foreground'>
                               <th className='px-3 py-3 border border-border font-semibold text-sm text-left'>Nhóm thứ</th>
                               <th className='px-3 py-3 border border-border font-semibold text-sm text-left'>Ngày áp dụng</th>
-                              <th className='px-3 py-3 border border-border min-w-36 font-semibold text-sm'>Giá ({period.currency}/ người)</th>
+                              <th className='px-3 py-3 border border-border min-w-36 font-semibold text-sm'>Người lớn ({period.currency})</th>
+                              <th className='px-3 py-3 border border-border min-w-36 font-semibold text-sm'>Trẻ em ({period.currency})</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -117,7 +118,10 @@ export default function EntranceFeePricingPeriodsTable({ item }: EntranceFeePric
                                     .join(", ")}
                                 </td>
                                 <td className='px-3 py-3 border border-border text-sm'>
-                                  {dg.price != null && dg.price > 0 ? formatNumberVN(dg.price) : "N/A"}
+                                  {dg.adultPrice != null && dg.adultPrice > 0 ? formatNumberVN(dg.adultPrice) : "N/A"}
+                                </td>
+                                <td className='px-3 py-3 border border-border text-sm'>
+                                  {dg.childPrice != null && dg.childPrice > 0 ? formatNumberVN(dg.childPrice) : "N/A"}
                                 </td>
                               </tr>
                             ))}
