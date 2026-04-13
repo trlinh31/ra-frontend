@@ -21,6 +21,7 @@ export default function EntranceFeeServiceFields({ index }: EntranceFeeServiceFi
 
   const entranceFeeId = useWatch({ control, name: `services.${index}.entranceFeeDetail.entranceFeeId` });
   const pricingPeriodId = useWatch({ control, name: `services.${index}.entranceFeeDetail.pricingPeriodId` });
+  const ticketTypeIndex = useWatch({ control, name: `services.${index}.entranceFeeDetail.ticketTypeIndex` });
   const dayGroupId = useWatch({ control, name: `services.${index}.entranceFeeDetail.dayGroupId` });
 
   const allItems = useMemo(() => entranceFeeMockStore.getAllItems(), []);
@@ -47,37 +48,39 @@ export default function EntranceFeeServiceFields({ index }: EntranceFeeServiceFi
 
   const selectedPeriod = useMemo(() => selectedItem?.pricingPeriods.find((p) => p.id === pricingPeriodId), [selectedItem, pricingPeriodId]);
 
+  const ticketTypeOptions = useMemo(() => {
+    if (!selectedItem) return [];
+    return selectedItem.ticketTypes.map((tt, i) => ({ label: tt.name, value: String(i) }));
+  }, [selectedItem]);
+
   const allDayGroups = useMemo(() => selectedPeriod?.dateRanges.flatMap((dr) => dr.dayGroups) ?? [], [selectedPeriod]);
 
   const dayGroupOptions = useMemo(() => {
     if (!selectedPeriod) return [];
+    const filtered = ticketTypeIndex ? allDayGroups.filter((g) => g.ticketTypeIndex === ticketTypeIndex) : allDayGroups;
     const seen = new Set<string>();
-    return allDayGroups.filter((g) => (seen.has(g.id) ? false : seen.add(g.id))).map((g) => ({ label: g.label, value: g.id }));
-  }, [selectedPeriod, allDayGroups]);
+    return filtered.filter((g) => (seen.has(g.id) ? false : seen.add(g.id))).map((g) => ({ label: g.label, value: g.id }));
+  }, [selectedPeriod, allDayGroups, ticketTypeIndex]);
 
   const computedPrice = useMemo(() => {
-    if (!selectedPeriod || !dayGroupId) return null;
-    const dg = allDayGroups.find((g) => g.id === dayGroupId);
+    if (!selectedPeriod || !ticketTypeIndex || !dayGroupId) return null;
+    const dg = allDayGroups.find((g) => g.id === dayGroupId && g.ticketTypeIndex === ticketTypeIndex);
     if (!dg) return null;
-    return { adultPrice: dg.adultPrice, childPrice: dg.childPrice, currency: selectedPeriod.currency };
-  }, [selectedPeriod, allDayGroups, dayGroupId]);
+    return { price: dg.price, currency: selectedPeriod.currency };
+  }, [selectedPeriod, allDayGroups, ticketTypeIndex, dayGroupId]);
 
   const prevPriceKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
-    const key = computedPrice ? `${computedPrice.adultPrice}-${computedPrice.childPrice}-${computedPrice.currency}` : null;
+    const key = computedPrice ? `${computedPrice.price}-${computedPrice.currency}` : null;
     if (key === prevPriceKeyRef.current) return;
     prevPriceKeyRef.current = key;
     if (computedPrice) {
-      setValue(`services.${index}.unitPrice`, computedPrice.adultPrice, { shouldValidate: true });
+      setValue(`services.${index}.unitPrice`, computedPrice.price, { shouldValidate: true });
       setValue(`services.${index}.currency`, computedPrice.currency, { shouldValidate: true });
-      setValue(`services.${index}.entranceFeeDetail.adultPrice`, computedPrice.adultPrice);
-      setValue(`services.${index}.entranceFeeDetail.childPrice`, computedPrice.childPrice);
     } else {
       setValue(`services.${index}.unitPrice`, 0);
       setValue(`services.${index}.currency`, "");
-      setValue(`services.${index}.entranceFeeDetail.adultPrice`, undefined);
-      setValue(`services.${index}.entranceFeeDetail.childPrice`, undefined);
     }
   }, [computedPrice, index, setValue]);
 
@@ -96,6 +99,7 @@ export default function EntranceFeeServiceFields({ index }: EntranceFeeServiceFi
   const resetDownstream = () => {
     setValue(`services.${index}.entranceFeeDetail.entranceFeeId`, "");
     setValue(`services.${index}.entranceFeeDetail.pricingPeriodId`, "");
+    setValue(`services.${index}.entranceFeeDetail.ticketTypeIndex`, "");
     setValue(`services.${index}.entranceFeeDetail.dayGroupId`, "");
   };
 
@@ -131,47 +135,56 @@ export default function EntranceFeeServiceFields({ index }: EntranceFeeServiceFi
         </Field>
       </div>
 
-      <FormSelect
-        name={`services.${index}.entranceFeeDetail.entranceFeeId`}
-        label='Phí vào cổng'
-        options={entranceFeeOptions}
-        onChange={() => {
-          setValue(`services.${index}.entranceFeeDetail.pricingPeriodId`, "");
-          setValue(`services.${index}.entranceFeeDetail.dayGroupId`, "");
-        }}
-        placeholder='Chọn phí vào cổng'
-      />
+      <div className='gap-3 grid grid-cols-1 sm:grid-cols-2'>
+        <FormSelect
+          name={`services.${index}.entranceFeeDetail.entranceFeeId`}
+          label='Phí vào cổng'
+          options={entranceFeeOptions}
+          onChange={() => {
+            setValue(`services.${index}.entranceFeeDetail.pricingPeriodId`, "");
+            setValue(`services.${index}.entranceFeeDetail.ticketTypeIndex`, "");
+            setValue(`services.${index}.entranceFeeDetail.dayGroupId`, "");
+          }}
+          placeholder='Chọn phí vào cổng'
+        />
+
+        <FormSelect
+          name={`services.${index}.entranceFeeDetail.pricingPeriodId`}
+          label='Khoảng ngày'
+          options={pricingPeriodOptions}
+          onChange={() => {
+            setValue(`services.${index}.entranceFeeDetail.ticketTypeIndex`, "");
+            setValue(`services.${index}.entranceFeeDetail.dayGroupId`, "");
+          }}
+          placeholder='Chọn khoảng ngày'
+          disabled={!entranceFeeId}
+        />
+      </div>
 
       <div className='gap-3 grid grid-cols-1 sm:grid-cols-2'>
         <FormSelect
-          name={`services.${index}.entranceFeeDetail.pricingPeriodId`}
-          label='Giai đoạn giá'
-          options={pricingPeriodOptions}
+          name={`services.${index}.entranceFeeDetail.ticketTypeIndex`}
+          label='Loại đối tượng'
+          options={ticketTypeOptions}
           onChange={() => {
             setValue(`services.${index}.entranceFeeDetail.dayGroupId`, "");
           }}
-          placeholder='Chọn giai đoạn giá'
-          disabled={!entranceFeeId}
+          placeholder='Chọn loại đối tượng'
+          disabled={!pricingPeriodId}
         />
-
         <FormSelect
           name={`services.${index}.entranceFeeDetail.dayGroupId`}
           label='Nhóm ngày'
           options={dayGroupOptions}
           placeholder='Chọn nhóm ngày'
-          disabled={!pricingPeriodId}
+          disabled={!ticketTypeIndex}
         />
       </div>
 
       {computedPrice && (
-        <div className='flex flex-wrap gap-4 font-semibold text-green-600 text-sm'>
-          <span>
-            Người lớn: {formatNumberVN(computedPrice.adultPrice)} {computedPrice.currency}
-          </span>
-          <span>
-            Trẻ em: {formatNumberVN(computedPrice.childPrice)} {computedPrice.currency}
-          </span>
-        </div>
+        <p className='font-semibold text-green-600 text-sm'>
+          Giá: {formatNumberVN(computedPrice.price)} {computedPrice.currency}
+        </p>
       )}
     </div>
   );

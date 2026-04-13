@@ -3,7 +3,7 @@ import AppDatePicker from "@/shared/components/common/AppDatePicker/AppDatePicke
 import { Button } from "@/shared/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/shared/components/ui/collapsible";
 import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
-import { formatDate } from "date-fns";
+import { format, formatDate, startOfMonth } from "date-fns";
 import { CalendarDays, ChevronDown, ChevronUp } from "lucide-react";
 import { useMemo, useState } from "react";
 
@@ -12,17 +12,21 @@ interface EntranceFeePricingPeriodsTableProps {
 }
 
 export default function EntranceFeePricingPeriodsTable({ item }: EntranceFeePricingPeriodsTableProps) {
-  const [filterFrom, setFilterFrom] = useState<string | null>(null);
-  const [filterTo, setFilterTo] = useState<string | null>(null);
+  const today = new Date();
+  const defaultFrom = format(startOfMonth(today), "yyyy-MM-dd");
+  const defaultTo = format(today, "yyyy-MM-dd");
+
+  const [filterFrom, setFilterFrom] = useState<string | null>(defaultFrom);
+  const [filterTo, setFilterTo] = useState<string | null>(defaultTo);
   const [openPeriods, setOpenPeriods] = useState<Set<number>>(new Set());
 
   const filteredPeriods = useMemo(() => {
     if (!filterFrom && !filterTo) return item.pricingPeriods;
     return item.pricingPeriods.filter((period) =>
       period.dateRanges.some((dr) => {
-        const startsBeforeFilterEnd = filterTo ? dr.from <= filterTo : true;
-        const endsAfterFilterStart = filterFrom ? dr.to >= filterFrom : true;
-        return startsBeforeFilterEnd && endsAfterFilterStart;
+        const startsAfterFilterFrom = filterFrom ? dr.from >= filterFrom : true;
+        const endsBeforeFilterTo = filterTo ? dr.to <= filterTo : true;
+        return startsAfterFilterFrom && endsBeforeFilterTo;
       })
     );
   }, [item.pricingPeriods, filterFrom, filterTo]);
@@ -44,18 +48,16 @@ export default function EntranceFeePricingPeriodsTable({ item }: EntranceFeePric
     <div className='space-y-4'>
       <div className='flex flex-wrap items-center gap-3'>
         {(filterFrom || filterTo) && (
-          <div>
-            <Button
-              type='button'
-              variant='destructive'
-              size='sm'
-              onClick={() => {
-                setFilterFrom(null);
-                setFilterTo(null);
-              }}>
-              Xóa bộ lọc
-            </Button>
-          </div>
+          <Button
+            type='button'
+            variant='outline'
+            size='sm'
+            onClick={() => {
+              setFilterFrom(null);
+              setFilterTo(null);
+            }}>
+            Xóa bộ lọc
+          </Button>
         )}
 
         <span className='font-medium text-sm'>Tìm kiếm theo ngày:</span>
@@ -100,31 +102,34 @@ export default function EntranceFeePricingPeriodsTable({ item }: EntranceFeePric
                         <table className='border border-border w-full text-center'>
                           <thead>
                             <tr className='bg-slate-700 text-primary-foreground'>
+                              <th className='px-3 py-3 border border-border font-semibold text-sm text-left'>Loại đối tượng</th>
                               <th className='px-3 py-3 border border-border font-semibold text-sm text-left'>Nhóm thứ</th>
                               <th className='px-3 py-3 border border-border font-semibold text-sm text-left'>Ngày áp dụng</th>
-                              <th className='px-3 py-3 border border-border min-w-36 font-semibold text-sm'>Người lớn ({period.currency})</th>
-                              <th className='px-3 py-3 border border-border min-w-36 font-semibold text-sm'>Trẻ em ({period.currency})</th>
+                              <th className='px-3 py-3 border border-border min-w-36 font-semibold text-sm'>Giá ({period.currency})</th>
                             </tr>
                           </thead>
                           <tbody>
-                            {dr.dayGroups.map((dg, dgIdx) => (
-                              <tr key={dgIdx} className='even:bg-muted/40'>
-                                <td className='px-3 py-3 border border-border font-medium text-sm text-left'>{dg.label}</td>
-                                <td className='px-3 py-3 border border-border text-sm text-left'>
-                                  {dg.days
-                                    .slice()
-                                    .sort((a, b) => a - b)
-                                    .map((d) => ["CN", "T2", "T3", "T4", "T5", "T6", "T7"][d])
-                                    .join(", ")}
-                                </td>
-                                <td className='px-3 py-3 border border-border text-sm'>
-                                  {dg.adultPrice != null && dg.adultPrice > 0 ? formatNumberVN(dg.adultPrice) : "N/A"}
-                                </td>
-                                <td className='px-3 py-3 border border-border text-sm'>
-                                  {dg.childPrice != null && dg.childPrice > 0 ? formatNumberVN(dg.childPrice) : "N/A"}
-                                </td>
-                              </tr>
-                            ))}
+                            {dr.dayGroups.map((dg, dgIdx) => {
+                              const ticketType = item.ticketTypes[parseInt(dg.ticketTypeIndex)];
+                              return (
+                                <tr key={dgIdx} className='even:bg-muted/40'>
+                                  <td className='px-3 py-3 border border-border font-medium text-sm text-left'>
+                                    {ticketType?.name ?? <span className='text-muted-foreground italic'>—</span>}
+                                  </td>
+                                  <td className='px-3 py-3 border border-border font-medium text-sm text-left'>{dg.label}</td>
+                                  <td className='px-3 py-3 border border-border text-sm text-left'>
+                                    {dg.days
+                                      .slice()
+                                      .sort((a, b) => a - b)
+                                      .map((d) => ["CN", "T2", "T3", "T4", "T5", "T6", "T7"][d])
+                                      .join(", ")}
+                                  </td>
+                                  <td className='px-3 py-3 border border-border text-sm'>
+                                    {dg.price != null && dg.price > 0 ? formatNumberVN(dg.price) : "N/A"}
+                                  </td>
+                                </tr>
+                              );
+                            })}
                           </tbody>
                         </table>
                       </div>

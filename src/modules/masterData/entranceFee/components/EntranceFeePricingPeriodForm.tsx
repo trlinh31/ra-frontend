@@ -122,8 +122,8 @@ export default function EntranceFeePricingPeriodForm({ periodIndex }: EntranceFe
                   id: crypto.randomUUID(),
                   label: "",
                   days: [],
-                  adultPrice: undefined as unknown as number,
-                  childPrice: undefined as unknown as number,
+                  ticketTypeIndex: "",
+                  price: undefined as unknown as number,
                 },
               ],
             })

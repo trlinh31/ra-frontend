@@ -1,5 +1,6 @@
 import { countryApi } from "@/modules/masterData/country/api/country.api";
 import EntranceFeePricingForm from "@/modules/masterData/entranceFee/components/EntranceFeePricingForm";
+import EntranceFeeTicketTypeForm from "@/modules/masterData/entranceFee/components/EntranceFeeTicketTypeForm";
 import { mapEntranceFeeDataToFormValues } from "@/modules/masterData/entranceFee/mappers/entrance-fee-form.mapper";
 import type { EntranceFee } from "@/modules/masterData/entranceFee/types/entrance-fee.type";
 import Section from "@/shared/components/common/Section";
@@ -60,7 +61,11 @@ export default function EntranceFeeForm({ defaultValues, onSubmit, onCancel, isS
           </div>
         </Section>
 
-        <Section title='2. Bảng giá'>
+        <Section title='2. Loại đối tượng'>
+          <EntranceFeeTicketTypeForm />
+        </Section>
+
+        <Section title='3. Bảng giá'>
           <EntranceFeePricingForm />
         </Section>
 

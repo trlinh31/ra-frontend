@@ -3,7 +3,7 @@ import AppDatePicker from "@/shared/components/common/AppDatePicker/AppDatePicke
 import { Button } from "@/shared/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/shared/components/ui/collapsible";
 import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
-import { formatDate } from "date-fns";
+import { format, formatDate, startOfMonth } from "date-fns";
 import { CalendarDays, ChevronDown, ChevronUp } from "lucide-react";
 import { useMemo, useState } from "react";
 
@@ -12,17 +12,21 @@ interface HotelPricingPeriodsTableProps {
 }
 
 export default function HotelPricingPeriodsTable({ hotel }: HotelPricingPeriodsTableProps) {
-  const [filterFrom, setFilterFrom] = useState<string | null>(null);
-  const [filterTo, setFilterTo] = useState<string | null>(null);
+  const today = new Date();
+  const defaultFrom = format(startOfMonth(today), "yyyy-MM-dd");
+  const defaultTo = format(today, "yyyy-MM-dd");
+
+  const [filterFrom, setFilterFrom] = useState<string | null>(defaultFrom);
+  const [filterTo, setFilterTo] = useState<string | null>(defaultTo);
   const [openPeriods, setOpenPeriods] = useState<Set<string>>(new Set());
 
   const filteredPeriods = useMemo(() => {
     if (!filterFrom && !filterTo) return hotel.pricingPeriods;
     return hotel.pricingPeriods.filter((period) =>
       period.dateRanges.some((dr) => {
-        const startsBeforeFilterEnd = filterTo ? dr.from <= filterTo : true;
-        const endsAfterFilterStart = filterFrom ? dr.to >= filterFrom : true;
-        return startsBeforeFilterEnd && endsAfterFilterStart;
+        const startsAfterFilterFrom = filterFrom ? dr.from >= filterFrom : true;
+        const endsBeforeFilterTo = filterTo ? dr.to <= filterTo : true;
+        return startsAfterFilterFrom && endsBeforeFilterTo;
       })
     );
   }, [hotel.pricingPeriods, filterFrom, filterTo]);
@@ -44,18 +48,16 @@ export default function HotelPricingPeriodsTable({ hotel }: HotelPricingPeriodsT
     <div className='space-y-4'>
       <div className='flex flex-wrap items-center gap-3'>
         {(filterFrom || filterTo) && (
-          <div>
-            <Button
-              type='button'
-              variant='destructive'
-              size='sm'
-              onClick={() => {
-                setFilterFrom(null);
-                setFilterTo(null);
-              }}>
-              Xóa bộ lọc
-            </Button>
-          </div>
+          <Button
+            type='button'
+            variant='outline'
+            size='sm'
+            onClick={() => {
+              setFilterFrom(null);
+              setFilterTo(null);
+            }}>
+            Xóa bộ lọc
+          </Button>
         )}
 
         <span className='font-medium text-sm'>Tìm kiếm theo ngày:</span>

@@ -23,9 +23,7 @@ export default function EntranceFeePricingForm() {
         {
           from: "",
           to: "",
-          dayGroups: [
-            { id: crypto.randomUUID(), label: "", days: [], adultPrice: undefined as unknown as number, childPrice: undefined as unknown as number },
-          ],
+          dayGroups: [{ id: crypto.randomUUID(), label: "", days: [], ticketTypeIndex: "", price: undefined as unknown as number }],
         },
       ],
     });

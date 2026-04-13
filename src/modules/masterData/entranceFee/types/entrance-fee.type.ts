@@ -1,9 +1,14 @@
+export interface EntranceFeeTicketType {
+  name: string;
+  note: string;
+}
+
 export interface EntranceFeeDayGroup {
   id: string;
   label: string;
   days: number[];
-  adultPrice: number;
-  childPrice: number;
+  ticketTypeIndex: string;
+  price: number;
 }
 
 export interface EntranceFeeDateRange {
@@ -27,5 +32,6 @@ export interface EntranceFee {
   city: string;
   notes: string;
   isActive: boolean;
+  ticketTypes: EntranceFeeTicketType[];
   pricingPeriods: EntranceFeePricingPeriod[];
 }

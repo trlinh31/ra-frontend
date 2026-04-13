@@ -2,9 +2,10 @@ import type { EntranceFeeFormValues } from "@/modules/masterData/entranceFee/sch
 import Section from "@/shared/components/common/Section";
 import FormCurrencyInput from "@/shared/components/form/FormCurrencyInput";
 import FormInput from "@/shared/components/form/FormInput";
+import FormSelect from "@/shared/components/form/FormSelect";
 import ActionButton from "@/shared/components/table/ActionButton";
 import { FieldError } from "@/shared/components/ui/field";
-import { Controller, useFieldArray, useFormContext } from "react-hook-form";
+import { Controller, useFieldArray, useFormContext, useWatch } from "react-hook-form";
 
 const DAY_LABELS: Record<number, string> = {
   0: "CN",
@@ -26,6 +27,13 @@ interface EntranceFeeDayGroupsFormProps {
 export default function EntranceFeeDayGroupsForm({ periodIndex, rangeIndex }: EntranceFeeDayGroupsFormProps) {
   const { control, formState } = useFormContext<EntranceFeeFormValues>();
 
+  const ticketTypes = useWatch({ control, name: "ticketTypes" }) ?? [];
+
+  const ticketTypeOptions = ticketTypes.map((tt, i) => ({
+    value: String(i),
+    label: tt.name || `Loại đối tượng ${i + 1}`,
+  }));
+
   const {
     fields: dayGroupFields,
     append: appendDayGroup,
@@ -45,6 +53,14 @@ export default function EntranceFeeDayGroupsForm({ periodIndex, rangeIndex }: En
         {dayGroupFields.map((field, groupIdx) => (
           <Section key={field.id} type='dashed' borderColor='red' title={`Nhóm thứ #${groupIdx + 1}`} className='relative'>
             <div className='items-start gap-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'>
+              <FormSelect
+                name={`pricingPeriods.${periodIndex}.dateRanges.${rangeIndex}.dayGroups.${groupIdx}.ticketTypeIndex`}
+                label='Loại đối tượng'
+                options={ticketTypeOptions}
+                placeholder='Chọn loại đối tượng'
+                required
+              />
+
               <FormInput
                 name={`pricingPeriods.${periodIndex}.dateRanges.${rangeIndex}.dayGroups.${groupIdx}.label`}
                 label='Tên nhóm'
@@ -87,14 +103,8 @@ export default function EntranceFeeDayGroupsForm({ periodIndex, rangeIndex }: En
               </section>
 
               <FormCurrencyInput
-                name={`pricingPeriods.${periodIndex}.dateRanges.${rangeIndex}.dayGroups.${groupIdx}.adultPrice`}
-                label='Giá người lớn'
-                required
-              />
-
-              <FormCurrencyInput
-                name={`pricingPeriods.${periodIndex}.dateRanges.${rangeIndex}.dayGroups.${groupIdx}.childPrice`}
-                label='Giá trẻ em'
+                name={`pricingPeriods.${periodIndex}.dateRanges.${rangeIndex}.dayGroups.${groupIdx}.price`}
+                label='Giá vé'
                 required
               />
             </div>
@@ -106,21 +116,23 @@ export default function EntranceFeeDayGroupsForm({ periodIndex, rangeIndex }: En
         ))}
       </div>
 
-      <ActionButton
-        action='add'
-        text='Thêm nhóm thứ'
-        variant='default'
-        size='default'
-        onClick={() =>
-          appendDayGroup({
-            id: crypto.randomUUID(),
-            label: "",
-            days: [],
-            adultPrice: undefined as unknown as number,
-            childPrice: undefined as unknown as number,
-          })
-        }
-      />
+      <div className={ticketTypeOptions.length === 0 ? "opacity-50 pointer-events-none" : ""}>
+        <ActionButton
+          action='add'
+          text='Thêm nhóm thứ'
+          variant='default'
+          size='default'
+          onClick={() =>
+            appendDayGroup({
+              id: crypto.randomUUID(),
+              label: "",
+              days: [],
+              ticketTypeIndex: "",
+              price: undefined as unknown as number,
+            })
+          }
+        />
+      </div>
 
       {rangeErrors?.dayGroups?.message && <FieldError errors={[rangeErrors.dayGroups]} />}
     </div>

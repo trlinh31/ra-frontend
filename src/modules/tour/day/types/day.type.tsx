@@ -69,9 +69,8 @@ export type DayService = {
   entranceFeeDetail?: {
     entranceFeeId: string;
     pricingPeriodId: string;
+    ticketTypeIndex: string;
     dayGroupId: string;
-    adultPrice?: number;
-    childPrice?: number;
   };
   flightDetail?: {
     flightId: string;

@@ -1,11 +1,16 @@
 import { z } from "zod";
 
+export const entranceFeeTicketTypeSchema = z.object({
+  name: z.string().min(1, "Trường này là bắt buộc"),
+  note: z.string(),
+});
+
 const entranceFeeDayGroupSchema = z.object({
   id: z.string(),
   label: z.string().min(1, "Trường này là bắt buộc"),
   days: z.array(z.number().min(0).max(6)).min(1, "Phải chọn ít nhất một ngày trong tuần"),
-  adultPrice: z.number({ error: "Trường này là bắt buộc" }).min(0, "Giá phải lớn hơn hoặc bằng 0"),
-  childPrice: z.number({ error: "Trường này là bắt buộc" }).min(0, "Giá phải lớn hơn hoặc bằng 0"),
+  ticketTypeIndex: z.string().min(1, "Trường này là bắt buộc"),
+  price: z.number({ error: "Trường này là bắt buộc" }).min(0, "Giá phải lớn hơn hoặc bằng 0"),
 });
 
 const entranceFeeDateRangeSchema = z.object({
@@ -28,6 +33,7 @@ export const entranceFeeSchema = z.object({
   city: z.string().min(1, "Vui lòng chọn thành phố"),
   notes: z.string(),
   isActive: z.boolean(),
+  ticketTypes: z.array(entranceFeeTicketTypeSchema).min(1, "Phải có ít nhất một loại đối tượng"),
   pricingPeriods: z.array(entranceFeePricingPeriodSchema),
 });
 
