@@ -1,6 +1,7 @@
 import { useCities } from "@/modules/masterData/country/hooks/useCities";
 import { useCountries } from "@/modules/masterData/country/hooks/useCountries";
 import { hotelMockStore } from "@/modules/masterData/hotel/data/hotel.mock-store";
+import { useNumberOfPeople } from "@/modules/tour/day/contexts/NumberOfPeopleContext";
 import type { DayFormValues } from "@/modules/tour/day/schemas/day.schema";
 import AppSelect from "@/shared/components/common/AppSelect";
 import FormSelect from "@/shared/components/form/FormSelect";
@@ -15,6 +16,7 @@ interface HotelServiceFieldsProps {
 
 export default function HotelServiceFields({ index }: HotelServiceFieldsProps) {
   const { control, setValue } = useFormContext<DayFormValues>();
+  const numberOfPeople = useNumberOfPeople();
 
   const [filterCountry, setFilterCountry] = useState("");
   const [filterCity, setFilterCity] = useState("");
@@ -51,6 +53,13 @@ export default function HotelServiceFields({ index }: HotelServiceFieldsProps) {
 
   const selectedHotel = useMemo(() => allHotels.find((h) => h.id === hotelId), [allHotels, hotelId]);
 
+  const selectedRoomType = useMemo(() => selectedHotel?.roomTypes.find((rt) => String(rt.id) === roomTypeId), [selectedHotel, roomTypeId]);
+
+  const numberOfRooms = useMemo(() => {
+    if (!selectedRoomType || selectedRoomType.maxGuests <= 0) return 1;
+    return Math.ceil(numberOfPeople / selectedRoomType.maxGuests);
+  }, [numberOfPeople, selectedRoomType]);
+
   const pricingPeriodOptions = useMemo(() => {
     if (!selectedHotel) return [];
     return selectedHotel.pricingPeriods.map((p) => ({ label: p.label, value: p.id }));
@@ -76,17 +85,21 @@ export default function HotelServiceFields({ index }: HotelServiceFieldsProps) {
     if (!selectedPeriod || !dayGroupId || !roomTypeId) return null;
     const dg = allDayGroups.find((g) => g.id === dayGroupId && String(g.roomTypeId) === roomTypeId);
     if (!dg) return null;
-    return { price: dg.price, currency: selectedPeriod.currency };
-  }, [selectedPeriod, allDayGroups, dayGroupId, roomTypeId]);
+    return {
+      pricePerRoom: dg.price,
+      totalPrice: dg.price * numberOfRooms,
+      currency: selectedPeriod.currency,
+    };
+  }, [selectedPeriod, allDayGroups, dayGroupId, roomTypeId, numberOfRooms]);
 
   const prevPriceKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
-    const key = computedPrice ? `${computedPrice.price}-${computedPrice.currency}` : null;
+    const key = computedPrice ? `${computedPrice.totalPrice}-${computedPrice.currency}` : null;
     if (key === prevPriceKeyRef.current) return;
     prevPriceKeyRef.current = key;
     if (computedPrice) {
-      setValue(`services.${index}.unitPrice`, computedPrice.price, { shouldValidate: true });
+      setValue(`services.${index}.unitPrice`, computedPrice.totalPrice, { shouldValidate: true });
       setValue(`services.${index}.currency`, computedPrice.currency, { shouldValidate: true });
     } else {
       setValue(`services.${index}.unitPrice`, 0);
@@ -125,7 +138,6 @@ export default function HotelServiceFields({ index }: HotelServiceFieldsProps) {
             options={countryOptions}
             value={filterCountry}
             onChange={(v) => {
-              console.log("123", 123);
               setFilterCountry(v);
               setFilterCity("");
               setFilterRate("");
@@ -196,9 +208,15 @@ export default function HotelServiceFields({ index }: HotelServiceFieldsProps) {
       </div>
 
       {computedPrice && (
-        <p className='font-semibold text-green-600 text-lg'>
-          Giá: {formatNumberVN(computedPrice.price)} {computedPrice.currency}
-        </p>
+        <div className='space-y-1'>
+          <p className='text-muted-foreground text-xs'>
+            {numberOfPeople} khách ÷ {selectedRoomType?.maxGuests ?? "?"} khách/phòng = {numberOfRooms} phòng &times;{" "}
+            {formatNumberVN(computedPrice.pricePerRoom)} {computedPrice.currency}
+          </p>
+          <p className='font-semibold text-green-600 text-lg'>
+            Tổng: {formatNumberVN(computedPrice.totalPrice)} {computedPrice.currency}
+          </p>
+        </div>
       )}
     </div>
   );

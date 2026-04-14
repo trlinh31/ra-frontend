@@ -1,11 +1,12 @@
 import { useCities } from "@/modules/masterData/country/hooks/useCities";
 import { useCountries } from "@/modules/masterData/country/hooks/useCountries";
 import { groupTourMockStore } from "@/modules/masterData/groupTour/data/group-tour.mock-store";
+import DayServicesSection from "@/modules/tour/day/components/DayServicesSection";
+import { NumberOfPeopleProvider } from "@/modules/tour/day/contexts/NumberOfPeopleContext";
 import { dayMockStore } from "@/modules/tour/day/data/day.mock-store";
 import { mapDayDataToFormValues } from "@/modules/tour/day/mappers/day-form.mapper";
 import { daySchema, type DayFormValues } from "@/modules/tour/day/schemas/day.schema";
 import { SERVICE_TYPE_CONFIG } from "@/modules/tour/day/types/day.type";
-import TourDayServicesSection from "@/modules/tour/tour/components/TourDayServicesSection";
 import type { TourFormValues, TourGroupTourItemFormValues } from "@/modules/tour/tour/schemas/tour.schema";
 import AppSelect from "@/shared/components/common/AppSelect";
 import Section from "@/shared/components/common/Section";
@@ -20,7 +21,7 @@ import { Form } from "@/shared/components/ui/form";
 import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronDown, ChevronUp, ChevronsUpDown, PlusCircle } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useFieldArray, useForm, useFormContext, useWatch } from "react-hook-form";
 
 // ─── Shared row props ───────────────────────────────────────────────────────
@@ -167,7 +168,7 @@ function TourDayItemRow({ index, total, onRemove, onMoveUp, onMoveDown }: TourIt
                 <FormInput name='title' label='Tên hành trình' required />
                 <FormTextarea name='description' label='Mô tả' className='sm:col-span-2' />
               </div>
-              <TourDayServicesSection />
+              <DayServicesSection />
             </div>
           </Form>
         </div>
@@ -379,21 +380,35 @@ function TourGroupTourItemRow({ index, total, onRemove, onMoveUp, onMoveDown }: 
   );
 }
 
-// ─── Dispatcher row ──────────────────────────────────────────────────────────
+// ─── Dispatcher row (memo’d to block re-renders from parent) ────────────────
 
-function TourItineraryRow(props: TourItineraryRowProps) {
+interface TourItineraryDispatchProps {
+  index: number;
+  total: number;
+  remove: (index: number) => void;
+  move: (from: number, to: number) => void;
+}
+
+const TourItineraryRow = memo(function TourItineraryRow({ index, total, remove, move }: TourItineraryDispatchProps) {
   const { control } = useFormContext<TourFormValues>();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const kind = useWatch({ control, name: `itinerary.${props.index}.kind` as any });
-  if (kind === "group_tour") return <TourGroupTourItemRow {...props} />;
-  return <TourDayItemRow {...props} />;
-}
+  const kind = useWatch({ control, name: `itinerary.${index}.kind` as any });
+
+  const onRemove = useCallback(() => remove(index), [remove, index]);
+  const onMoveUp = useCallback(() => move(index, index - 1), [move, index]);
+  const onMoveDown = useCallback(() => move(index, index + 1), [move, index]);
+
+  if (kind === "group_tour")
+    return <TourGroupTourItemRow index={index} total={total} onRemove={onRemove} onMoveUp={onMoveUp} onMoveDown={onMoveDown} />;
+  return <TourDayItemRow index={index} total={total} onRemove={onRemove} onMoveUp={onMoveUp} onMoveDown={onMoveDown} />;
+});
 
 // ─── Main export ─────────────────────────────────────────────────────────────
 
 export default function TourDayForm() {
   const { control, formState } = useFormContext<TourFormValues>();
   const { fields, append, remove, move } = useFieldArray({ control, name: "itinerary" });
+  const numberOfPeople = (useWatch({ control, name: "numberOfPeople" }) as number) ?? 1;
 
   const handleAddDay = () => append({ kind: "day" as const, ...mapDayDataToFormValues(undefined) });
   const handleAddGroupTour = () =>
@@ -419,28 +434,23 @@ export default function TourDayForm() {
   }
 
   return (
-    <div className='space-y-3'>
-      {fields.map((field, index) => (
-        <TourItineraryRow
-          key={field.id}
-          index={index}
-          total={fields.length}
-          onRemove={() => remove(index)}
-          onMoveUp={() => move(index, index - 1)}
-          onMoveDown={() => move(index, index + 1)}
-        />
-      ))}
-      <div className='flex gap-2'>
-        <Button type='button' onClick={handleAddDay}>
-          <PlusCircle className='w-4 h-4' />
-          Thêm ngày
-        </Button>
-        <Button type='button' variant='secondary' onClick={handleAddGroupTour}>
-          <PlusCircle className='w-4 h-4' />
-          Thêm nhóm tour
-        </Button>
+    <NumberOfPeopleProvider value={numberOfPeople}>
+      <div className='space-y-3'>
+        {fields.map((field, index) => (
+          <TourItineraryRow key={field.id} index={index} total={fields.length} remove={remove} move={move} />
+        ))}
+        <div className='flex gap-2'>
+          <Button type='button' onClick={handleAddDay}>
+            <PlusCircle className='w-4 h-4' />
+            Thêm ngày
+          </Button>
+          <Button type='button' variant='secondary' onClick={handleAddGroupTour}>
+            <PlusCircle className='w-4 h-4' />
+            Thêm nhóm tour
+          </Button>
+        </div>
+        {formState.errors.itinerary?.message && <p className='font-normal text-destructive text-sm'>{formState.errors.itinerary.message}</p>}
       </div>
-      {formState.errors.itinerary?.message && <p className='font-normal text-destructive text-sm'>{formState.errors.itinerary.message}</p>}
-    </div>
+    </NumberOfPeopleProvider>
   );
 }
