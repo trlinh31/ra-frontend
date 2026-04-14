@@ -1,10 +1,16 @@
 import { z } from "zod";
 
+export const seatClassSchema = z.object({
+  name: z.string().min(1, "Trường này là bắt buộc"),
+  note: z.string(),
+});
+
 const flightDayGroupSchema = z.object({
   id: z.string(),
   label: z.string().min(1, "Trường này là bắt buộc"),
   days: z.array(z.number().min(0).max(6)).min(1, "Phải chọn ít nhất một ngày trong tuần"),
   price: z.number({ error: "Trường này là bắt buộc" }).min(0, "Giá phải lớn hơn hoặc bằng 0"),
+  seatClassIndex: z.string().min(1, "Trường này là bắt buộc"),
 });
 
 const flightDateRangeSchema = z.object({
@@ -37,6 +43,7 @@ export const flightSchema = z.object({
   toCity: z.string().min(1, "Vui lòng chọn thành phố điểm đến"),
   notes: z.string(),
   isActive: z.boolean(),
+  seatClasses: z.array(seatClassSchema).min(1, "Phải có ít nhất một hạng vé"),
   pricingPeriods: z.array(flightPricingPeriodSchema),
 });
 

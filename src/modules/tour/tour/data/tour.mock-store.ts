@@ -8,6 +8,16 @@ let _tours: Tour[] = [
     description: "Hành trình khám phá Hà Nội và vịnh Hạ Long kỳ vĩ",
     content: "<p>Chào mừng quý khách đến với hành trình khám phá <strong>Hà Nội – Hạ Long</strong> tuyệt vời!</p>",
     numberOfPeople: 10,
+    groupTours: [
+      {
+        groupTourId: "1",
+        pricingPeriodId: "gt1-p1",
+        dayGroupId: "gt1-dg1",
+        name: "Tour Hà Nội - Hạ Long 3N2Đ",
+        unitPrice: 4500000,
+        currency: "VND",
+      },
+    ],
     days: [
       { dayId: "day1", order: 1 },
       { dayId: "day2", order: 2 },
@@ -21,6 +31,7 @@ let _tours: Tour[] = [
     description: "Khám phá thủ đô Hà Nội trong 2 ngày",
     content: "<p>Trải nghiệm <strong>Hà Nội</strong> – thành phố ngàn năm văn hiến.</p>",
     numberOfPeople: 15,
+    groupTours: [],
     days: [
       { dayId: "day1", order: 1 },
       { dayId: "day2", order: 2 },

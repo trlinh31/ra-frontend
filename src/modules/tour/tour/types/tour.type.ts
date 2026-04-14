@@ -3,6 +3,15 @@ export type TourDay = {
   order: number;
 };
 
+export type TourGroupTour = {
+  groupTourId: string;
+  pricingPeriodId: string;
+  dayGroupId: string;
+  name: string;
+  unitPrice: number;
+  currency: string;
+};
+
 export type Tour = {
   id: string;
   code: string;
@@ -10,5 +19,6 @@ export type Tour = {
   description: string;
   content: string;
   numberOfPeople: number;
+  groupTours: TourGroupTour[];
   days: TourDay[];
 };

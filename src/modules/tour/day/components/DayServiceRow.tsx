@@ -6,7 +6,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui
 import { Controller, useFormContext } from "react-hook-form";
 import EntranceFeeServiceFields from "./EntranceFeeServiceFields";
 import FlightServiceFields from "./FlightServiceFields";
-import GroupTourServiceFields from "./GroupTourServiceFields";
 import HotelServiceFields from "./HotelServiceFields";
 import TransportServiceFields from "./TransportServiceFields";
 import VisaServiceFields from "./VisaServiceFields";
@@ -46,10 +45,6 @@ export default function DayServiceRow({ index, onRemove }: DayServiceRowProps) {
 
             <TabsContent value={ServiceType.TRANSPORT}>
               <TransportServiceFields index={index} />
-            </TabsContent>
-
-            <TabsContent value={ServiceType.GROUP_TOUR}>
-              <GroupTourServiceFields index={index} />
             </TabsContent>
 
             <TabsContent value={ServiceType.VISA}>

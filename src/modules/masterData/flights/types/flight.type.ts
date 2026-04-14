@@ -1,8 +1,15 @@
+export type FlightSeatClass = {
+  id: number;
+  name: string;
+  note: string;
+};
+
 export type FlightDayGroup = {
   id: string;
   label: string;
   days: number[];
   price: number;
+  seatClassId: number;
 };
 
 export type FlightDateRange = {
@@ -33,5 +40,6 @@ export type Flight = {
   toCity: string;
   notes: string;
   isActive: boolean;
+  seatClasses: FlightSeatClass[];
   pricingPeriods: FlightPricingPeriod[];
 };

@@ -1,4 +1,5 @@
 import { dayMockStore } from "@/modules/tour/day/data/day.mock-store";
+import { SERVICE_TYPE_CONFIG } from "@/modules/tour/day/types/day.type";
 import type { TourFormValues } from "@/modules/tour/tour/schemas/tour.schema";
 import AppSelect from "@/shared/components/common/AppSelect";
 import Section from "@/shared/components/common/Section";
@@ -37,48 +38,66 @@ function TourDayRow({ index, total, onRemove, onMoveUp, onMoveDown }: TourDayRow
   }, [selectedDay]);
 
   return (
-    <div className='flex flex-wrap items-center gap-3 bg-background px-3 py-2 border rounded-md'>
-      <span className='w-14 font-medium text-sm shrink-0'>Ngày {index + 1}</span>
+    <div className='bg-background border rounded-md overflow-hidden'>
+      <div className='flex flex-wrap items-center gap-3 px-3 py-2'>
+        <span className='w-14 font-medium text-sm shrink-0'>Ngày {index + 1}</span>
 
-      {selectedDay && (
-        <Badge variant='outline' className='shrink-0'>
-          {selectedDay.code}
-        </Badge>
-      )}
-
-      <Controller
-        control={control}
-        name={`days.${index}.dayId`}
-        render={({ field, fieldState }) => (
-          <Field data-invalid={fieldState.invalid} className='flex-1 min-w-52'>
-            <AppSelect options={dayOptions} value={field.value} onChange={field.onChange} placeholder='Chọn ngày hành trình' />
-            {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-          </Field>
-        )}
-      />
-
-      {selectedDay && (
-        <Badge variant='secondary' className='shrink-0'>
-          {selectedDay.services.length} dịch vụ
-        </Badge>
-      )}
-
-      {selectedDay &&
-        Object.entries(dayTotals).map(([currency, total]) => (
-          <Badge key={currency} variant='outline' className='bg-green-50 border-green-300 text-green-700 shrink-0'>
-            {currency === "VND" ? formatNumberVN(total) : total.toLocaleString()} {currency}
+        {selectedDay && (
+          <Badge variant='outline' className='shrink-0'>
+            {selectedDay.code}
           </Badge>
-        ))}
+        )}
 
-      <div className='flex items-center gap-1 shrink-0'>
-        <Button type='button' variant='ghost' size='icon' onClick={onMoveUp} disabled={index === 0}>
-          <ChevronUp className='w-4 h-4' />
-        </Button>
-        <Button type='button' variant='ghost' size='icon' onClick={onMoveDown} disabled={index === total - 1}>
-          <ChevronDown className='w-4 h-4' />
-        </Button>
-        <ActionButton action='delete' onClick={onRemove} />
+        <Controller
+          control={control}
+          name={`days.${index}.dayId`}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid} className='flex-1 min-w-52'>
+              <AppSelect options={dayOptions} value={field.value} onChange={field.onChange} placeholder='Chọn ngày hành trình' />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
+
+        {selectedDay &&
+          Object.entries(dayTotals).map(([currency, total]) => (
+            <Badge key={currency} variant='outline' className='bg-green-50 border-green-300 text-green-700 shrink-0'>
+              {currency === "VND" ? formatNumberVN(total) : total.toLocaleString()} {currency}
+            </Badge>
+          ))}
+
+        <div className='flex items-center gap-1 shrink-0'>
+          <Button type='button' variant='ghost' size='icon' onClick={onMoveUp} disabled={index === 0}>
+            <ChevronUp className='w-4 h-4' />
+          </Button>
+          <Button type='button' variant='ghost' size='icon' onClick={onMoveDown} disabled={index === total - 1}>
+            <ChevronDown className='w-4 h-4' />
+          </Button>
+          <ActionButton action='delete' onClick={onRemove} />
+        </div>
       </div>
+
+      {selectedDay && selectedDay.services.length > 0 && (
+        <div className='border-t divide-y'>
+          {selectedDay.services.map((service) => {
+            const config = SERVICE_TYPE_CONFIG[service.serviceType];
+            return (
+              <div key={service.id} className='flex items-center gap-3 bg-muted/30 px-3 py-2 text-sm'>
+                <span className='flex items-center gap-1 w-28 text-muted-foreground shrink-0'>
+                  {config?.icon}
+                  <span className='text-xs'>{config?.label}</span>
+                </span>
+                <span className='flex-1 truncate'>{service.name}</span>
+                {service.unitPrice > 0 && service.currency && (
+                  <span className='font-medium text-green-700 shrink-0'>
+                    {service.currency === "VND" ? formatNumberVN(service.unitPrice) : service.unitPrice.toLocaleString()} {service.currency}
+                  </span>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

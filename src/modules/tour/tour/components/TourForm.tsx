@@ -14,6 +14,7 @@ import { Save, Users } from "lucide-react";
 import { useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import TourDayForm from "./TourDayForm";
+import TourGroupTourForm from "./TourGroupTourForm";
 
 interface TourFormProps {
   defaultValues?: Tour | undefined;
@@ -25,22 +26,34 @@ interface TourFormProps {
 
 function TourCostSummary() {
   const days = useWatch<TourFormValues, "days">({ name: "days" });
+  const groupTours = useWatch<TourFormValues, "groupTours">({ name: "groupTours" });
   const numberOfPeople = useWatch<TourFormValues, "numberOfPeople">({ name: "numberOfPeople" });
 
   const allDays = useMemo(() => dayMockStore.getAll(), []);
 
   const totalsByCurrency = useMemo(() => {
-    if (!days?.length) return {} as Record<string, number>;
-    return days.reduce<Record<string, number>>((acc, tourDay) => {
-      const day = allDays.find((d) => d.id === tourDay.dayId);
-      if (!day) return acc;
-      day.services.forEach((s) => {
-        if (!s.unitPrice || !s.currency) return;
-        acc[s.currency] = (acc[s.currency] ?? 0) + s.unitPrice;
+    const acc: Record<string, number> = {};
+
+    if (days?.length) {
+      days.forEach((tourDay) => {
+        const day = allDays.find((d) => d.id === tourDay.dayId);
+        if (!day) return;
+        day.services.forEach((s) => {
+          if (!s.unitPrice || !s.currency) return;
+          acc[s.currency] = (acc[s.currency] ?? 0) + s.unitPrice;
+        });
       });
-      return acc;
-    }, {});
-  }, [days, allDays]);
+    }
+
+    if (groupTours?.length) {
+      groupTours.forEach((gt) => {
+        if (!gt.unitPrice || !gt.currency) return;
+        acc[gt.currency] = (acc[gt.currency] ?? 0) + gt.unitPrice;
+      });
+    }
+
+    return acc;
+  }, [days, groupTours, allDays]);
 
   const people = Number(numberOfPeople);
   const hasTotals = Object.keys(totalsByCurrency).length > 0;
@@ -48,7 +61,7 @@ function TourCostSummary() {
   if (!hasTotals) return null;
 
   return (
-    <Section title='3. Chi phí mỗi người'>
+    <Section title='5. Chi phí mỗi người'>
       <div className='space-y-3'>
         {Object.entries(totalsByCurrency).map(([currency, total]) => (
           <div key={currency} className='gap-4 grid grid-cols-1 sm:grid-cols-3 bg-muted p-4 rounded-lg'>
@@ -97,11 +110,16 @@ export default function TourForm({ defaultValues, onSubmit, onCancel, isSubmitti
           </div>
         </Section>
 
-        <Section title='2. Lịch trình & Nội dung'>
-          <div className='gap-6 grid grid-cols-1 lg:grid-cols-2'>
-            <FormRichTextEditor name='content' label='Nội dung tour' />
-            <TourDayForm />
-          </div>
+        <Section title='2. Nội dung tour'>
+          <FormRichTextEditor name='content' label='Nội dung tour' />
+        </Section>
+
+        <Section title='3. Nhóm tour'>
+          <TourGroupTourForm />
+        </Section>
+
+        <Section title='4. Lịch trình ngày'>
+          <TourDayForm />
         </Section>
 
         <TourCostSummary />

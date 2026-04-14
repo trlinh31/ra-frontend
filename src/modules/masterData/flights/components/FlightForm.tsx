@@ -1,4 +1,5 @@
 import FlightPricingForm from "@/modules/masterData/flights/components/FlightPricingForm";
+import FlightSeatClassSection from "@/modules/masterData/flights/components/FlightSeatClassSection";
 import { mapFlightDataToFormValues } from "@/modules/masterData/flights/mappers/flight-form.mapper";
 import type { Flight } from "@/modules/masterData/flights/types/flight.type";
 import Section from "@/shared/components/common/Section";
@@ -83,7 +84,9 @@ export default function FlightForm({ defaultValues, onSubmit, onCancel, isSubmit
           </div>
         </Section>
 
-        <Section title='2. Bảng giá'>
+        <FlightSeatClassSection />
+
+        <Section title='3. Bảng giá'>
           <FlightPricingForm />
         </Section>
 

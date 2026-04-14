@@ -2,9 +2,10 @@ import type { FlightFormValues } from "@/modules/masterData/flights/schemas/flig
 import Section from "@/shared/components/common/Section";
 import FormCurrencyInput from "@/shared/components/form/FormCurrencyInput";
 import FormInput from "@/shared/components/form/FormInput";
+import FormSelect from "@/shared/components/form/FormSelect";
 import ActionButton from "@/shared/components/table/ActionButton";
 import { FieldError } from "@/shared/components/ui/field";
-import { Controller, useFieldArray, useFormContext } from "react-hook-form";
+import { Controller, useFieldArray, useFormContext, useWatch } from "react-hook-form";
 
 const DAY_LABELS: Record<number, string> = {
   0: "CN",
@@ -26,6 +27,12 @@ interface FlightDayGroupsFormProps {
 export default function FlightDayGroupsForm({ periodIndex, rangeIndex }: FlightDayGroupsFormProps) {
   const { control, formState } = useFormContext<FlightFormValues>();
 
+  const seatClasses = useWatch({ control, name: "seatClasses" }) ?? [];
+  const seatClassOptions = seatClasses.map((sc, i) => ({
+    value: String(i),
+    label: sc.name || `Hạng vé ${i + 1}`,
+  }));
+
   const {
     fields: dayGroupFields,
     append: appendDayGroup,
@@ -44,7 +51,15 @@ export default function FlightDayGroupsForm({ periodIndex, rangeIndex }: FlightD
       <div className='space-y-2'>
         {dayGroupFields.map((field, groupIdx) => (
           <Section key={field.id} type='dashed' borderColor='red' title={`Nhóm thứ #${groupIdx + 1}`} className='relative'>
-            <div className='items-start gap-4 grid grid-cols-1 sm:grid-cols-3'>
+            <div className='items-start gap-4 grid grid-cols-1 sm:grid-cols-4'>
+              <FormSelect
+                name={`pricingPeriods.${periodIndex}.dateRanges.${rangeIndex}.dayGroups.${groupIdx}.seatClassIndex`}
+                label='Hạng vé'
+                options={seatClassOptions}
+                placeholder='Chọn hạng vé'
+                required
+              />
+
               <FormInput
                 name={`pricingPeriods.${periodIndex}.dateRanges.${rangeIndex}.dayGroups.${groupIdx}.label`}
                 label='Tên nhóm'
@@ -100,13 +115,15 @@ export default function FlightDayGroupsForm({ periodIndex, rangeIndex }: FlightD
         ))}
       </div>
 
-      <ActionButton
-        action='add'
-        text='Thêm nhóm thứ'
-        variant='default'
-        size='default'
-        onClick={() => appendDayGroup({ id: crypto.randomUUID(), label: "", days: [], price: undefined as unknown as number })}
-      />
+      <div className={seatClassOptions.length === 0 ? "opacity-50 pointer-events-none" : ""}>
+        <ActionButton
+          action='add'
+          text='Thêm nhóm thứ'
+          variant='default'
+          size='default'
+          onClick={() => appendDayGroup({ id: crypto.randomUUID(), label: "", days: [], price: undefined as unknown as number, seatClassIndex: "" })}
+        />
+      </div>
 
       {rangeErrors?.dayGroups?.message && <FieldError errors={[rangeErrors.dayGroups]} />}
     </div>

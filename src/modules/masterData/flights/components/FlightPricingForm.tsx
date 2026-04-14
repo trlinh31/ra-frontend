@@ -19,7 +19,13 @@ export default function FlightPricingForm() {
       id: crypto.randomUUID(),
       label: "",
       currency: "VND",
-      dateRanges: [{ from: "", to: "", dayGroups: [{ id: crypto.randomUUID(), label: "", days: [], price: undefined as unknown as number }] }],
+      dateRanges: [
+        {
+          from: "",
+          to: "",
+          dayGroups: [{ id: crypto.randomUUID(), label: "", days: [], price: undefined as unknown as number, seatClassIndex: "" }],
+        },
+      ],
     });
   };
 

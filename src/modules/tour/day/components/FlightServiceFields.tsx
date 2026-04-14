@@ -23,6 +23,7 @@ export default function FlightServiceFields({ index }: FlightServiceFieldsProps)
 
   const flightId = useWatch({ control, name: `services.${index}.flightDetail.flightId` });
   const pricingPeriodId = useWatch({ control, name: `services.${index}.flightDetail.pricingPeriodId` });
+  const seatClassId = useWatch({ control, name: `services.${index}.flightDetail.seatClassId` });
   const dayGroupId = useWatch({ control, name: `services.${index}.flightDetail.dayGroupId` });
 
   const allFlights = useMemo(() => flightMockStore.getAll(), []);
@@ -57,20 +58,26 @@ export default function FlightServiceFields({ index }: FlightServiceFieldsProps)
 
   const selectedPeriod = useMemo(() => selectedFlight?.pricingPeriods.find((p) => p.id === pricingPeriodId), [selectedFlight, pricingPeriodId]);
 
+  const seatClassOptions = useMemo(() => {
+    if (!selectedFlight) return [];
+    return selectedFlight.seatClasses.map((sc) => ({ label: sc.name, value: String(sc.id) }));
+  }, [selectedFlight]);
+
   const allDayGroups = useMemo(() => selectedPeriod?.dateRanges.flatMap((dr) => dr.dayGroups) ?? [], [selectedPeriod]);
 
   const dayGroupOptions = useMemo(() => {
     if (!selectedPeriod) return [];
+    const filtered = seatClassId ? allDayGroups.filter((g) => String(g.seatClassId) === seatClassId) : allDayGroups;
     const seen = new Set<string>();
-    return allDayGroups.filter((g) => (seen.has(g.id) ? false : seen.add(g.id))).map((g) => ({ label: g.label, value: g.id }));
-  }, [selectedPeriod, allDayGroups]);
+    return filtered.filter((g) => (seen.has(g.id) ? false : seen.add(g.id))).map((g) => ({ label: g.label, value: g.id }));
+  }, [selectedPeriod, allDayGroups, seatClassId]);
 
   const computedPrice = useMemo(() => {
-    if (!selectedPeriod || !dayGroupId) return null;
-    const dg = allDayGroups.find((g) => g.id === dayGroupId);
+    if (!selectedPeriod || !dayGroupId || !seatClassId) return null;
+    const dg = allDayGroups.find((g) => g.id === dayGroupId && String(g.seatClassId) === seatClassId);
     if (!dg) return null;
     return { price: dg.price, currency: selectedPeriod.currency };
-  }, [selectedPeriod, allDayGroups, dayGroupId]);
+  }, [selectedPeriod, allDayGroups, dayGroupId, seatClassId]);
 
   const prevPriceKeyRef = useRef<string | null>(null);
 
@@ -104,6 +111,7 @@ export default function FlightServiceFields({ index }: FlightServiceFieldsProps)
   const resetDownstream = () => {
     setValue(`services.${index}.flightDetail.flightId`, "");
     setValue(`services.${index}.flightDetail.pricingPeriodId`, "");
+    setValue(`services.${index}.flightDetail.seatClassId`, "");
     setValue(`services.${index}.flightDetail.dayGroupId`, "");
   };
 
@@ -167,23 +175,25 @@ export default function FlightServiceFields({ index }: FlightServiceFieldsProps)
         </Field>
       </div>
 
-      <FormSelect
-        name={`services.${index}.flightDetail.flightId`}
-        label='Chuyến bay'
-        options={flightOptions}
-        onChange={() => {
-          setValue(`services.${index}.flightDetail.pricingPeriodId`, "");
-          setValue(`services.${index}.flightDetail.dayGroupId`, "");
-        }}
-        placeholder='Chọn chuyến bay'
-      />
-
       <div className='gap-3 grid grid-cols-1 sm:grid-cols-2'>
+        <FormSelect
+          name={`services.${index}.flightDetail.flightId`}
+          label='Chuyến bay'
+          options={flightOptions}
+          onChange={() => {
+            setValue(`services.${index}.flightDetail.pricingPeriodId`, "");
+            setValue(`services.${index}.flightDetail.seatClassId`, "");
+            setValue(`services.${index}.flightDetail.dayGroupId`, "");
+          }}
+          placeholder='Chọn chuyến bay'
+        />
+
         <FormSelect
           name={`services.${index}.flightDetail.pricingPeriodId`}
           label='Giai đoạn giá'
           options={pricingPeriodOptions}
           onChange={() => {
+            setValue(`services.${index}.flightDetail.seatClassId`, "");
             setValue(`services.${index}.flightDetail.dayGroupId`, "");
           }}
           placeholder='Chọn giai đoạn giá'
@@ -191,11 +201,22 @@ export default function FlightServiceFields({ index }: FlightServiceFieldsProps)
         />
 
         <FormSelect
+          name={`services.${index}.flightDetail.seatClassId`}
+          label='Hạng vé'
+          options={seatClassOptions}
+          onChange={() => {
+            setValue(`services.${index}.flightDetail.dayGroupId`, "");
+          }}
+          placeholder='Chọn hạng vé'
+          disabled={!pricingPeriodId}
+        />
+
+        <FormSelect
           name={`services.${index}.flightDetail.dayGroupId`}
           label='Nhóm ngày'
           options={dayGroupOptions}
           placeholder='Chọn nhóm ngày'
-          disabled={!pricingPeriodId}
+          disabled={!seatClassId}
         />
       </div>
 
