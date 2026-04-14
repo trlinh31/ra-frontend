@@ -53,8 +53,8 @@ export default function DayListPage() {
     { header: "Mã", accessorKey: "code" },
     { header: "Quốc gia", accessorKey: "country" },
     { header: "Thành phố", accessorKey: "city" },
-    { header: "Tên hành trình", accessorKey: "title" },
-    { header: "Mô tả", accessorKey: "description", enableSorting: false },
+    { header: "Tên hành trình", accessorKey: "title", maxSize: 200 },
+    { header: "Mô tả", accessorKey: "description", enableSorting: false, maxSize: 200 },
     {
       id: "serviceCount",
       header: "Số dịch vụ",
