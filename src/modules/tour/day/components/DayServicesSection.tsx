@@ -28,7 +28,7 @@ export default function DayServicesSection() {
   const { fields, append, remove } = useFieldArray({ control, name: "services" });
 
   return (
-    <Section title='3. Dịch vụ'>
+    <Section title='Dịch vụ'>
       <div className='space-y-3'>
         {fields.length === 0 ? (
           <Section type='dashed' bgColor='transparent' className='text-muted-foreground text-sm text-center'>

@@ -1,4 +1,10 @@
-import type { Tour } from "../types/tour.type";
+import { dayMockStore } from "@/modules/tour/day/data/day.mock-store";
+import type { Tour, TourDay } from "../types/tour.type";
+
+const embedDay = (id: string): TourDay => {
+  const d = dayMockStore.getById(id)!;
+  return { code: d.code, title: d.title, country: d.country, city: d.city, description: d.description, services: d.services };
+};
 
 let _tours: Tour[] = [
   {
@@ -18,11 +24,7 @@ let _tours: Tour[] = [
         currency: "VND",
       },
     ],
-    days: [
-      { dayId: "day1", order: 1 },
-      { dayId: "day2", order: 2 },
-      { dayId: "day3", order: 3 },
-    ],
+    days: [embedDay("day1"), embedDay("day2"), embedDay("day3")],
   },
   {
     id: "t2",
@@ -32,10 +34,7 @@ let _tours: Tour[] = [
     content: "<p>Trải nghiệm <strong>Hà Nội</strong> – thành phố ngàn năm văn hiến.</p>",
     numberOfPeople: 15,
     groupTours: [],
-    days: [
-      { dayId: "day1", order: 1 },
-      { dayId: "day2", order: 2 },
-    ],
+    days: [embedDay("day1"), embedDay("day2")],
   },
 ];
 

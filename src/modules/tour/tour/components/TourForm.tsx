@@ -1,4 +1,3 @@
-import { dayMockStore } from "@/modules/tour/day/data/day.mock-store";
 import { mapTourDataToFormValues } from "@/modules/tour/tour/mappers/tour-form.mapper";
 import { tourSchema, type TourFormValues } from "@/modules/tour/tour/schemas/tour.schema";
 import type { Tour } from "@/modules/tour/tour/types/tour.type";
@@ -29,16 +28,12 @@ function TourCostSummary() {
   const groupTours = useWatch<TourFormValues, "groupTours">({ name: "groupTours" });
   const numberOfPeople = useWatch<TourFormValues, "numberOfPeople">({ name: "numberOfPeople" });
 
-  const allDays = useMemo(() => dayMockStore.getAll(), []);
-
   const totalsByCurrency = useMemo(() => {
     const acc: Record<string, number> = {};
 
     if (days?.length) {
-      days.forEach((tourDay) => {
-        const day = allDays.find((d) => d.id === tourDay.dayId);
-        if (!day) return;
-        day.services.forEach((s) => {
+      days.forEach((day) => {
+        (day.services ?? []).forEach((s) => {
           if (!s.unitPrice || !s.currency) return;
           acc[s.currency] = (acc[s.currency] ?? 0) + s.unitPrice;
         });
@@ -53,7 +48,7 @@ function TourCostSummary() {
     }
 
     return acc;
-  }, [days, groupTours, allDays]);
+  }, [days, groupTours]);
 
   const people = Number(numberOfPeople);
   const hasTotals = Object.keys(totalsByCurrency).length > 0;

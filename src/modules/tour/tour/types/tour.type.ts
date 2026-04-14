@@ -1,6 +1,12 @@
+import type { DayService } from "@/modules/tour/day/types/day.type";
+
 export type TourDay = {
-  dayId: string;
-  order: number;
+  code: string;
+  title: string;
+  country: string;
+  city: string;
+  description: string;
+  services: DayService[];
 };
 
 export type TourGroupTour = {

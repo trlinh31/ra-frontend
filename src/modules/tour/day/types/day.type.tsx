@@ -65,6 +65,7 @@ export type DayService = {
   flightDetail?: {
     flightId: string;
     pricingPeriodId: string;
+    seatClassId: string;
     dayGroupId: string;
   };
 };

@@ -1,9 +1,7 @@
+import { daySchema } from "@/modules/tour/day/schemas/day.schema";
 import { z } from "zod";
 
-export const tourDaySchema = z.object({
-  dayId: z.string().min(1, "Vui lòng chọn ngày"),
-  order: z.number(),
-});
+export const tourDaySchema = daySchema;
 
 export const tourGroupTourSchema = z.object({
   groupTourId: z.string().min(1, "Vui lòng chọn nhóm tour"),
