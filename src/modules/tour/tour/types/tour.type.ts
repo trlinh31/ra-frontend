@@ -1,6 +1,7 @@
 import type { DayService } from "@/modules/tour/day/types/day.type";
 
 export type TourDay = {
+  kind: "day";
   code: string;
   title: string;
   country: string;
@@ -10,6 +11,7 @@ export type TourDay = {
 };
 
 export type TourGroupTour = {
+  kind: "group_tour";
   groupTourId: string;
   pricingPeriodId: string;
   dayGroupId: string;
@@ -18,6 +20,8 @@ export type TourGroupTour = {
   currency: string;
 };
 
+export type TourItineraryItem = TourDay | TourGroupTour;
+
 export type Tour = {
   id: string;
   code: string;
@@ -25,6 +29,5 @@ export type Tour = {
   description: string;
   content: string;
   numberOfPeople: number;
-  groupTours: TourGroupTour[];
-  days: TourDay[];
+  itinerary: TourItineraryItem[];
 };

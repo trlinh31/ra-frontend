@@ -8,36 +8,58 @@ interface TourDaysTableProps {
 }
 
 export default function TourDaysTable({ item }: TourDaysTableProps) {
-  if (!item.days.length) {
-    return <p className='px-4 py-3 text-muted-foreground text-sm italic'>Chưa có ngày hành trình nào.</p>;
+  if (!item.itinerary.length) {
+    return <p className='px-4 py-3 text-muted-foreground text-sm italic'>Chưa có lịch trình nào.</p>;
   }
 
   // Tính tổng toàn tour
   const tourTotals = useMemo(() => {
     const totals: Record<string, number> = {};
-    for (const day of item.days) {
-      for (const svc of day.services) {
-        if (!svc.unitPrice || !svc.currency) continue;
-        totals[svc.currency] = (totals[svc.currency] ?? 0) + svc.unitPrice;
+    for (const entry of item.itinerary) {
+      if (entry.kind === "day") {
+        for (const svc of entry.services) {
+          if (!svc.unitPrice || !svc.currency) continue;
+          totals[svc.currency] = (totals[svc.currency] ?? 0) + svc.unitPrice;
+        }
+      } else {
+        if (!entry.unitPrice || !entry.currency) continue;
+        totals[entry.currency] = (totals[entry.currency] ?? 0) + entry.unitPrice;
       }
     }
     return totals;
-  }, [item.days]);
+  }, [item.itinerary]);
 
   return (
     <div className='space-y-3 px-4 py-3'>
-      {item.days.map((day, dayIdx) => {
-        const dayTotals = day.services.reduce<Record<string, number>>((acc, svc) => {
+      {item.itinerary.map((entry, idx) => {
+        if (entry.kind === "group_tour") {
+          return (
+            <div key={idx} className='border rounded-md overflow-hidden'>
+              <div className='flex justify-between items-center bg-blue-50 px-3 py-2'>
+                <span className='font-semibold text-sm'>
+                  Ngày {idx + 1}: [Nhóm tour] {entry.name}
+                </span>
+                {entry.unitPrice > 0 && entry.currency && (
+                  <span className='font-medium text-green-700 text-sm'>
+                    {entry.currency === "VND" ? formatNumberVN(entry.unitPrice) : entry.unitPrice.toLocaleString()} {entry.currency}
+                  </span>
+                )}
+              </div>
+            </div>
+          );
+        }
+
+        const dayTotals = entry.services.reduce<Record<string, number>>((acc, svc) => {
           if (!svc.unitPrice || !svc.currency) return acc;
           acc[svc.currency] = (acc[svc.currency] ?? 0) + svc.unitPrice;
           return acc;
         }, {});
 
         return (
-          <div key={dayIdx} className='border rounded-md overflow-hidden'>
+          <div key={idx} className='border rounded-md overflow-hidden'>
             <div className='flex justify-between items-center bg-muted px-3 py-2'>
               <span className='font-semibold text-sm'>
-                Ngày {dayIdx + 1}: [{day.code}] {day.title}
+                Ngày {idx + 1}: [{entry.code}] {entry.title}
               </span>
               <div className='flex items-center gap-2 font-medium text-green-700 text-sm'>
                 {Object.entries(dayTotals).map(([cur, total]) => (
@@ -47,10 +69,10 @@ export default function TourDaysTable({ item }: TourDaysTableProps) {
                 ))}
               </div>
             </div>
-            {day.services.length > 0 && (
+            {entry.services.length > 0 && (
               <table className='w-full text-sm'>
                 <tbody>
-                  {day.services.map((svc, i) => {
+                  {entry.services.map((svc, i) => {
                     const config = SERVICE_TYPE_CONFIG[svc.serviceType];
                     return (
                       <tr key={i} className={i % 2 === 0 ? "bg-background" : "bg-muted/30"}>

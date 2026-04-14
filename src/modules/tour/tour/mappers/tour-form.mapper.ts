@@ -7,34 +7,39 @@ export const mapTourDataToFormValues = (data: Tour | undefined): TourFormValues 
   description: data?.description ?? "",
   content: data?.content ?? "",
   numberOfPeople: data?.numberOfPeople ?? 1,
-  groupTours:
-    data?.groupTours?.map((gt) => ({
-      groupTourId: gt.groupTourId,
-      pricingPeriodId: gt.pricingPeriodId,
-      dayGroupId: gt.dayGroupId,
-      name: gt.name,
-      unitPrice: gt.unitPrice,
-      currency: gt.currency,
-    })) ?? [],
-  days:
-    data?.days.map((d) => ({
-      code: d.code,
-      title: d.title,
-      country: d.country,
-      city: d.city,
-      description: d.description,
-      services: d.services.map((s) => ({
-        serviceType: s.serviceType,
-        name: s.name,
-        unitPrice: s.unitPrice,
-        currency: s.currency,
-        ...(s.hotelDetail ? { hotelDetail: s.hotelDetail } : {}),
-        ...(s.transportDetail ? { transportDetail: s.transportDetail } : {}),
-        ...(s.visaDetail ? { visaDetail: s.visaDetail } : {}),
-        ...(s.entranceFeeDetail ? { entranceFeeDetail: s.entranceFeeDetail } : {}),
-        ...(s.flightDetail ? { flightDetail: s.flightDetail } : {}),
-      })),
-    })) ?? [],
+  itinerary:
+    data?.itinerary?.map((item) => {
+      if (item.kind === "day") {
+        return {
+          kind: "day" as const,
+          code: item.code,
+          title: item.title,
+          country: item.country,
+          city: item.city,
+          description: item.description,
+          services: item.services.map((s) => ({
+            serviceType: s.serviceType,
+            name: s.name,
+            unitPrice: s.unitPrice,
+            currency: s.currency,
+            ...(s.hotelDetail ? { hotelDetail: s.hotelDetail } : {}),
+            ...(s.transportDetail ? { transportDetail: s.transportDetail } : {}),
+            ...(s.visaDetail ? { visaDetail: s.visaDetail } : {}),
+            ...(s.entranceFeeDetail ? { entranceFeeDetail: s.entranceFeeDetail } : {}),
+            ...(s.flightDetail ? { flightDetail: s.flightDetail } : {}),
+          })),
+        };
+      }
+      return {
+        kind: "group_tour" as const,
+        groupTourId: item.groupTourId,
+        pricingPeriodId: item.pricingPeriodId,
+        dayGroupId: item.dayGroupId,
+        name: item.name,
+        unitPrice: item.unitPrice,
+        currency: item.currency,
+      };
+    }) ?? [],
 });
 
 export const mapTourFormValuesToPayload = (values: TourFormValues): Omit<Tour, "id"> => ({
@@ -43,32 +48,37 @@ export const mapTourFormValuesToPayload = (values: TourFormValues): Omit<Tour, "
   description: values.description ?? "",
   content: values.content ?? "",
   numberOfPeople: values.numberOfPeople,
-  groupTours:
-    values.groupTours?.map((gt) => ({
-      groupTourId: gt.groupTourId,
-      pricingPeriodId: gt.pricingPeriodId,
-      dayGroupId: gt.dayGroupId,
-      name: gt.name,
-      unitPrice: gt.unitPrice,
-      currency: gt.currency,
-    })) ?? [],
-  days: values.days.map((d, i) => ({
-    code: d.code,
-    title: d.title,
-    country: d.country,
-    city: d.city,
-    description: d.description ?? "",
-    services: (d.services ?? []).map((s, si) => ({
-      id: `s${Date.now()}-${i}-${si}`,
-      serviceType: s.serviceType,
-      name: s.name,
-      unitPrice: s.unitPrice,
-      currency: s.currency,
-      ...(s.hotelDetail ? { hotelDetail: s.hotelDetail } : {}),
-      ...(s.transportDetail ? { transportDetail: s.transportDetail } : {}),
-      ...(s.visaDetail ? { visaDetail: s.visaDetail } : {}),
-      ...(s.entranceFeeDetail ? { entranceFeeDetail: s.entranceFeeDetail } : {}),
-      ...(s.flightDetail ? { flightDetail: s.flightDetail } : {}),
-    })),
-  })),
+  itinerary: values.itinerary.map((item, i) => {
+    if (item.kind === "day") {
+      return {
+        kind: "day" as const,
+        code: item.code,
+        title: item.title,
+        country: item.country,
+        city: item.city,
+        description: item.description ?? "",
+        services: (item.services ?? []).map((s, si) => ({
+          id: `s${Date.now()}-${i}-${si}`,
+          serviceType: s.serviceType,
+          name: s.name,
+          unitPrice: s.unitPrice,
+          currency: s.currency,
+          ...(s.hotelDetail ? { hotelDetail: s.hotelDetail } : {}),
+          ...(s.transportDetail ? { transportDetail: s.transportDetail } : {}),
+          ...(s.visaDetail ? { visaDetail: s.visaDetail } : {}),
+          ...(s.entranceFeeDetail ? { entranceFeeDetail: s.entranceFeeDetail } : {}),
+          ...(s.flightDetail ? { flightDetail: s.flightDetail } : {}),
+        })),
+      };
+    }
+    return {
+      kind: "group_tour" as const,
+      groupTourId: item.groupTourId,
+      pricingPeriodId: item.pricingPeriodId,
+      dayGroupId: item.dayGroupId,
+      name: item.name,
+      unitPrice: item.unitPrice,
+      currency: item.currency,
+    };
+  }),
 });

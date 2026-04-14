@@ -52,7 +52,7 @@ export default function TourListPage() {
       id: "dayCount",
       header: "Số ngày",
       enableSorting: false,
-      cell: ({ row }) => row.original.days.length,
+      cell: ({ row }) => row.original.itinerary.length,
     },
     {
       id: "actions",
