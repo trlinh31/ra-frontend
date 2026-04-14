@@ -104,7 +104,7 @@ function TourGroupTourRow({ index, onRemove }: TourGroupTourRowProps) {
         <ActionButton action='delete' variant='destructive' onClick={onRemove} />
       </div>
 
-      <div className='space-y-3'>
+      <div className='space-y-3 pt-6'>
         <div className='gap-3 grid grid-cols-1 sm:grid-cols-2'>
           <Field>
             <FieldLabel>Quốc gia</FieldLabel>
