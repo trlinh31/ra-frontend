@@ -1,6 +1,7 @@
 import { useCities } from "@/modules/masterData/country/hooks/useCities";
 import { useCountries } from "@/modules/masterData/country/hooks/useCountries";
 import { transportMockStore } from "@/modules/masterData/transportation/data/transportation.mock-store";
+import { useNumberOfPeople } from "@/modules/tour/day/contexts/NumberOfPeopleContext";
 import type { DayFormValues } from "@/modules/tour/day/schemas/day.schema";
 import AppSelect from "@/shared/components/common/AppSelect";
 import FormSelect from "@/shared/components/form/FormSelect";
@@ -8,6 +9,7 @@ import { Field, FieldLabel } from "@/shared/components/ui/field";
 import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
+import InlinePriceInput from "./InlinePriceInput";
 
 interface TransportServiceFieldsProps {
   index: number;
@@ -15,6 +17,7 @@ interface TransportServiceFieldsProps {
 
 export default function TransportServiceFields({ index }: TransportServiceFieldsProps) {
   const { control, setValue } = useFormContext<DayFormValues>();
+  const numberOfPeople = useNumberOfPeople();
 
   const [filterCountry, setFilterCountry] = useState("");
   const [filterCity, setFilterCity] = useState("");
@@ -47,21 +50,27 @@ export default function TransportServiceFields({ index }: TransportServiceFields
     }));
   }, [selectedTransport]);
 
+  const numberOfVehicles = useMemo(() => {
+    const cap = Number(capacity);
+    if (!cap || cap <= 0) return 1;
+    return Math.ceil(numberOfPeople / cap);
+  }, [numberOfPeople, capacity]);
+
   const computedPrice = useMemo(() => {
     if (!selectedTransport || !capacity) return null;
     const vcp = selectedTransport.vehicleCapacityPrice.find((v) => String(v.capacity) === capacity);
     if (!vcp) return null;
-    return { price: vcp.price, currency: vcp.currency };
-  }, [selectedTransport, capacity]);
+    return { pricePerVehicle: vcp.price, totalPrice: vcp.price * numberOfVehicles, currency: vcp.currency };
+  }, [selectedTransport, capacity, numberOfVehicles]);
 
   const prevPriceKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
-    const key = computedPrice ? `${computedPrice.price}-${computedPrice.currency}` : null;
+    const key = computedPrice ? `${computedPrice.totalPrice}-${computedPrice.currency}` : null;
     if (key === prevPriceKeyRef.current) return;
     prevPriceKeyRef.current = key;
     if (computedPrice) {
-      setValue(`services.${index}.unitPrice`, computedPrice.price, { shouldValidate: true });
+      setValue(`services.${index}.unitPrice`, computedPrice.totalPrice, { shouldValidate: true });
       setValue(`services.${index}.currency`, computedPrice.currency, { shouldValidate: true });
     } else {
       setValue(`services.${index}.unitPrice`, 0);
@@ -116,30 +125,31 @@ export default function TransportServiceFields({ index }: TransportServiceFields
             disabled={!filterCountry}
           />
         </Field>
+
+        <FormSelect
+          name={`services.${index}.transportDetail.transportId`}
+          label='Lịch trình'
+          options={transportOptions}
+          onChange={() => {
+            setValue(`services.${index}.transportDetail.capacity`, "");
+          }}
+          placeholder='Chọn lịch trình'
+        />
+
+        <FormSelect
+          name={`services.${index}.transportDetail.capacity`}
+          label='Sức chứa'
+          options={capacityOptions}
+          placeholder='Chọn sức chứa'
+          disabled={!transportId}
+        />
       </div>
 
-      <FormSelect
-        name={`services.${index}.transportDetail.transportId`}
-        label='Lịch trình'
-        options={transportOptions}
-        onChange={() => {
-          setValue(`services.${index}.transportDetail.capacity`, "");
-        }}
-        placeholder='Chọn lịch trình'
-      />
-
-      <FormSelect
-        name={`services.${index}.transportDetail.capacity`}
-        label='Sức chứa'
-        options={capacityOptions}
-        placeholder='Chọn sức chứa'
-        disabled={!transportId}
-      />
-
       {computedPrice && (
-        <p className='font-semibold text-green-600 text-lg'>
-          Giá: {formatNumberVN(computedPrice.price)} {computedPrice.currency}
-        </p>
+        <InlinePriceInput
+          index={index}
+          breakdownText={`${numberOfPeople} khách ÷ ${capacity} chỗ/xe = ${numberOfVehicles} xe × ${formatNumberVN(computedPrice.pricePerVehicle)} ${computedPrice.currency}`}
+        />
       )}
     </div>
   );

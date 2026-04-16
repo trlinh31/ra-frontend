@@ -9,6 +9,7 @@ import { Field, FieldLabel } from "@/shared/components/ui/field";
 import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
+import InlinePriceInput from "./InlinePriceInput";
 
 interface HotelServiceFieldsProps {
   index: number;
@@ -208,15 +209,10 @@ export default function HotelServiceFields({ index }: HotelServiceFieldsProps) {
       </div>
 
       {computedPrice && (
-        <div className='space-y-1'>
-          <p className='text-muted-foreground text-xs'>
-            {numberOfPeople} khách ÷ {selectedRoomType?.maxGuests ?? "?"} khách/phòng = {numberOfRooms} phòng &times;{" "}
-            {formatNumberVN(computedPrice.pricePerRoom)} {computedPrice.currency}
-          </p>
-          <p className='font-semibold text-green-600 text-lg'>
-            Tổng: {formatNumberVN(computedPrice.totalPrice)} {computedPrice.currency}
-          </p>
-        </div>
+        <InlinePriceInput
+          index={index}
+          breakdownText={`${numberOfPeople} khách ÷ ${selectedRoomType?.maxGuests ?? "?"} khách/phòng = ${numberOfRooms} phòng × ${formatNumberVN(computedPrice.pricePerRoom)} ${computedPrice.currency}`}
+        />
       )}
     </div>
   );

@@ -1,20 +1,77 @@
 import { useCities } from "@/modules/masterData/country/hooks/useCities";
 import { useCountries } from "@/modules/masterData/country/hooks/useCountries";
 import { entranceFeeMockStore } from "@/modules/masterData/entranceFee/data/entrance-fee.mock-store";
+import { useNumberOfPeople } from "@/modules/tour/day/contexts/NumberOfPeopleContext";
 import type { DayFormValues } from "@/modules/tour/day/schemas/day.schema";
 import AppSelect from "@/shared/components/common/AppSelect";
+import FormInput from "@/shared/components/form/FormInput";
 import FormSelect from "@/shared/components/form/FormSelect";
 import { Field, FieldLabel } from "@/shared/components/ui/field";
 import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
+import InlinePriceInput from "./InlinePriceInput";
 
 interface EntranceFeeServiceFieldsProps {
   index: number;
 }
 
+type PriceBase = { pricePerPerson: number; currency: string };
+
+interface EntranceFeePriceSectionProps {
+  index: number;
+  priceBase: PriceBase | null;
+  numberOfPeople: number;
+  disabled: boolean;
+}
+
+function EntranceFeePriceSection({ index, priceBase, numberOfPeople, disabled }: EntranceFeePriceSectionProps) {
+  const { control, setValue } = useFormContext<DayFormValues>();
+  const count = useWatch({ control, name: `services.${index}.entranceFeeDetail.count` });
+
+  const qty = Number(count) > 0 ? Number(count) : 0;
+  const totalPrice = priceBase && qty > 0 ? priceBase.pricePerPerson * qty : null;
+
+  const prevPriceKeyRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    const key = totalPrice != null && priceBase ? `${totalPrice}-${priceBase.currency}` : null;
+    if (key === prevPriceKeyRef.current) return;
+    prevPriceKeyRef.current = key;
+    if (totalPrice != null && priceBase) {
+      setValue(`services.${index}.unitPrice`, totalPrice, { shouldValidate: true });
+      setValue(`services.${index}.currency`, priceBase.currency, { shouldValidate: true });
+    } else {
+      setValue(`services.${index}.unitPrice`, 0);
+      setValue(`services.${index}.currency`, "");
+    }
+  }, [totalPrice, priceBase, index, setValue]);
+
+  return (
+    <>
+      <div className='items-end gap-3 grid grid-cols-1 sm:grid-cols-2'>
+        <FormInput
+          name={`services.${index}.entranceFeeDetail.count`}
+          label='Số lượng'
+          type='number'
+          min={1}
+          max={numberOfPeople}
+          placeholder='Nhập số lượng'
+          disabled={disabled}
+        />
+        {numberOfPeople > 0 && <p className='pb-2 text-muted-foreground text-xs'>Tổng tour: {numberOfPeople} người</p>}
+      </div>
+
+      {priceBase && totalPrice != null && (
+        <InlinePriceInput index={index} breakdownText={`${qty} người × ${formatNumberVN(priceBase.pricePerPerson)} ${priceBase.currency}`} />
+      )}
+    </>
+  );
+}
+
 export default function EntranceFeeServiceFields({ index }: EntranceFeeServiceFieldsProps) {
   const { control, setValue } = useFormContext<DayFormValues>();
+  const numberOfPeople = useNumberOfPeople();
 
   const [filterCountry, setFilterCountry] = useState("");
   const [filterCity, setFilterCity] = useState("");
@@ -62,27 +119,12 @@ export default function EntranceFeeServiceFields({ index }: EntranceFeeServiceFi
     return filtered.filter((g) => (seen.has(g.id) ? false : seen.add(g.id))).map((g) => ({ label: g.label, value: g.id }));
   }, [selectedPeriod, allDayGroups, ticketTypeIndex]);
 
-  const computedPrice = useMemo(() => {
+  const computedPriceBase = useMemo((): PriceBase | null => {
     if (!selectedPeriod || !ticketTypeIndex || !dayGroupId) return null;
     const dg = allDayGroups.find((g) => g.id === dayGroupId && g.ticketTypeIndex === ticketTypeIndex);
     if (!dg) return null;
-    return { price: dg.price, currency: selectedPeriod.currency };
+    return { pricePerPerson: dg.price, currency: selectedPeriod.currency };
   }, [selectedPeriod, allDayGroups, ticketTypeIndex, dayGroupId]);
-
-  const prevPriceKeyRef = useRef<string | null>(null);
-
-  useEffect(() => {
-    const key = computedPrice ? `${computedPrice.price}-${computedPrice.currency}` : null;
-    if (key === prevPriceKeyRef.current) return;
-    prevPriceKeyRef.current = key;
-    if (computedPrice) {
-      setValue(`services.${index}.unitPrice`, computedPrice.price, { shouldValidate: true });
-      setValue(`services.${index}.currency`, computedPrice.currency, { shouldValidate: true });
-    } else {
-      setValue(`services.${index}.unitPrice`, 0);
-      setValue(`services.${index}.currency`, "");
-    }
-  }, [computedPrice, index, setValue]);
 
   const prevEntranceFeeIdRef = useRef<string | undefined>(undefined);
 
@@ -181,11 +223,7 @@ export default function EntranceFeeServiceFields({ index }: EntranceFeeServiceFi
         />
       </div>
 
-      {computedPrice && (
-        <p className='font-semibold text-green-600 text-sm'>
-          Giá: {formatNumberVN(computedPrice.price)} {computedPrice.currency}
-        </p>
-      )}
+      <EntranceFeePriceSection index={index} priceBase={computedPriceBase} numberOfPeople={numberOfPeople} disabled={!dayGroupId} />
     </div>
   );
 }

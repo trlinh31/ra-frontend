@@ -23,6 +23,7 @@ export const entranceFeeServiceDetailSchema = z.object({
   pricingPeriodId: z.string().min(1, "Vui lòng chọn giai đoạn giá"),
   ticketTypeIndex: z.string().min(1, "Vui lòng chọn loại đối tượng"),
   dayGroupId: z.string().min(1, "Vui lòng chọn nhóm ngày"),
+  count: z.number({ error: "Vui lòng nhập số lượng" }).min(1, "Số lượng phải ít nhất là 1"),
 });
 
 export const flightServiceDetailSchema = z.object({

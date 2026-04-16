@@ -1,6 +1,7 @@
 import { useCities } from "@/modules/masterData/country/hooks/useCities";
 import { useCountries } from "@/modules/masterData/country/hooks/useCountries";
 import { flightMockStore } from "@/modules/masterData/flights/data/flight.mock-store";
+import { useNumberOfPeople } from "@/modules/tour/day/contexts/NumberOfPeopleContext";
 import type { DayFormValues } from "@/modules/tour/day/schemas/day.schema";
 import AppSelect from "@/shared/components/common/AppSelect";
 import FormSelect from "@/shared/components/form/FormSelect";
@@ -8,6 +9,7 @@ import { Field, FieldLabel } from "@/shared/components/ui/field";
 import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
+import InlinePriceInput from "./InlinePriceInput";
 
 interface FlightServiceFieldsProps {
   index: number;
@@ -15,6 +17,7 @@ interface FlightServiceFieldsProps {
 
 export default function FlightServiceFields({ index }: FlightServiceFieldsProps) {
   const { control, setValue } = useFormContext<DayFormValues>();
+  const numberOfPeople = useNumberOfPeople();
 
   const [filterFromCountry, setFilterFromCountry] = useState("");
   const [filterFromCity, setFilterFromCity] = useState("");
@@ -76,17 +79,17 @@ export default function FlightServiceFields({ index }: FlightServiceFieldsProps)
     if (!selectedPeriod || !dayGroupId || !seatClassId) return null;
     const dg = allDayGroups.find((g) => g.id === dayGroupId && String(g.seatClassId) === seatClassId);
     if (!dg) return null;
-    return { price: dg.price, currency: selectedPeriod.currency };
-  }, [selectedPeriod, allDayGroups, dayGroupId, seatClassId]);
+    return { pricePerSeat: dg.price, totalPrice: dg.price * numberOfPeople, currency: selectedPeriod.currency };
+  }, [selectedPeriod, allDayGroups, dayGroupId, seatClassId, numberOfPeople]);
 
   const prevPriceKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
-    const key = computedPrice ? `${computedPrice.price}-${computedPrice.currency}` : null;
+    const key = computedPrice ? `${computedPrice.totalPrice}-${computedPrice.currency}` : null;
     if (key === prevPriceKeyRef.current) return;
     prevPriceKeyRef.current = key;
     if (computedPrice) {
-      setValue(`services.${index}.unitPrice`, computedPrice.price, { shouldValidate: true });
+      setValue(`services.${index}.unitPrice`, computedPrice.totalPrice, { shouldValidate: true });
       setValue(`services.${index}.currency`, computedPrice.currency, { shouldValidate: true });
     } else {
       setValue(`services.${index}.unitPrice`, 0);
@@ -221,9 +224,10 @@ export default function FlightServiceFields({ index }: FlightServiceFieldsProps)
       </div>
 
       {computedPrice && (
-        <p className='font-semibold text-green-600 text-lg'>
-          Giá: {formatNumberVN(computedPrice.price)} {computedPrice.currency}
-        </p>
+        <InlinePriceInput
+          index={index}
+          breakdownText={`${numberOfPeople} người × ${formatNumberVN(computedPrice.pricePerSeat)} ${computedPrice.currency}`}
+        />
       )}
     </div>
   );

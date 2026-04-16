@@ -1,6 +1,7 @@
 import { useCities } from "@/modules/masterData/country/hooks/useCities";
 import { useCountries } from "@/modules/masterData/country/hooks/useCountries";
 import { visaFastTrackMockStore } from "@/modules/masterData/visaFastTrack/data/visa-fast-track.mock-store";
+import { useNumberOfPeople } from "@/modules/tour/day/contexts/NumberOfPeopleContext";
 import type { DayFormValues } from "@/modules/tour/day/schemas/day.schema";
 import AppSelect from "@/shared/components/common/AppSelect";
 import FormSelect from "@/shared/components/form/FormSelect";
@@ -8,6 +9,7 @@ import { Field, FieldLabel } from "@/shared/components/ui/field";
 import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
+import InlinePriceInput from "./InlinePriceInput";
 
 interface VisaServiceFieldsProps {
   index: number;
@@ -15,6 +17,7 @@ interface VisaServiceFieldsProps {
 
 export default function VisaServiceFields({ index }: VisaServiceFieldsProps) {
   const { control, setValue } = useFormContext<DayFormValues>();
+  const numberOfPeople = useNumberOfPeople();
 
   const [filterCountry, setFilterCountry] = useState("");
   const [filterCity, setFilterCity] = useState("");
@@ -51,17 +54,17 @@ export default function VisaServiceFields({ index }: VisaServiceFieldsProps) {
     if (!selectedProvider || !serviceName) return null;
     const svc = selectedProvider.services.find((s) => s.serviceName === serviceName);
     if (!svc) return null;
-    return { price: svc.price, currency: svc.priceUnit };
-  }, [selectedProvider, serviceName]);
+    return { pricePerPerson: svc.price, totalPrice: svc.price * numberOfPeople, currency: svc.priceUnit };
+  }, [selectedProvider, serviceName, numberOfPeople]);
 
   const prevPriceKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
-    const key = computedPrice ? `${computedPrice.price}-${computedPrice.currency}` : null;
+    const key = computedPrice ? `${computedPrice.totalPrice}-${computedPrice.currency}` : null;
     if (key === prevPriceKeyRef.current) return;
     prevPriceKeyRef.current = key;
     if (computedPrice) {
-      setValue(`services.${index}.unitPrice`, computedPrice.price, { shouldValidate: true });
+      setValue(`services.${index}.unitPrice`, computedPrice.totalPrice, { shouldValidate: true });
       setValue(`services.${index}.currency`, computedPrice.currency, { shouldValidate: true });
     } else {
       setValue(`services.${index}.unitPrice`, 0);
@@ -116,30 +119,31 @@ export default function VisaServiceFields({ index }: VisaServiceFieldsProps) {
             disabled={!filterCountry}
           />
         </Field>
+
+        <FormSelect
+          name={`services.${index}.visaDetail.providerId`}
+          label='Nhà cung cấp'
+          options={providerOptions}
+          onChange={() => {
+            setValue(`services.${index}.visaDetail.serviceName`, "");
+          }}
+          placeholder='Chọn nhà cung cấp'
+        />
+
+        <FormSelect
+          name={`services.${index}.visaDetail.serviceName`}
+          label='Dịch vụ'
+          options={serviceOptions}
+          placeholder='Chọn dịch vụ'
+          disabled={!providerId}
+        />
       </div>
 
-      <FormSelect
-        name={`services.${index}.visaDetail.providerId`}
-        label='Nhà cung cấp'
-        options={providerOptions}
-        onChange={() => {
-          setValue(`services.${index}.visaDetail.serviceName`, "");
-        }}
-        placeholder='Chọn nhà cung cấp'
-      />
-
-      <FormSelect
-        name={`services.${index}.visaDetail.serviceName`}
-        label='Dịch vụ'
-        options={serviceOptions}
-        placeholder='Chọn dịch vụ'
-        disabled={!providerId}
-      />
-
       {computedPrice && (
-        <p className='font-semibold text-green-600 text-lg'>
-          Giá: {formatNumberVN(computedPrice.price)} {computedPrice.currency}
-        </p>
+        <InlinePriceInput
+          index={index}
+          breakdownText={`${numberOfPeople} người × ${formatNumberVN(computedPrice.pricePerPerson)} ${computedPrice.currency}`}
+        />
       )}
     </div>
   );

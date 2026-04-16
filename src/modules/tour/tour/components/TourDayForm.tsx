@@ -177,8 +177,6 @@ function TourDayItemRow({ index, total, onRemove, onMoveUp, onMoveDown }: TourIt
   );
 }
 
-// ─── Group tour item row ─────────────────────────────────────────────────────
-
 function TourGroupTourItemRow({ index, total, onRemove, onMoveUp, onMoveDown }: TourItineraryRowProps) {
   const { control, setValue } = useFormContext<TourFormValues>();
   const [isExpanded, setIsExpanded] = useState(false);
@@ -380,8 +378,6 @@ function TourGroupTourItemRow({ index, total, onRemove, onMoveUp, onMoveDown }: 
   );
 }
 
-// ─── Dispatcher row (memo’d to block re-renders from parent) ────────────────
-
 interface TourItineraryDispatchProps {
   index: number;
   total: number;
@@ -402,8 +398,6 @@ const TourItineraryRow = memo(function TourItineraryRow({ index, total, remove, 
     return <TourGroupTourItemRow index={index} total={total} onRemove={onRemove} onMoveUp={onMoveUp} onMoveDown={onMoveDown} />;
   return <TourDayItemRow index={index} total={total} onRemove={onRemove} onMoveUp={onMoveUp} onMoveDown={onMoveDown} />;
 });
-
-// ─── Main export ─────────────────────────────────────────────────────────────
 
 export default function TourDayForm() {
   const { control, formState } = useFormContext<TourFormValues>();
