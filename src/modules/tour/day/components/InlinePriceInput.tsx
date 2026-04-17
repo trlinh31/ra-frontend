@@ -1,4 +1,5 @@
 import type { DayFormValues } from "@/modules/tour/day/schemas/day.schema";
+import { CURRENCIES } from "@/shared/constants/currency.constant";
 import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
 import { Pencil } from "lucide-react";
 import { useRef, useState } from "react";
@@ -16,12 +17,14 @@ export default function InlinePriceInput({ index, breakdownText }: InlinePriceIn
 
   const [isEditing, setIsEditing] = useState(false);
   const [localValue, setLocalValue] = useState<string>("");
+  const [localCurrency, setLocalCurrency] = useState<string>("");
   const inputRef = useRef<HTMLInputElement>(null);
 
   if (!currency) return null;
 
   const handleClick = () => {
     setLocalValue(String(unitPrice));
+    setLocalCurrency(currency);
     setIsEditing(true);
     setTimeout(() => {
       inputRef.current?.focus();
@@ -33,6 +36,9 @@ export default function InlinePriceInput({ index, breakdownText }: InlinePriceIn
     const parsed = Number(localValue);
     if (!isNaN(parsed) && parsed >= 0) {
       setValue(`services.${index}.unitPrice`, parsed, { shouldValidate: true });
+    }
+    if (localCurrency) {
+      setValue(`services.${index}.currency`, localCurrency, { shouldValidate: true });
     }
     setIsEditing(false);
   };
@@ -57,11 +63,21 @@ export default function InlinePriceInput({ index, breakdownText }: InlinePriceIn
             min={0}
             value={localValue}
             onChange={(e) => setLocalValue(e.target.value)}
-            onBlur={commit}
             onKeyDown={handleKeyDown}
             className='bg-background px-2 py-1 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring w-40 font-semibold text-green-600 text-base'
           />
-          <span className='font-semibold text-green-600 text-base'>{currency}</span>
+          <select
+            value={localCurrency}
+            onChange={(e) => setLocalCurrency(e.target.value)}
+            onKeyDown={handleKeyDown}
+            onBlur={commit}
+            className='bg-background px-2 py-1 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring font-semibold text-green-600 text-base'>
+            {CURRENCIES.map((c) => (
+              <option key={c.code} value={c.code}>
+                {c.code}
+              </option>
+            ))}
+          </select>
         </div>
       ) : (
         <button type='button' onClick={handleClick} className='group flex items-center gap-1.5 cursor-pointer' title='Nhấn để chỉnh sửa'>
