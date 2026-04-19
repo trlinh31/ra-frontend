@@ -33,6 +33,14 @@ export const flightServiceDetailSchema = z.object({
   dayGroupId: z.string().min(1, "Vui lòng chọn nhóm ngày"),
 });
 
+export const tourGuideServiceDetailSchema = z.object({
+  tourGuideId: z.string().min(1, "Vui lòng chọn hướng dẫn viên"),
+});
+
+export const restaurantServiceDetailSchema = z.object({
+  restaurantId: z.string().min(1, "Vui lòng chọn nhà hàng"),
+});
+
 export const dayServiceSchema = z.object({
   serviceType: z.enum(ServiceType, { error: "Vui lòng chọn loại dịch vụ" }),
   name: z.string().min(1, "Vui lòng nhập tên dịch vụ"),
@@ -43,6 +51,8 @@ export const dayServiceSchema = z.object({
   visaDetail: visaServiceDetailSchema.optional(),
   entranceFeeDetail: entranceFeeServiceDetailSchema.optional(),
   flightDetail: flightServiceDetailSchema.optional(),
+  tourGuideDetail: tourGuideServiceDetailSchema.optional(),
+  restaurantDetail: restaurantServiceDetailSchema.optional(),
 });
 
 export type HotelServiceDetailFormValues = z.infer<typeof hotelServiceDetailSchema>;

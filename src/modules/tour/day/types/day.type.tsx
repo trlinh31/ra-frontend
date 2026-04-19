@@ -1,4 +1,4 @@
-import { Car, FileText, Hotel, Plane, Ticket } from "lucide-react";
+import { Car, FileText, Hotel, Plane, Ticket, UserRound, UtensilsCrossed } from "lucide-react";
 
 export enum ServiceType {
   HOTEL = "hotel",
@@ -6,6 +6,8 @@ export enum ServiceType {
   VISA = "visa",
   ENTRANCE_FEE = "entrance_fee",
   FLIGHT = "flight",
+  TOUR_GUIDE = "tour_guide",
+  RESTAURANT = "restaurant",
 }
 
 type ServiceConfig = {
@@ -33,6 +35,14 @@ export const SERVICE_TYPE_CONFIG: Record<ServiceType, ServiceConfig> = {
   [ServiceType.FLIGHT]: {
     label: "Chuyến bay",
     icon: <Plane size={16} />,
+  },
+  [ServiceType.TOUR_GUIDE]: {
+    label: "Hướng dẫn viên",
+    icon: <UserRound size={16} />,
+  },
+  [ServiceType.RESTAURANT]: {
+    label: "Nhà hàng",
+    icon: <UtensilsCrossed size={16} />,
   },
 };
 
@@ -68,6 +78,12 @@ export type DayService = {
     pricingPeriodId: string;
     seatClassId: string;
     dayGroupId: string;
+  };
+  tourGuideDetail?: {
+    tourGuideId: string;
+  };
+  restaurantDetail?: {
+    restaurantId: string;
   };
 };
 

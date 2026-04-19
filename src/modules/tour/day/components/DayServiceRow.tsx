@@ -7,6 +7,8 @@ import { Controller, useFormContext } from "react-hook-form";
 import EntranceFeeServiceFields from "./EntranceFeeServiceFields";
 import FlightServiceFields from "./FlightServiceFields";
 import HotelServiceFields from "./HotelServiceFields";
+import RestaurantServiceFields from "./RestaurantServiceFields";
+import TourGuideServiceFields from "./TourGuideServiceFields";
 import TransportServiceFields from "./TransportServiceFields";
 import VisaServiceFields from "./VisaServiceFields";
 
@@ -57,6 +59,14 @@ export default function DayServiceRow({ index, onRemove }: DayServiceRowProps) {
 
             <TabsContent value={ServiceType.FLIGHT}>
               <FlightServiceFields index={index} />
+            </TabsContent>
+
+            <TabsContent value={ServiceType.TOUR_GUIDE}>
+              <TourGuideServiceFields index={index} />
+            </TabsContent>
+
+            <TabsContent value={ServiceType.RESTAURANT}>
+              <RestaurantServiceFields index={index} />
             </TabsContent>
           </Tabs>
         )}

@@ -16,6 +16,11 @@ export const mapDayDataToFormValues = (data: Day | undefined): DayFormValues => 
         currency: s.currency,
         ...(s.hotelDetail ? { hotelDetail: s.hotelDetail } : {}),
         ...(s.transportDetail ? { transportDetail: s.transportDetail } : {}),
+        ...(s.visaDetail ? { visaDetail: s.visaDetail } : {}),
+        ...(s.entranceFeeDetail ? { entranceFeeDetail: s.entranceFeeDetail } : {}),
+        ...(s.flightDetail ? { flightDetail: s.flightDetail } : {}),
+        ...(s.tourGuideDetail ? { tourGuideDetail: s.tourGuideDetail } : {}),
+        ...(s.restaurantDetail ? { restaurantDetail: s.restaurantDetail } : {}),
       })) ?? [],
   };
 };
@@ -35,6 +40,11 @@ export const mapDayFormValuesToPayload = (values: DayFormValues) => {
       currency: s.currency,
       ...(s.hotelDetail ? { hotelDetail: s.hotelDetail } : {}),
       ...(s.transportDetail ? { transportDetail: s.transportDetail } : {}),
+      ...(s.visaDetail ? { visaDetail: s.visaDetail } : {}),
+      ...(s.entranceFeeDetail ? { entranceFeeDetail: s.entranceFeeDetail } : {}),
+      ...(s.flightDetail ? { flightDetail: s.flightDetail } : {}),
+      ...(s.tourGuideDetail ? { tourGuideDetail: s.tourGuideDetail } : {}),
+      ...(s.restaurantDetail ? { restaurantDetail: s.restaurantDetail } : {}),
     })),
   };
 };

@@ -34,6 +34,12 @@ export const PATHS = {
     SUPPLIER: "/master-data/supplier",
     SUPPLIER_CREATE: "/master-data/supplier/create",
     SUPPLIER_EDIT: "/master-data/supplier/:id",
+    TOUR_GUIDE: "/master-data/tour-guide",
+    TOUR_GUIDE_CREATE: "/master-data/tour-guide/create",
+    TOUR_GUIDE_EDIT: "/master-data/tour-guide/:id",
+    RESTAURANT: "/master-data/restaurant",
+    RESTAURANT_CREATE: "/master-data/restaurant/create",
+    RESTAURANT_EDIT: "/master-data/restaurant/:id",
   },
 
   TOUR: {

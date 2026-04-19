@@ -6,8 +6,12 @@ import EditFlightPage from "@/modules/masterData/flights/pages/EditFlightPage";
 import GroupTourListPage from "@/modules/masterData/groupTour";
 import EditGroupTourPage from "@/modules/masterData/groupTour/pages/EditGroupTourPage";
 import { EditHotelPage, HotelDetailPage, HotelListPage } from "@/modules/masterData/hotel";
+import EditRestaurantPage from "@/modules/masterData/restaurant/pages/EditRestaurantPage";
+import RestaurantListPage from "@/modules/masterData/restaurant/pages/RestaurantListPage";
 import EditSupplierPage from "@/modules/masterData/supplier/pages/EditSupplierPage";
 import SupplierListPage from "@/modules/masterData/supplier/pages/SupplierListPage";
+import EditTourGuidePage from "@/modules/masterData/tourGuide/pages/EditTourGuidePage";
+import TourGuideListPage from "@/modules/masterData/tourGuide/pages/TourGuideListPage";
 import TransportationListPage from "@/modules/masterData/transportation";
 import EditTransportationPage from "@/modules/masterData/transportation/pages/EditTransportationPage";
 import VisaFastTrackListPage from "@/modules/masterData/visaFastTrack";
@@ -17,7 +21,21 @@ import EditDayPage from "@/modules/tour/day/pages/EditDayPage";
 import TourListPage from "@/modules/tour/tour";
 import EditTourPage from "@/modules/tour/tour/pages/EditTourPage";
 import DashboardLayout from "@/shared/layouts/DashboardLayout";
-import { Box, Bus, CalendarDays, Compass, Container, Hotel, LayoutGrid, MapPin, Plane, Shield, Ticket } from "lucide-react";
+import {
+  Box,
+  Bus,
+  CalendarDays,
+  Compass,
+  Container,
+  Hotel,
+  LayoutGrid,
+  MapPin,
+  Plane,
+  Shield,
+  Ticket,
+  UserRound,
+  UtensilsCrossed,
+} from "lucide-react";
 import { Navigate } from "react-router-dom";
 import { PATHS } from "./route.constant";
 import type { AppRoute } from "./route.type";
@@ -62,6 +80,42 @@ export const APP_ROUTES: AppRoute[] = [
           {
             path: PATHS.MASTER_DATA.SUPPLIER_EDIT,
             element: <EditSupplierPage />,
+            showInSidebar: false,
+          },
+          {
+            path: PATHS.MASTER_DATA.TOUR_GUIDE,
+            title: "Hướng dẫn viên",
+            pageTitle: "Quản lý hướng dẫn viên",
+            element: <TourGuideListPage />,
+            icon: UserRound,
+            showInSidebar: true,
+          },
+          {
+            path: PATHS.MASTER_DATA.TOUR_GUIDE_CREATE,
+            element: <EditTourGuidePage />,
+            showInSidebar: false,
+          },
+          {
+            path: PATHS.MASTER_DATA.TOUR_GUIDE_EDIT,
+            element: <EditTourGuidePage />,
+            showInSidebar: false,
+          },
+          {
+            path: PATHS.MASTER_DATA.RESTAURANT,
+            title: "Nhà hàng",
+            pageTitle: "Quản lý nhà hàng",
+            element: <RestaurantListPage />,
+            icon: UtensilsCrossed,
+            showInSidebar: true,
+          },
+          {
+            path: PATHS.MASTER_DATA.RESTAURANT_CREATE,
+            element: <EditRestaurantPage />,
+            showInSidebar: false,
+          },
+          {
+            path: PATHS.MASTER_DATA.RESTAURANT_EDIT,
+            element: <EditRestaurantPage />,
             showInSidebar: false,
           },
           {
