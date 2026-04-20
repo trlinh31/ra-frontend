@@ -70,16 +70,16 @@ export default function HotelListPage() {
       cell: ({ row }) => row.index + 1,
     },
     {
-      header: "Mã khách sạn",
-      accessorKey: "code",
-    },
-    {
       header: "Quốc gia",
       accessorKey: "country",
     },
     {
       header: "Thành phố",
       accessorKey: "city",
+    },
+    {
+      header: "Mã khách sạn",
+      accessorKey: "code",
     },
     {
       header: "Tên khách sạn",

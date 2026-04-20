@@ -1,6 +1,8 @@
-import { SERVICE_TYPE_CONFIG } from "@/modules/tour/day/types/day.type";
+import { SERVICE_TYPE_CONFIG, type DayService } from "@/modules/tour/day/types/day.type";
 import type { Tour } from "@/modules/tour/tour/types/tour.type";
+import { AppTable } from "@/shared/components/common/AppTable";
 import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
+import type { ColumnDef } from "@tanstack/react-table";
 import { useMemo } from "react";
 
 interface TourDaysTableProps {
@@ -28,6 +30,36 @@ export default function TourDaysTable({ item }: TourDaysTableProps) {
     }
     return totals;
   }, [item.itinerary]);
+
+  const dayServiceColumns: ColumnDef<DayService>[] = [
+    { id: "index", header: "STT", cell: ({ row }) => row.index + 1, enableSorting: false },
+    {
+      header: "Loại dịch vụ",
+      accessorKey: "serviceType",
+      cell: ({ row }) => {
+        const config = SERVICE_TYPE_CONFIG[row.original.serviceType];
+        return (
+          <span className='flex items-center gap-1.5 text-muted-foreground'>
+            {config?.icon}
+            {config?.label}
+          </span>
+        );
+      },
+    },
+    { header: "Tên dịch vụ", accessorKey: "name" },
+    {
+      header: "Đơn giá",
+      accessorKey: "unitPrice",
+      cell: ({ row }) => {
+        const svc = row.original;
+        return (
+          <div className='font-medium text-green-600 text-right whitespace-nowrap'>
+            {svc.unitPrice ? `${formatNumberVN(svc.unitPrice)} ${svc.currency}` : "—"}
+          </div>
+        );
+      },
+    },
+  ];
 
   return (
     <div className='space-y-3 px-4 py-3'>
@@ -70,28 +102,7 @@ export default function TourDaysTable({ item }: TourDaysTableProps) {
               </div>
             </div>
             {entry.services.length > 0 && (
-              <table className='w-full text-sm'>
-                <tbody>
-                  {entry.services.map((svc, i) => {
-                    const config = SERVICE_TYPE_CONFIG[svc.serviceType];
-                    return (
-                      <tr key={i} className={i % 2 === 0 ? "bg-background" : "bg-muted/30"}>
-                        <td className='px-3 py-1.5 w-8 text-muted-foreground text-center'>{i + 1}</td>
-                        <td className='px-3 py-1.5 w-36'>
-                          <span className='flex items-center gap-1.5 text-muted-foreground'>
-                            {config?.icon}
-                            {config?.label}
-                          </span>
-                        </td>
-                        <td className='px-3 py-1.5'>{svc.name}</td>
-                        <td className='px-3 py-1.5 font-medium text-green-600 text-right whitespace-nowrap'>
-                          {svc.unitPrice ? `${formatNumberVN(svc.unitPrice)} ${svc.currency}` : "—"}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+              <AppTable columns={dayServiceColumns} data={entry.services} enablePagination={false} />
             )}
           </div>
         );

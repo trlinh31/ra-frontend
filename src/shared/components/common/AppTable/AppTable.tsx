@@ -2,7 +2,7 @@ import AppPagination from "@/shared/components/common/AppPagination";
 import AppSelect from "@/shared/components/common/AppSelect";
 import { Checkbox } from "@/shared/components/ui/checkbox";
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/shared/components/ui/empty";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/shared/components/ui/table";
+import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/shared/components/ui/table";
 import { DEFAULT_PAGE_SIZE, PAGE_SIZE_OPTIONS } from "@/shared/constants/pagination.constant";
 import { cn } from "@/shared/lib/utils";
 import {
@@ -48,6 +48,8 @@ interface AppTableProps<TData, TValue> {
   renderExpandedRow?: (row: TData) => React.ReactNode;
 
   enablePagination?: boolean;
+
+  renderFooter?: (data: TData[]) => React.ReactNode;
 }
 
 export function AppTable<TData, TValue>({
@@ -73,6 +75,8 @@ export function AppTable<TData, TValue>({
   renderExpandedRow,
 
   enablePagination = true,
+
+  renderFooter,
 }: AppTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
 
@@ -240,6 +244,8 @@ export function AppTable<TData, TValue>({
                 </React.Fragment>
               ))}
           </TableBody>
+
+          {renderFooter && <TableFooter>{renderFooter(data)}</TableFooter>}
         </Table>
       </div>
 

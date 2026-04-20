@@ -1,7 +1,7 @@
 import { PATHS } from "@/app/routes/route.constant";
 import TransportationFilterBar from "@/modules/masterData/transportation/components/TransportationFilterBar";
 import { transportMockStore } from "@/modules/masterData/transportation/data/transportation.mock-store";
-import type { Transportation } from "@/modules/masterData/transportation/types/transportation.type";
+import type { Transportation, VehicleCapacityPrice } from "@/modules/masterData/transportation/types/transportation.type";
 import { AppTable } from "@/shared/components/common/AppTable";
 import ActionButton from "@/shared/components/table/ActionButton";
 import TableToolbar from "@/shared/components/table/TableToolbar";
@@ -101,30 +101,16 @@ export default function TransportationListPage() {
         columns={columns}
         data={filteredItems}
         enableExpanding
-        renderExpandedRow={(item) => (
-          <div className='px-4 py-3'>
-            <table className='border border-border w-full text-sm text-center'>
-              <thead>
-                <tr className='bg-slate-700 text-primary-foreground'>
-                  <th className='px-3 py-2 border border-border font-semibold'>STT</th>
-                  <th className='px-3 py-2 border border-border font-semibold'>Sức chứa (chỗ)</th>
-                  <th className='px-3 py-2 border border-border font-semibold'>Đơn vị tiền tệ</th>
-                  <th className='px-3 py-2 border border-border font-semibold'>Giá</th>
-                </tr>
-              </thead>
-              <tbody>
-                {item.vehicleCapacityPrice.map((vcp, idx) => (
-                  <tr key={idx} className='even:bg-muted/40'>
-                    <td className='px-3 py-2 border border-border'>{idx + 1}</td>
-                    <td className='px-3 py-2 border border-border'>{vcp.capacity} chỗ</td>
-                    <td className='px-3 py-2 border border-border'>{vcp.currency}</td>
-                    <td className='px-3 py-2 border border-border'>{formatNumberVN(vcp.price)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        renderExpandedRow={(item) => {
+          const vcpColumns: ColumnDef<VehicleCapacityPrice>[] = [
+            { id: "index", header: "STT", cell: ({ row }) => row.index + 1, enableSorting: false },
+            { header: "Sức chứa (chỗ)", accessorKey: "capacity", cell: ({ row }) => `${row.original.capacity} chỗ` },
+            { header: "Đơn vị tiền tệ", accessorKey: "currency" },
+            { header: "Giá", accessorKey: "price", cell: ({ row }) => formatNumberVN(row.original.price) },
+          ];
+
+          return <AppTable columns={vcpColumns} data={item.vehicleCapacityPrice} enablePagination={false} />;
+        }}
       />
     </div>
   );

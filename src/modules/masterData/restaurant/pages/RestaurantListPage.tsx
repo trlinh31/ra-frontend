@@ -1,11 +1,12 @@
 import { PATHS } from "@/app/routes/route.constant";
 import RestaurantFilterBar from "@/modules/masterData/restaurant/components/RestaurantFilterBar";
 import { restaurantMockStore } from "@/modules/masterData/restaurant/data/restaurant.mock-store";
-import type { Restaurant } from "@/modules/masterData/restaurant/types/restaurant.type";
+import type { MenuItem, Restaurant } from "@/modules/masterData/restaurant/types/restaurant.type";
 import { AppTable } from "@/shared/components/common/AppTable";
 import ActionButton from "@/shared/components/table/ActionButton";
 import TableToolbar from "@/shared/components/table/TableToolbar";
 import { Switch } from "@/shared/components/ui/switch";
+import { TableCell, TableRow } from "@/shared/components/ui/table";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import type { ColumnDef } from "@tanstack/react-table";
 import { UtensilsCrossed } from "lucide-react";
@@ -83,32 +84,35 @@ export default function RestaurantListPage() {
   ];
 
   const renderMenu = (restaurant: Restaurant) => {
-    const total = restaurant.menuItems.reduce((sum, item) => sum + item.price, 0);
+    const menuColumns: ColumnDef<MenuItem>[] = [
+      { id: "index", header: "STT", cell: ({ row }) => row.index + 1, enableSorting: false },
+      { header: "Tên món", accessorKey: "name" },
+      {
+        header: "Giá",
+        accessorKey: "price",
+        cell: ({ row }) => <div className='text-right'>{row.original.price.toLocaleString("vi-VN")} ₫</div>,
+      },
+    ];
+
     return (
       <div className='space-y-2'>
         <p className='mb-2 font-semibold text-muted-foreground text-xs uppercase'>Menu – {restaurant.name}</p>
-        <table className='w-full text-sm'>
-          <thead>
-            <tr className='border-b text-left'>
-              <th className='pb-1 font-bold'>Tên món</th>
-              <th className='pb-1 font-bold text-right'>Giá</th>
-            </tr>
-          </thead>
-          <tbody>
-            {restaurant.menuItems.map((item, i) => (
-              <tr key={i} className='last:border-0 border-b'>
-                <td className='py-1'>{item.name}</td>
-                <td className='py-1 text-right'>{item.price.toLocaleString("vi-VN")} ₫</td>
-              </tr>
-            ))}
-          </tbody>
-          <tfoot>
-            <tr>
-              <td className='pt-2 font-semibold'>Tổng cộng</td>
-              <td className='pt-2 font-bold text-primary text-right'>{total.toLocaleString("vi-VN")} ₫</td>
-            </tr>
-          </tfoot>
-        </table>
+        <AppTable
+          columns={menuColumns}
+          data={restaurant.menuItems}
+          enablePagination={false}
+          renderFooter={(items) => {
+            const total = items.reduce((sum, item) => sum + item.price, 0);
+            return (
+              <TableRow>
+                <TableCell colSpan={2} className='font-semibold text-right'>
+                  Tổng cộng
+                </TableCell>
+                <TableCell className='font-bold text-primary text-right'>{total.toLocaleString("vi-VN")} ₫</TableCell>
+              </TableRow>
+            );
+          }}
+        />
       </div>
     );
   };

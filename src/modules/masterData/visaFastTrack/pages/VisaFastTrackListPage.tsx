@@ -1,14 +1,13 @@
 import { PATHS } from "@/app/routes/route.constant";
+import { getVisaFastTrackListColumns } from "@/modules/masterData/visaFastTrack/columns/visa-fast-track-list.columns";
+import { getVisaServiceDetailColumns } from "@/modules/masterData/visaFastTrack/columns/visa-service-detail.columns";
 import type { VisaFastTrackFilters } from "@/modules/masterData/visaFastTrack/components/VisaFastTrackFilterBar";
 import VisaFastTrackFilterBar from "@/modules/masterData/visaFastTrack/components/VisaFastTrackFilterBar";
 import { visaFastTrackMockStore } from "@/modules/masterData/visaFastTrack/data/visa-fast-track.mock-store";
 import type { Service, VisaService } from "@/modules/masterData/visaFastTrack/types/visa-fast-track.type";
 import { AppTable } from "@/shared/components/common/AppTable";
-import ActionButton from "@/shared/components/table/ActionButton";
 import TableToolbar from "@/shared/components/table/TableToolbar";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
-import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
-import type { ColumnDef } from "@tanstack/react-table";
 import { Shield } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -55,23 +54,7 @@ export default function VisaFastTrackListPage() {
     setItems(visaFastTrackMockStore.getAll());
   };
 
-  const columns: ColumnDef<VisaService>[] = [
-    { id: "index", header: "STT", cell: ({ row }) => row.index + 1 },
-    { header: "Quốc gia", accessorKey: "country" },
-    { header: "Thành phố", accessorKey: "city" },
-    { header: "Nhà cung cấp", accessorKey: "provider" },
-    {
-      id: "actions",
-      header: "Hành động",
-      enableSorting: false,
-      cell: ({ row }) => (
-        <div className='flex items-center gap-2'>
-          <ActionButton action='edit' onClick={() => handleEdit(row.original)} />
-          <ActionButton action='delete' onClick={() => handleDelete(row.original)} />
-        </div>
-      ),
-    },
-  ];
+  const columns = getVisaFastTrackListColumns({ onEdit: handleEdit, onDelete: handleDelete });
 
   return (
     <div className='space-y-4'>
@@ -88,14 +71,6 @@ export default function VisaFastTrackListPage() {
 }
 
 const VisaFastTrackDetailRow = ({ services }: { services: Service[] }) => {
-  const columns: ColumnDef<Service>[] = [
-    { id: "index", header: "STT", cell: ({ row }) => row.index + 1, enableSorting: false },
-    { header: "Nhóm", accessorKey: "group" },
-    { header: "Tên dịch vụ", accessorKey: "serviceName" },
-    { header: "Giá", accessorKey: "price", cell: ({ row }) => formatNumberVN(row.original.price) + " " + row.original.priceUnit },
-    { header: "Địa điểm đón", accessorKey: "pickupLocation", enableSorting: false },
-    { header: "Mô tả", accessorKey: "description", enableSorting: false },
-  ];
-
+  const columns = getVisaServiceDetailColumns();
   return <AppTable columns={columns} data={services} enablePagination={false} />;
 };

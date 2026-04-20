@@ -1,8 +1,10 @@
-import type { Hotel } from "@/modules/masterData/hotel/types/hotel.type";
+import type { DayGroup, Hotel } from "@/modules/masterData/hotel/types/hotel.type";
 import AppDatePicker from "@/shared/components/common/AppDatePicker/AppDatePicker";
+import { AppTable } from "@/shared/components/common/AppTable";
 import { Button } from "@/shared/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/shared/components/ui/collapsible";
 import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
+import type { ColumnDef } from "@tanstack/react-table";
 import { format, formatDate, startOfMonth } from "date-fns";
 import { CalendarDays, ChevronDown, ChevronUp } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -94,46 +96,41 @@ export default function HotelPricingPeriodsTable({ hotel }: HotelPricingPeriodsT
 
                 <CollapsibleContent>
                   <div className='space-y-3 mt-2'>
-                    {period.dateRanges.map((dr, drIdx) => (
-                      <div key={drIdx} className='overflow-x-auto'>
-                        <p className='px-1 pb-1 font-medium text-muted-foreground text-sm'>
-                          {formatDate(new Date(dr.from), "dd/MM/yyyy")} → {formatDate(new Date(dr.to), "dd/MM/yyyy")}
-                        </p>
-                        <table className='border border-border w-full text-center'>
-                          <thead>
-                            <tr className='bg-slate-700 text-primary-foreground'>
-                              <th className='px-3 py-3 border border-border font-semibold text-sm text-left'>Loại phòng</th>
-                              <th className='px-3 py-3 border border-border font-semibold text-sm text-left'>Nhóm thứ</th>
-                              <th className='px-3 py-3 border border-border font-semibold text-sm text-left'>Ngày áp dụng</th>
-                              <th className='px-3 py-3 border border-border min-w-36 font-semibold text-sm'>Giá ({period.currency}/ đêm)</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {dr.dayGroups.map((dg, dgIdx) => {
-                              const roomType = hotel.roomTypes.find((rt) => rt.id === dg.roomTypeId);
-                              return (
-                                <tr key={dgIdx} className='even:bg-muted/40'>
-                                  <td className='px-3 py-3 border border-border font-medium text-sm text-left'>
-                                    {roomType?.name ?? <span className='text-muted-foreground italic'>—</span>}
-                                  </td>
-                                  <td className='px-3 py-3 border border-border font-medium text-sm text-left'>{dg.label}</td>
-                                  <td className='px-3 py-3 border border-border text-sm text-left'>
-                                    {dg.days
-                                      .slice()
-                                      .sort((a, b) => a - b)
-                                      .map((d) => ["CN", "T2", "T3", "T4", "T5", "T6", "T7"][d])
-                                      .join(", ")}
-                                  </td>
-                                  <td className='px-3 py-3 border border-border text-sm'>
-                                    {dg.price != null && dg.price > 0 ? formatNumberVN(dg.price) : "N/A"}
-                                  </td>
-                                </tr>
-                              );
-                            })}
-                          </tbody>
-                        </table>
-                      </div>
-                    ))}
+                    {period.dateRanges.map((dr, drIdx) => {
+                      const dgColumns: ColumnDef<DayGroup>[] = [
+                        {
+                          header: "Loại phòng",
+                          accessorKey: "roomTypeId",
+                          cell: ({ row }) => {
+                            const rt = hotel.roomTypes.find((r) => r.id === row.original.roomTypeId);
+                            return rt?.name ?? <span className='text-muted-foreground italic'>—</span>;
+                          },
+                        },
+                        { header: "Nhóm thứ", accessorKey: "label" },
+                        {
+                          header: "Ngày áp dụng",
+                          accessorKey: "days",
+                          enableSorting: false,
+                          cell: ({ row }) =>
+                            row.original.days
+                              .slice()
+                              .sort((a, b) => a - b)
+                              .map((d) => ["CN", "T2", "T3", "T4", "T5", "T6", "T7"][d])
+                              .join(", "),
+                        },
+                        {
+                          header: `Giá (${period.currency}/ đêm)`,
+                          accessorKey: "price",
+                          cell: ({ row }) => (row.original.price != null && row.original.price > 0 ? formatNumberVN(row.original.price) : "N/A"),
+                        },
+                      ];
+
+                      return (
+                        <div key={drIdx}>
+                          <AppTable columns={dgColumns} data={dr.dayGroups} enablePagination={false} />
+                        </div>
+                      );
+                    })}
                   </div>
                 </CollapsibleContent>
               </Collapsible>

@@ -1,5 +1,8 @@
-import { SERVICE_TYPE_CONFIG, type Day } from "@/modules/tour/day/types/day.type";
+import { SERVICE_TYPE_CONFIG, type Day, type DayService } from "@/modules/tour/day/types/day.type";
+import { AppTable } from "@/shared/components/common/AppTable";
+import { TableCell, TableRow } from "@/shared/components/ui/table";
 import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
+import type { ColumnDef } from "@tanstack/react-table";
 
 interface DayServicesTableProps {
   item: Day;
@@ -10,61 +13,67 @@ export default function DayServicesTable({ item }: DayServicesTableProps) {
     return <p className='px-4 py-3 text-muted-foreground text-sm italic'>Chưa có dịch vụ nào.</p>;
   }
 
+  const columns: ColumnDef<DayService>[] = [
+    { id: "index", header: "STT", cell: ({ row }) => row.index + 1, enableSorting: false },
+    {
+      header: "Loại dịch vụ",
+      accessorKey: "serviceType",
+      cell: ({ row }) => {
+        const config = SERVICE_TYPE_CONFIG[row.original.serviceType];
+        return (
+          <span className='flex items-center gap-1.5'>
+            {config?.icon}
+            {config?.label ?? row.original.serviceType}
+          </span>
+        );
+      },
+    },
+    { header: "Tên dịch vụ", accessorKey: "name" },
+    {
+      header: "Đơn giá",
+      accessorKey: "unitPrice",
+      cell: ({ row }) => {
+        const svc = row.original;
+        return (
+          <div className='font-medium text-green-600 text-right'>
+            {svc.unitPrice ? (
+              `${formatNumberVN(svc.unitPrice)} ${svc.currency}`
+            ) : (
+              <span className='font-normal text-muted-foreground italic'>Chưa có</span>
+            )}
+          </div>
+        );
+      },
+    },
+  ];
+
   return (
     <div className='px-4 py-3'>
-      <table className='w-full text-sm border-collapse'>
-        <thead>
-          <tr className='bg-muted text-muted-foreground'>
-            <th className='px-3 py-2 border font-medium text-left'>STT</th>
-            <th className='px-3 py-2 border font-medium text-left'>Loại dịch vụ</th>
-            <th className='px-3 py-2 border font-medium text-left'>Tên dịch vụ</th>
-            <th className='px-3 py-2 border font-medium text-right'>Đơn giá</th>
-          </tr>
-        </thead>
-        <tbody>
-          {item.services.map((svc, idx) => {
-            const config = SERVICE_TYPE_CONFIG[svc.serviceType];
-            return (
-              <tr key={svc.id} className='hover:bg-muted/40'>
-                <td className='px-3 py-2 border text-center'>{idx + 1}</td>
-                <td className='px-3 py-2 border'>
-                  <span className='flex items-center gap-1.5'>
-                    {config?.icon}
-                    {config?.label ?? svc.serviceType}
-                  </span>
-                </td>
-                <td className='px-3 py-2 border'>{svc.name}</td>
-                <td className='px-3 py-2 border font-medium text-green-600 text-right'>
-                  {svc.unitPrice ? (
-                    `${formatNumberVN(svc.unitPrice)} ${svc.currency}`
-                  ) : (
-                    <span className='font-normal text-muted-foreground italic'>Chưa có</span>
-                  )}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-        <tfoot>
-          <tr className='bg-muted font-semibold'>
-            <td colSpan={3} className='px-3 py-2 border text-right'>
-              Tổng cộng
-            </td>
-            <td className='px-3 py-2 border text-green-700 text-right'>
-              {(() => {
-                const byCurrency = item.services.reduce<Record<string, number>>((acc, svc) => {
-                  if (!svc.unitPrice || !svc.currency) return acc;
-                  acc[svc.currency] = (acc[svc.currency] ?? 0) + svc.unitPrice;
-                  return acc;
-                }, {});
-                const entries = Object.entries(byCurrency);
-                if (!entries.length) return <span className='font-normal text-muted-foreground italic'>—</span>;
-                return entries.map(([cur, total]) => `${formatNumberVN(total)} ${cur}`).join(" + ");
-              })()}
-            </td>
-          </tr>
-        </tfoot>
-      </table>
+      <AppTable
+        columns={columns}
+        data={item.services}
+        enablePagination={false}
+        renderFooter={(services) => {
+          const byCurrency = services.reduce<Record<string, number>>((acc, svc) => {
+            if (!svc.unitPrice || !svc.currency) return acc;
+            acc[svc.currency] = (acc[svc.currency] ?? 0) + svc.unitPrice;
+            return acc;
+          }, {});
+          const entries = Object.entries(byCurrency);
+          return (
+            <TableRow>
+              <TableCell colSpan={3} className='font-semibold text-right'>
+                Tổng cộng
+              </TableCell>
+              <TableCell className='font-semibold text-green-700 text-right'>
+                {entries.length ? entries.map(([cur, total]) => `${formatNumberVN(total)} ${cur}`).join(" + ") : (
+                  <span className='font-normal text-muted-foreground italic'>—</span>
+                )}
+              </TableCell>
+            </TableRow>
+          );
+        }}
+      />
     </div>
   );
 }
