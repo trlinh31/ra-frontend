@@ -1,7 +1,8 @@
 # TÀI LIỆU NGHIỆP VỤ HỆ THỐNG RA TRAVEL
 
-> **Phiên bản:** 1.0  
+> **Phiên bản:** 1.2  
 > **Ngày tạo:** 21/04/2026  
+> **Cập nhật lần cuối:** 21/04/2026  
 > **Trạng thái:** Draft (UI đang phát triển, chưa tích hợp backend thực)
 
 ---
@@ -67,6 +68,7 @@ Mỗi chức năng Master Data đều hỗ trợ:
 - **Chỉnh sửa** thông tin
 - **Xóa** với xác nhận (không thể hoàn tác)
 - **Bật/tắt trạng thái hoạt động** (`isActive`)
+- **Quản lý dịch vụ thêm** (Add-on Services): mỗi entity có thể có danh sách dịch vụ bổ sung đính kèm (xem mục 5.16)
 
 ### 2.3 Quản lý Tour
 
@@ -74,6 +76,34 @@ Mỗi chức năng Master Data đều hỗ trợ:
 | --- | ------------------- | ------------------------------------------------------------------------------- |
 | 1   | **Ngày hành trình** | Tạo/quản lý từng ngày trong lịch trình, gắn nhiều dịch vụ vào mỗi ngày          |
 | 2   | **Tour du lịch**    | Tổng hợp các ngày hành trình thành tour hoàn chỉnh, tính chi phí theo đầu người |
+
+Khi thêm dịch vụ vào Ngày hành trình hoặc Tour, người dùng có **3 cách** để thêm dịch vụ:
+
+| Cách | Tên                        | Mô tả                                                                                    |
+| ---- | -------------------------- | ---------------------------------------------------------------------------------------- |
+| 1    | **Dịch vụ từ Master Data** | Chọn từ danh sách có sẵn (khách sạn, chuyến bay, nhà hàng...) kèm bảng giá đã định nghĩa |
+| 2    | **Dịch vụ thêm (Add-on)**  | Chọn dịch vụ bổ sung đã được định nghĩa sẵn trong một entity Master Data cụ thể          |
+| 3    | **Dịch vụ tự do (Custom)** | Nhập tự do tên dịch vụ, giá và tiền tệ — không cần liên kết với Master Data              |
+
+### 2.4 Quản lý Tour Bán – Phòng Sales
+
+| STT | Chức năng        | Mô tả                                                                      |
+| --- | ---------------- | -------------------------------------------------------------------------- |
+| 1   | **Confirm Tour** | Tạo tour thực tế từ tour mẫu, tùy chỉnh theo yêu cầu của đoàn khách cụ thể |
+
+### 2.5 Quản lý Vận hành – Phòng Operations
+
+| STT | Chức năng       | Mô tả                                                                      |
+| --- | --------------- | -------------------------------------------------------------------------- |
+| 1   | **Assign Tour** | Giao tour đã confirm cho Operator phụ trách thực hiện                      |
+| 2   | **Follow Tour** | Theo dõi tiến độ từng dịch vụ, cập nhật trạng thái và sửa chi tiết thực tế |
+
+### 2.6 Quản lý Thanh toán – Phòng Kế toán
+
+| STT | Chức năng              | Mô tả                                                              |
+| --- | ---------------------- | ------------------------------------------------------------------ |
+| 1   | **Thu của khách hàng** | Theo dõi các đợt thu tiền từ khách theo kế hoạch hợp đồng          |
+| 2   | **Chi cho Vendor**     | Theo dõi và ghi nhận các khoản thanh toán cho nhà cung cấp dịch vụ |
 
 ---
 
@@ -139,16 +169,85 @@ Giai đoạn "Q1/2026" | Tiền tệ: VND
 Bước 1: Tạo mới ngày hành trình với thông tin cơ bản:
         - Mã ngày, Tiêu đề, Quốc gia, Thành phố, Mô tả
 Bước 2: Thêm các dịch vụ vào ngày (có thể thêm nhiều dịch vụ)
-        - Chọn loại dịch vụ:
-          ┌─────────────────────────────────────────────┐
-          │  Khách sạn   │  Vận chuyển  │  Visa         │
-          │  Phí vào cổng│  Chuyến bay  │  Hướng dẫn viên│
-          │  Nhà hàng    │              │               │
-          └─────────────────────────────────────────────┘
-        - Hệ thống hiển thị form chi tiết tương ứng loại dịch vụ
-        - Chọn nhà cung cấp / giai đoạn giá / nhóm ngày cụ thể
-        - Nhập đơn giá và tiền tệ
+        Người dùng chọn 1 trong 3 cách:
+        ┌──────────────────────────────────────────────────────────────┐
+        │ Cách 1 – Dịch vụ Master Data (có bảng giá)                  │
+        │   Khách sạn │ Vận chuyển │ Visa │ Phí vào cổng             │
+        │   Chuyến bay │ Hướng dẫn viên │ Nhà hàng                   │
+        ├──────────────────────────────────────────────────────────────┤
+        │ Cách 2 – Dịch vụ thêm (Add-on) từ Master Data              │
+        │   Chọn entity (VD: Khách sạn X) → chọn add-on đã định nghĩa │
+        │   Hệ thống tự điền tên và giá từ Master Data               │
+        ├──────────────────────────────────────────────────────────────┤
+        │ Cách 3 – Dịch vụ tự do (Custom)                            │
+        │   Nhập tên dịch vụ, đơn giá, tiền tệ, ghi chú tùy ý        │
+        └──────────────────────────────────────────────────────────────┘
 Bước 3: Lưu ngày hành trình
+```
+
+### 3.11 Quy trình quản lý Dịch vụ thêm (Add-on) trong Master Data
+
+**Mô tả:**  
+Mỗi entity trong Master Data (Khách sạn, Nhà hàng, Vận chuyển, Chuyến bay, Hướng dẫn viên, Visa, Phí vào cổng, Nhóm Tour) đều có thể được đính kèm danh sách các dịch vụ bổ sung (add-on). Các dịch vụ này được dùng để tái sử dụng khi xây dựng lịch trình tour.
+
+**Ví dụ thực tế:**
+
+```
+Khách sạn "Ánh Dương":
+  ├── [Add-on] Giường phụ          → 200.000 ₫ / đêm
+  ├── [Add-on] Bữa sáng buffet     → 150.000 ₫ / người
+  └── [Add-on] Đưa đón sân bay     → 300.000 ₫ / lượt
+
+Nhà hàng "Hải Sản Biển Đông":
+  ├── [Add-on] Phòng riêng VIP      → 500.000 ₫ / bữa
+  └── [Add-on] Nước uống thêm      →  50.000 ₫ / người
+
+Hướng dẫn viên "Nguyễn Văn A":
+  └── [Add-on] Phiên dịch tiếng Nhật → 500.000 ₫ / ngày
+```
+
+**Luồng quản lý add-on trong Master Data:**
+
+```
+Bước 1: Vào trang chi tiết / chỉnh sửa của một entity Master Data
+Bước 2: Tìm mục "Dịch vụ thêm (Add-on)"
+Bước 3: Nhấn [+ Thêm dịch vụ]
+Bước 4: Nhập thông tin:
+        - Tên dịch vụ (bắt buộc)
+        - Đơn giá (bắt buộc, ≥ 0)
+        - Tiền tệ (bắt buộc)
+        - Đơn vị tính: /người, /phòng, /đêm, /lượt, /ngày, /tour... (tùy chọn)
+        - Mô tả chi tiết (tùy chọn)
+Bước 5: Lưu → add-on xuất hiện trong danh sách
+Bước 6: Có thể chỉnh sửa / xóa từng add-on
+```
+
+**Luồng sử dụng add-on khi xây dựng lịch trình:**
+
+```
+Bước 1: Trong form Ngày hành trình hoặc Tour, chọn [+ Thêm dịch vụ]
+Bước 2: Chọn "Dịch vụ thêm (Add-on)"
+Bước 3: Chọn loại entity nguồn (Khách sạn / Nhà hàng / ...)
+Bước 4: Chọn entity cụ thể (VD: Khách sạn Ánh Dương)
+Bước 5: Hệ thống hiển thị danh sách add-on của entity đó
+Bước 6: Chọn add-on muốn thêm
+        → Tên và giá được điền tự động từ Master Data
+        → Người dùng có thể ghi đè giá nếu cần
+Bước 7: Lưu
+```
+
+**Luồng thêm Dịch vụ tự do (Custom) không từ Master Data:**
+
+```
+Bước 1: Trong form Ngày hành trình hoặc Tour, chọn [+ Thêm dịch vụ]
+Bước 2: Chọn "Dịch vụ tự do (Custom)"
+Bước 3: Nhập trực tiếp:
+        - Tên dịch vụ
+        - Đơn giá
+        - Tiền tệ
+        - Ghi chú (tùy chọn)
+Bước 4: Lưu → dịch vụ được thêm vào lịch trình
+        (Không được lưu vào Master Data, chỉ tồn tại trong tour/ngày đó)
 ```
 
 ### 3.6 Quy trình tạo Tour
@@ -173,18 +272,138 @@ Bước 3: Hệ thống tự động tính chi phí:
 Bước 4: Lưu tour
 ```
 
+### 3.7 Quy trình Confirm Tour (Phòng Sales)
+
+**Tổng quan luồng liên phòng ban:**
+
+```
+[Sales] Tạo tour mẫu ──► Confirm tour (custom) ──► Assign sang Vận hành
+                                                           │
+                               [Ops] Follow tour ◄─────────┘
+                               Cập nhật dịch vụ thực tế
+                                      │
+                       [Kế toán] Follow thanh toán
+                       ├── Thu của khách
+                       └── Chi cho vendor
+```
+
+**Luồng xử lý:**
+
+```
+Bước 1: Seller chọn tour mẫu từ danh sách tour có sẵn
+Bước 2: Hệ thống tạo bản sao (clone) từ tour mẫu
+Bước 3: Seller nhập thông tin đoàn khách:
+        - Tên đoàn / tên khách hàng
+        - Số lượng khách thực tế
+        - Ngày khởi hành
+        - Ghi chú yêu cầu đặc biệt
+Bước 4: Seller tùy chỉnh lịch trình nếu cần:
+        - Thêm / bớt / đổi dịch vụ trong từng ngày
+        - Thay đổi loại phòng, hạng vé, gói combo...
+        - Hệ thống tự tính lại chi phí sau mỗi thay đổi
+Bước 5: Seller nhấn [Confirm Tour]
+        - Nếu có Sale Manager → trạng thái chuyển sang "Chờ duyệt"
+        - Nếu không cần duyệt  → chuyển thẳng sang "Đã xác nhận"
+Bước 6 (nếu có Sale Manager duyệt):
+        - Sale Manager Approve → tour sang "Đã xác nhận"
+        - Sale Manager Reject  → Seller chỉnh sửa và submit lại
+```
+
+**Vòng đời trạng thái ConfirmedTour:**
+
+```
+draft ──► pending_approval ──► confirmed ──► in_operation ──► completed
+               └────────────► rejected ──► (chỉnh sửa) ──► pending_approval
+```
+
+### 3.8 Quy trình Assign Tour cho Vận hành
+
+```
+Bước 1: Tour đạt trạng thái "Đã xác nhận" (confirmed)
+Bước 2: Operation Manager vào danh sách tour chờ assign
+Bước 3: Chọn tour → chọn Operator phụ trách
+        - Có thể assign 1 Operator chính + Operator hỗ trợ
+        - Nhập ghi chú nội bộ và deadline chuẩn bị
+Bước 4: Nhấn [Assign] → tour chuyển trạng thái "Đang vận hành"
+Bước 5: Operator nhận thông báo được assign tour
+```
+
+### 3.9 Quy trình Follow Tour & Sửa Detail (Phòng Vận hành)
+
+```
+Bước 1: Operator xem danh sách tour được assign cho mình
+Bước 2: Vào chi tiết tour → xem từng ngày hành trình
+Bước 3: Với mỗi dịch vụ, Operator có thể:
+        a. Cập nhật trạng thái thực tế:
+           pending → booked → confirmed → completed
+                                  └──────► issue (vấn đề phát sinh)
+        b. Sửa thông tin thực tế (nếu khác kế hoạch):
+           - Đổi khách sạn / loại phòng
+           - Đổi xe / sức chứa
+           - Đổi chuyến bay / hạng vé
+           - Cập nhật giá thực tế
+        c. Ghi chú vấn đề phát sinh
+Bước 4: Mỗi thay đổi được ghi log đầy đủ (ai, lúc nào, thay đổi gì)
+        Giá gốc (kế hoạch ban đầu) được giữ nguyên, không bị xóa
+Bước 5: Khi tất cả dịch vụ hoàn thành → Operator đánh dấu "Hoàn thành"
+Bước 6: Operation Manager review và đóng tour
+```
+
+### 3.10 Quy trình Follow Thanh toán (Phòng Kế toán)
+
+**3.10A – Thu tiền từ khách hàng:**
+
+```
+Bước 1: Tour confirm → Kế toán tạo "Phiếu thu" cho tour đó
+Bước 2: Nhập kế hoạch thu theo từng đợt:
+        - Đợt 1: Đặt cọc (VD: 30% tổng giá trị)
+        - Đợt 2: Thanh toán lần 2 (VD: trước khởi hành 30 ngày)
+        - Đợt 3: Thanh toán còn lại (VD: trước khởi hành 7 ngày)
+Bước 3: Theo dõi từng đợt → khi nhận tiền:
+        - Đánh dấu "Đã thu"
+        - Nhập số tiền thực nhận, ngày nhận, hình thức thanh toán
+Bước 4: Hệ thống tổng hợp: Tổng đã thu / Tổng phải thu / Còn lại
+```
+
+**3.10B – Chi tiền cho Vendor:**
+
+```
+Bước 1: Từ ServiceExecutionLog (do Vận hành cập nhật), Kế toán xem
+        danh sách dịch vụ đã ở trạng thái "confirmed" hoặc "completed"
+Bước 2: Tạo "Phiếu chi" cho từng dịch vụ:
+        - Vendor (khách sạn / hãng bay / nhà hàng...)
+        - Số tiền = giá thực tế từ log vận hành
+        - Hạn thanh toán với vendor
+Bước 3: Theo dõi trạng thái:
+        pending → partial → paid
+                └────────────────► overdue (quá hạn)
+Bước 4: Khi thanh toán → ghi nhận: số tiền, ngày trả, đính kèm chứng từ
+Bước 5: Accountant Manager xem tổng công nợ toàn tour / toàn tháng
+```
+
 ---
 
 ## 4. Vai trò trong hệ thống
 
-| Role         | Tên hiển thị         | Mô tả (suy luận)                         |
-| ------------ | -------------------- | ---------------------------------------- |
-| `ADMIN`      | Quản trị viên        | Toàn quyền truy cập tất cả chức năng     |
-| `MANAGER`    | Quản lý              | Quản lý nghiệp vụ, xem/tạo/sửa dữ liệu   |
-| `ACCOUNTANT` | Kế toán              | Xem bảng giá, chi phí, báo cáo tài chính |
-| `SELLER`     | Nhân viên kinh doanh | Xem và tạo tour, báo giá cho khách hàng  |
+**Phân chia theo phòng ban:**
 
-> **Lưu ý:** Phân quyền chi tiết cho từng chức năng chưa được triển khai trong source code hiện tại (đang dùng mock với ADMIN toàn quyền). Bảng trên là giả định dựa trên tên role.
+| Role                 | Team     | Tên hiển thị          | Quyền                                                               |
+| -------------------- | -------- | --------------------- | ------------------------------------------------------------------- |
+| `ADMIN`              | —        | Quản trị viên         | Xem toàn bộ mọi team, mọi chức năng, không hạn chế                  |
+| `SALE_MANAGER`       | Sales    | Trưởng phòng Sales    | Xem/duyệt toàn bộ tour của team Sales; approve/reject confirm tour  |
+| `SELLER`             | Sales    | Nhân viên kinh doanh  | Tạo tour mẫu, confirm tour, custom lịch trình, báo giá khách hàng   |
+| `OPERATION_MANAGER`  | Vận hành | Trưởng phòng Vận hành | Assign tour cho Operator; xem toàn bộ tour đang vận hành của team   |
+| `OPERATOR`           | Vận hành | Nhân viên Vận hành    | Follow và cập nhật các tour được assign; sửa detail dịch vụ thực tế |
+| `ACCOUNTANT_MANAGER` | Kế toán  | Trưởng phòng Kế toán  | Xem tổng công nợ toàn hệ thống; duyệt các phiếu thanh toán          |
+| `ACCOUNTANT`         | Kế toán  | Kế toán viên          | Nhập/cập nhật trạng thái thu/chi; theo dõi phiếu thu và phiếu chi   |
+
+**Quy tắc xem dữ liệu theo role:**
+
+- **ADMIN:** Xem toàn bộ, không hạn chế
+- **Manager (bất kỳ team):** Xem toàn bộ dữ liệu của team mình
+- **Staff (SELLER / OPERATOR / ACCOUNTANT):** Chỉ xem dữ liệu được giao / liên quan đến mình
+
+> **Lưu ý:** Phân quyền chi tiết chưa được triển khai trong source code hiện tại. Bảng trên là thiết kế nghiệp vụ đề xuất.
 
 ---
 
@@ -363,18 +582,22 @@ Bước 4: Lưu tour
 | `flightDetail`      | object? | Chi tiết chuyến bay (flightId, pricingPeriodId, seatClassId, dayGroupId)                   |
 | `tourGuideDetail`   | object? | Chi tiết hướng dẫn viên (tourGuideId)                                                      |
 | `restaurantDetail`  | object? | Chi tiết nhà hàng (restaurantId, pricingPeriodIndex, comboPackageIndex, dayGroupKey)       |
+| `addonDetail`       | object? | Chi tiết dịch vụ thêm (entityType, entityId, addonId) — chỉ có khi `serviceType = addon`   |
+| `customDetail`      | object? | Chi tiết dịch vụ tự do (description) — chỉ có khi `serviceType = custom`                   |
 
 **Các loại ServiceType:**
 
-| Giá trị        | Tên hiển thị   |
-| -------------- | -------------- |
-| `hotel`        | Khách sạn      |
-| `transport`    | Vận chuyển     |
-| `visa`         | Visa           |
-| `entrance_fee` | Phí vào cổng   |
-| `flight`       | Chuyến bay     |
-| `tour_guide`   | Hướng dẫn viên |
-| `restaurant`   | Nhà hàng       |
+| Giá trị        | Tên hiển thị   | Nguồn dữ liệu                                      |
+| -------------- | -------------- | -------------------------------------------------- |
+| `hotel`        | Khách sạn      | Master Data (có bảng giá)                          |
+| `transport`    | Vận chuyển     | Master Data (có bảng giá)                          |
+| `visa`         | Visa           | Master Data (có bảng giá)                          |
+| `entrance_fee` | Phí vào cổng   | Master Data (có bảng giá)                          |
+| `flight`       | Chuyến bay     | Master Data (có bảng giá)                          |
+| `tour_guide`   | Hướng dẫn viên | Master Data (có bảng giá)                          |
+| `restaurant`   | Nhà hàng       | Master Data (có bảng giá)                          |
+| `addon`        | Dịch vụ thêm   | Add-on định nghĩa sẵn trong một entity Master Data |
+| `custom`       | Dịch vụ tự do  | Nhập tay tại chỗ, không liên kết Master Data       |
 
 ### 5.11 Tour – Tour du lịch
 
@@ -396,6 +619,129 @@ Có 2 loại mục lịch trình:
 | --------------- | -------------- | ------------------------------------------------------ |
 | Ngày hành trình | `"day"`        | Sử dụng dữ liệu từ entity Day, có thể bổ sung dịch vụ  |
 | Nhóm Tour       | `"group_tour"` | Mua tour nhóm từ nhà cung cấp, chọn giá theo giai đoạn |
+
+### 5.16 AddonService – Dịch vụ thêm trong Master Data
+
+Đây là dịch vụ bổ sung được định nghĩa sẵn và đính kèm vào một entity Master Data cụ thể.
+
+| Field         | Kiểu    | Ý nghĩa                                                                                                          |
+| ------------- | ------- | ---------------------------------------------------------------------------------------------------------------- |
+| `id`          | string  | Mã định danh duy nhất                                                                                            |
+| `entityType`  | string  | Loại entity chủ sở hữu (hotel / restaurant / transport / flight / tour_guide / visa / entrance_fee / group_tour) |
+| `entityId`    | string  | ID của entity chủ sở hữu                                                                                         |
+| `name`        | string  | Tên dịch vụ (bắt buộc)                                                                                           |
+| `price`       | number  | Đơn giá (≥ 0)                                                                                                    |
+| `currency`    | string  | Tiền tệ                                                                                                          |
+| `unit`        | string? | Đơn vị tính: `/người`, `/phòng`, `/đêm`, `/lượt`, `/ngày`, `/tour`...                                            |
+| `description` | string  | Mô tả chi tiết                                                                                                   |
+| `isActive`    | boolean | Trạng thái — chỉ hiện add-on đang active trong dropdown chọn                                                     |
+
+**Ví dụ dữ liệu:**
+
+```json
+{
+  "id": "addon-001",
+  "entityType": "hotel",
+  "entityId": "hotel-123",
+  "name": "Giường phụ",
+  "price": 200000,
+  "currency": "VND",
+  "unit": "/đêm",
+  "description": "Thêm giường phụ cho phòng đôi",
+  "isActive": true
+}
+```
+
+---
+
+### 5.12 ConfirmedTour – Tour đã bán
+
+| Field            | Kiểu                     | Ý nghĩa                                            |
+| ---------------- | ------------------------ | -------------------------------------------------- |
+| `id`             | string                   | Mã định danh duy nhất                              |
+| `tourTemplateId` | string                   | Tham chiếu tour mẫu gốc                            |
+| `code`           | string                   | Mã tour đã bán (tự sinh)                           |
+| `customerName`   | string                   | Tên khách hàng / tên đoàn                          |
+| `numberOfPeople` | number                   | Số khách thực tế                                   |
+| `departureDate`  | string                   | Ngày khởi hành                                     |
+| `itinerary`      | TourItineraryItem[]      | Lịch trình đã custom (bản sao độc lập từ tour mẫu) |
+| `totalCost`      | Record\<string, number\> | Tổng chi phí theo từng tiền tệ                     |
+| `status`         | enum                     | Trạng thái (xem bảng bên dưới)                     |
+| `note`           | string                   | Ghi chú yêu cầu đặc biệt                           |
+| `createdBy`      | string                   | Seller tạo                                         |
+| `approvedBy`     | string?                  | Sale Manager duyệt                                 |
+| `assignedTo`     | string?                  | Operator được giao                                 |
+| `assignedAt`     | string?                  | Thời điểm assign                                   |
+| `operationNote`  | string?                  | Ghi chú của Operation Manager                      |
+
+**Trạng thái ConfirmedTour:**
+
+| Giá trị            | Ý nghĩa                             |
+| ------------------ | ----------------------------------- |
+| `draft`            | Bản nháp, chưa submit               |
+| `pending_approval` | Chờ Sale Manager duyệt              |
+| `confirmed`        | Đã xác nhận, chờ assign vận hành    |
+| `in_operation`     | Đang thực hiện (đã assign Operator) |
+| `completed`        | Hoàn thành                          |
+| `rejected`         | Bị từ chối, cần chỉnh sửa lại       |
+| `cancelled`        | Đã hủy                              |
+
+### 5.13 ServiceExecutionLog – Log vận hành dịch vụ
+
+| Field             | Kiểu    | Ý nghĩa                                                    |
+| ----------------- | ------- | ---------------------------------------------------------- |
+| `id`              | string  | Mã log                                                     |
+| `confirmedTourId` | string  | Tour đang thực hiện                                        |
+| `dayIndex`        | number  | Ngày thứ mấy trong lịch trình                              |
+| `serviceId`       | string  | Dịch vụ trong ngày                                         |
+| `status`          | enum    | `pending` / `booked` / `confirmed` / `completed` / `issue` |
+| `plannedPrice`    | number  | Giá kế hoạch ban đầu (không bao giờ bị thay đổi)           |
+| `actualPrice`     | number? | Giá thực tế (do Operator cập nhật)                         |
+| `actualCurrency`  | string  | Tiền tệ thực tế                                            |
+| `note`            | string  | Ghi chú / mô tả vấn đề phát sinh                           |
+| `updatedBy`       | string  | Người cập nhật                                             |
+| `updatedAt`       | string  | Thời điểm cập nhật                                         |
+
+### 5.14 CustomerPayment – Phiếu thu khách hàng
+
+| Field             | Kiểu                 | Ý nghĩa               |
+| ----------------- | -------------------- | --------------------- |
+| `id`              | string               | Mã phiếu thu          |
+| `confirmedTourId` | string               | Tour liên quan        |
+| `totalAmount`     | number               | Tổng giá trị hợp đồng |
+| `currency`        | string               | Tiền tệ               |
+| `installments`    | PaymentInstallment[] | Danh sách các đợt thu |
+
+**PaymentInstallment – Đợt thanh toán:**
+
+| Field            | Kiểu    | Ý nghĩa                                    |
+| ---------------- | ------- | ------------------------------------------ |
+| `label`          | string  | Tên đợt (VD: "Đặt cọc 30%")                |
+| `dueDate`        | string  | Hạn thanh toán                             |
+| `expectedAmount` | number  | Số tiền dự kiến                            |
+| `actualAmount`   | number? | Số tiền thực nhận                          |
+| `paidAt`         | string? | Ngày thực nhận                             |
+| `paymentMethod`  | string? | Hình thức (chuyển khoản / tiền mặt...)     |
+| `status`         | enum    | `pending` / `partial` / `paid` / `overdue` |
+| `note`           | string  | Ghi chú                                    |
+
+### 5.15 VendorPayment – Phiếu chi cho Vendor
+
+| Field             | Kiểu    | Ý nghĩa                                      |
+| ----------------- | ------- | -------------------------------------------- |
+| `id`              | string  | Mã phiếu chi                                 |
+| `confirmedTourId` | string  | Tour liên quan                               |
+| `serviceLogId`    | string  | Tham chiếu ServiceExecutionLog               |
+| `vendorName`      | string  | Tên vendor                                   |
+| `vendorType`      | string  | Loại vendor (hotel / flight / restaurant...) |
+| `expectedAmount`  | number  | Số tiền phải trả theo kế hoạch               |
+| `actualAmount`    | number? | Số tiền thực trả                             |
+| `currency`        | string  | Tiền tệ                                      |
+| `dueDate`         | string  | Hạn thanh toán cho vendor                    |
+| `paidAt`          | string? | Ngày thực trả                                |
+| `paymentMethod`   | string? | Hình thức thanh toán                         |
+| `status`          | enum    | `pending` / `partial` / `paid` / `overdue`   |
+| `note`            | string  | Ghi chú                                      |
 
 ---
 
@@ -477,6 +823,52 @@ Có 2 loại mục lịch trình:
 
 - Tất cả entity Master Data đều có trạng thái `isActive`
 - Có thể toggle bật/tắt **trực tiếp từ danh sách** (không cần vào form chỉnh sửa)
+
+### 7.11 Quy tắc Dịch vụ thêm (Add-on) và Dịch vụ tự do (Custom)
+
+**Add-on:**
+
+- Add-on thuộc về một entity Master Data cụ thể — không dùng chung giữa các entity khác nhau
+- Add-on chỉ hiển thị trong dropdown nếu `isActive = true`
+- Khi add-on được chọn vào lịch trình, giá được **sao chép tại thời điểm chọn** (snapshot) — thay đổi giá add-on sau đó không ảnh hưởng đến tour đã tạo
+- Người dùng **có thể ghi đè giá** khi thêm add-on vào lịch trình (giá gốc từ Master Data vẫn được lưu để tham chiếu)
+- Xóa add-on trong Master Data không xóa dịch vụ đã được thêm vào lịch trình
+
+**Custom (Dịch vụ tự do):**
+
+- Dịch vụ custom **không được lưu vào Master Data** — chỉ tồn tại trong lịch trình cụ thể đó
+- Tên, giá, tiền tệ đều do người dùng nhập tay tự do
+- Không có ràng buộc validate ngoài: tên bắt buộc, giá ≥ 0
+- Được tính vào tổng chi phí tour như các dịch vụ khác
+- Nếu muốn tái sử dụng nhiều lần → nên tạo add-on trong Master Data thay vì dùng custom
+
+### 7.7 Quy tắc Confirm Tour
+
+- Chỉ **SELLER** và **SALE_MANAGER** mới có thể tạo và submit Confirm Tour
+- Khi có Sale Manager trong hệ thống, tour phải qua bước **duyệt** trước khi được confirm
+- Không thể chỉnh sửa ConfirmedTour khi đã ở trạng thái `in_operation` trở đi
+- ConfirmedTour là **bản sao độc lập** — thay đổi tour mẫu gốc không ảnh hưởng đến tour đã confirm
+- Không thể xóa ConfirmedTour khi đã sang trạng thái `in_operation` trở đi
+
+### 7.8 Quy tắc Assign Tour
+
+- Chỉ **OPERATION_MANAGER** mới có thể Assign Tour cho Operator
+- Tour phải ở trạng thái `confirmed` mới được phép assign
+- Sau khi assign, tour chuyển sang `in_operation`; cần có lý do nếu muốn đổi Operator
+
+### 7.9 Quy tắc Follow Tour (Vận hành)
+
+- **OPERATOR** chỉ thấy và thao tác được tour được assign cho mình
+- **OPERATION_MANAGER** thấy toàn bộ tour của team vận hành
+- Khi Operator cập nhật giá thực tế, hệ thống **giữ nguyên giá kế hoạch** (`plannedPrice`) và ghi log thay đổi — không xóa dữ liệu gốc
+- Chỉ được tạo Phiếu chi (VendorPayment) khi dịch vụ đạt trạng thái `confirmed` hoặc `completed`
+
+### 7.10 Quy tắc Thanh toán
+
+- **ACCOUNTANT_MANAGER** xem tổng công nợ toàn hệ thống; **ACCOUNTANT** chỉ nhập/cập nhật dữ liệu
+- Phiếu chi chỉ được tạo khi dịch vụ đã được Vận hành xác nhận (`confirmed` / `completed`)
+- Không được xóa phiếu thanh toán đã ghi nhận — chỉ được cập nhật trạng thái
+- Một tour có thể có nhiều đợt thu khác nhau theo thỏa thuận hợp đồng
 
 ---
 
