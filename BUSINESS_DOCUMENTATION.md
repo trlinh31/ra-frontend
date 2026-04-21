@@ -849,19 +849,6 @@ Có 2 loại mục lịch trình:
 - ConfirmedTour là **bản sao độc lập** — thay đổi tour mẫu gốc không ảnh hưởng đến tour đã confirm
 - Không thể xóa ConfirmedTour khi đã sang trạng thái `in_operation` trở đi
 
-### 7.8 Quy tắc Assign Tour
-
-- Chỉ **OPERATION_MANAGER** mới có thể Assign Tour cho Operator
-- Tour phải ở trạng thái `confirmed` mới được phép assign
-- Sau khi assign, tour chuyển sang `in_operation`; cần có lý do nếu muốn đổi Operator
-
-### 7.9 Quy tắc Follow Tour (Vận hành)
-
-- **OPERATOR** chỉ thấy và thao tác được tour được assign cho mình
-- **OPERATION_MANAGER** thấy toàn bộ tour của team vận hành
-- Khi Operator cập nhật giá thực tế, hệ thống **giữ nguyên giá kế hoạch** (`plannedPrice`) và ghi log thay đổi — không xóa dữ liệu gốc
-- Chỉ được tạo Phiếu chi (VendorPayment) khi dịch vụ đạt trạng thái `confirmed` hoặc `completed`
-
 ### 7.10 Quy tắc Thanh toán
 
 - **ACCOUNTANT_MANAGER** xem tổng công nợ toàn hệ thống; **ACCOUNTANT** chỉ nhập/cập nhật dữ liệu

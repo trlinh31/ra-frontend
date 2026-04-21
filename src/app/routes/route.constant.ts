@@ -51,4 +51,20 @@ export const PATHS = {
     TOUR_CREATE: "/tour/tours/create",
     TOUR_EDIT: "/tour/tours/:id",
   },
+
+  SALES: {
+    ROOT: "/sales",
+    CONFIRMED_TOURS: "/sales/confirmed-tours",
+    CONFIRMED_TOUR_CREATE: "/sales/confirmed-tours/create",
+    CONFIRMED_TOUR_DETAIL: "/sales/confirmed-tours/:id",
+  },
+
+  ACCOUNTING: {
+    ROOT: "/accounting",
+    CUSTOMER_PAYMENTS: "/accounting/customer-payments",
+    CUSTOMER_PAYMENT_CREATE: "/accounting/customer-payments/create",
+    CUSTOMER_PAYMENT_DETAIL: "/accounting/customer-payments/:id",
+    VENDOR_PAYMENTS: "/accounting/vendor-payments",
+    VENDOR_PAYMENT_CREATE: "/accounting/vendor-payments/create",
+  },
 } as const;

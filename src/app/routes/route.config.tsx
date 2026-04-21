@@ -1,3 +1,8 @@
+import CreateCustomerPaymentPage from "@/modules/accounting/customerPayment/pages/CreateCustomerPaymentPage";
+import CustomerPaymentDetailPage from "@/modules/accounting/customerPayment/pages/CustomerPaymentDetailPage";
+import CustomerPaymentListPage from "@/modules/accounting/customerPayment/pages/CustomerPaymentListPage";
+import CreateVendorPaymentPage from "@/modules/accounting/vendorPayment/pages/CreateVendorPaymentPage";
+import VendorPaymentListPage from "@/modules/accounting/vendorPayment/pages/VendorPaymentListPage";
 import DashboardPage from "@/modules/dashboard";
 import EntranceFeeListPage from "@/modules/masterData/entranceFee";
 import EditEntranceFeePage from "@/modules/masterData/entranceFee/pages/EditEntranceFeePage";
@@ -16,25 +21,32 @@ import TransportationListPage from "@/modules/masterData/transportation";
 import EditTransportationPage from "@/modules/masterData/transportation/pages/EditTransportationPage";
 import VisaFastTrackListPage from "@/modules/masterData/visaFastTrack";
 import EditVisaFastTrackPage from "@/modules/masterData/visaFastTrack/pages/EditVisaFastTrackPage";
+import ConfirmedTourListPage from "@/modules/sales/confirmedTour/pages/ConfirmedTourListPage";
+import CreateConfirmedTourPage from "@/modules/sales/confirmedTour/pages/CreateConfirmedTourPage";
 import DayListPage from "@/modules/tour/day";
 import EditDayPage from "@/modules/tour/day/pages/EditDayPage";
 import TourListPage from "@/modules/tour/tour";
 import EditTourPage from "@/modules/tour/tour/pages/EditTourPage";
 import DashboardLayout from "@/shared/layouts/DashboardLayout";
 import {
+  Banknote,
   Box,
   Bus,
   CalendarDays,
+  ClipboardList,
   Compass,
   Container,
+  CreditCard,
   Hotel,
   LayoutGrid,
   MapPin,
   Plane,
   Shield,
+  ShoppingBag,
   Ticket,
   UserRound,
   UtensilsCrossed,
+  Wallet,
 } from "lucide-react";
 import { Navigate } from "react-router-dom";
 import { PATHS } from "./route.constant";
@@ -274,6 +286,68 @@ export const APP_ROUTES: AppRoute[] = [
           {
             path: PATHS.TOUR.TOUR_EDIT,
             element: <EditTourPage />,
+            showInSidebar: false,
+          },
+        ],
+      },
+      {
+        path: PATHS.SALES.ROOT,
+        title: "Phòng Sales",
+        pageTitle: "Phòng Sales",
+        icon: ShoppingBag,
+        showInSidebar: true,
+        children: [
+          {
+            path: PATHS.SALES.CONFIRMED_TOURS,
+            title: "Tour Booking",
+            pageTitle: "Danh sách Tour Booking",
+            element: <ConfirmedTourListPage />,
+            icon: ClipboardList,
+            showInSidebar: true,
+          },
+          {
+            path: PATHS.SALES.CONFIRMED_TOUR_CREATE,
+            element: <CreateConfirmedTourPage />,
+            showInSidebar: false,
+          },
+        ],
+      },
+      {
+        path: PATHS.ACCOUNTING.ROOT,
+        title: "Kế toán",
+        pageTitle: "Kế toán",
+        icon: Wallet,
+        showInSidebar: true,
+        children: [
+          {
+            path: PATHS.ACCOUNTING.CUSTOMER_PAYMENTS,
+            title: "Phiếu Thu Khách Hàng",
+            pageTitle: "Phiếu Thu Khách Hàng",
+            element: <CustomerPaymentListPage />,
+            icon: CreditCard,
+            showInSidebar: true,
+          },
+          {
+            path: PATHS.ACCOUNTING.CUSTOMER_PAYMENT_CREATE,
+            element: <CreateCustomerPaymentPage />,
+            showInSidebar: false,
+          },
+          {
+            path: PATHS.ACCOUNTING.CUSTOMER_PAYMENT_DETAIL,
+            element: <CustomerPaymentDetailPage />,
+            showInSidebar: false,
+          },
+          {
+            path: PATHS.ACCOUNTING.VENDOR_PAYMENTS,
+            title: "Phiếu Chi Vendor",
+            pageTitle: "Phiếu Chi Vendor",
+            element: <VendorPaymentListPage />,
+            icon: Banknote,
+            showInSidebar: true,
+          },
+          {
+            path: PATHS.ACCOUNTING.VENDOR_PAYMENT_CREATE,
+            element: <CreateVendorPaymentPage />,
             showInSidebar: false,
           },
         ],
