@@ -1,7 +1,6 @@
-import type { AddonEntityType, AddonService } from "../types/addon.type";
+import type { AddonEntityType, AddonService } from "@/modules/masterData/addon/types/addon.type";
 
 const initialAddons: AddonService[] = [
-  // Khách sạn Ánh Dương (id: "1")
   {
     id: "addon-001",
     entityType: "hotel",

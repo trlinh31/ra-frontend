@@ -44,6 +44,16 @@ export const restaurantServiceDetailSchema = z.object({
   dayGroupKey: z.string().min(1, "Vui lòng chọn nhóm ngày"),
 });
 
+export const addonServiceDetailSchema = z.object({
+  entityType: z.string().min(1, "Vui lòng chọn loại dịch vụ"),
+  entityId: z.string().min(1, "Vui lòng chọn đối tác"),
+  addonId: z.string().min(1, "Vui lòng chọn dịch vụ thêm"),
+});
+
+export const customServiceDetailSchema = z.object({
+  description: z.string(),
+});
+
 export const dayServiceSchema = z.object({
   serviceType: z.enum(ServiceType, { error: "Vui lòng chọn loại dịch vụ" }),
   name: z.string().min(1, "Vui lòng nhập tên dịch vụ"),
@@ -56,6 +66,8 @@ export const dayServiceSchema = z.object({
   flightDetail: flightServiceDetailSchema.optional(),
   tourGuideDetail: tourGuideServiceDetailSchema.optional(),
   restaurantDetail: restaurantServiceDetailSchema.optional(),
+  addonDetail: addonServiceDetailSchema.optional(),
+  customDetail: customServiceDetailSchema.optional(),
 });
 
 export type HotelServiceDetailFormValues = z.infer<typeof hotelServiceDetailSchema>;

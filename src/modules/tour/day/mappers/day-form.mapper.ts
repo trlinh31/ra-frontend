@@ -21,6 +21,8 @@ export const mapDayDataToFormValues = (data: Day | undefined): DayFormValues => 
         ...(s.flightDetail ? { flightDetail: s.flightDetail } : {}),
         ...(s.tourGuideDetail ? { tourGuideDetail: s.tourGuideDetail } : {}),
         ...(s.restaurantDetail ? { restaurantDetail: s.restaurantDetail } : {}),
+        ...(s.addonDetail ? { addonDetail: s.addonDetail } : {}),
+        ...(s.customDetail ? { customDetail: s.customDetail } : {}),
       })) ?? [],
   };
 };
@@ -45,6 +47,8 @@ export const mapDayFormValuesToPayload = (values: DayFormValues) => {
       ...(s.flightDetail ? { flightDetail: s.flightDetail } : {}),
       ...(s.tourGuideDetail ? { tourGuideDetail: s.tourGuideDetail } : {}),
       ...(s.restaurantDetail ? { restaurantDetail: s.restaurantDetail } : {}),
+      ...(s.addonDetail ? { addonDetail: s.addonDetail } : {}),
+      ...(s.customDetail ? { customDetail: s.customDetail } : {}),
     })),
   };
 };

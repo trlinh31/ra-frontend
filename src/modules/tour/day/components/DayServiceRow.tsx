@@ -4,6 +4,8 @@ import Section from "@/shared/components/common/Section";
 import ActionButton from "@/shared/components/table/ActionButton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { Controller, useFormContext } from "react-hook-form";
+import AddonServiceFields from "./AddonServiceFields";
+import CustomServiceFields from "./CustomServiceFields";
 import EntranceFeeServiceFields from "./EntranceFeeServiceFields";
 import FlightServiceFields from "./FlightServiceFields";
 import HotelServiceFields from "./HotelServiceFields";
@@ -16,6 +18,8 @@ interface DayServiceRowProps {
   index: number;
   onRemove: () => void;
 }
+
+const HIDDEN_TOP_LEVEL = new Set<ServiceType>([ServiceType.CUSTOM]);
 
 export default function DayServiceRow({ index, onRemove }: DayServiceRowProps) {
   const { control, setValue } = useFormContext<DayFormValues>();
@@ -31,7 +35,18 @@ export default function DayServiceRow({ index, onRemove }: DayServiceRowProps) {
     setValue(`services.${index}.flightDetail`, undefined as never);
     setValue(`services.${index}.tourGuideDetail`, undefined as never);
     setValue(`services.${index}.restaurantDetail`, undefined as never);
+    setValue(`services.${index}.addonDetail`, undefined as never);
+    setValue(`services.${index}.customDetail`, undefined as never);
     setValue(`services.${index}.serviceType`, newType as DayFormValues["services"][number]["serviceType"]);
+  };
+
+  const handleAddonSubTabChange = (subTab: string) => {
+    setValue(`services.${index}.addonDetail`, undefined as never);
+    setValue(`services.${index}.customDetail`, undefined as never);
+    setValue(`services.${index}.name`, "");
+    setValue(`services.${index}.unitPrice`, 0);
+    setValue(`services.${index}.currency`, "");
+    setValue(`services.${index}.serviceType`, subTab as DayFormValues["services"][number]["serviceType"]);
   };
 
   return (
@@ -44,46 +59,73 @@ export default function DayServiceRow({ index, onRemove }: DayServiceRowProps) {
       <Controller
         control={control}
         name={`services.${index}.serviceType`}
-        render={({ field }) => (
-          <Tabs value={field.value} onValueChange={handleServiceTypeChange}>
-            <TabsList className='flex-wrap gap-1 mt-3 h-auto'>
-              {Object.entries(SERVICE_TYPE_CONFIG).map(([key, value]) => (
-                <TabsTrigger key={key} value={key}>
-                  {value.icon}
-                  {value.label}
-                </TabsTrigger>
-              ))}
-            </TabsList>
+        render={({ field }) => {
+          const outerTabValue = field.value === ServiceType.CUSTOM ? ServiceType.ADDON : field.value;
 
-            <TabsContent value={ServiceType.HOTEL}>
-              <HotelServiceFields index={index} />
-            </TabsContent>
+          return (
+            <Tabs value={outerTabValue} onValueChange={handleServiceTypeChange}>
+              <TabsList className='flex-wrap gap-1 mt-3 h-auto'>
+                {(Object.entries(SERVICE_TYPE_CONFIG) as [ServiceType, (typeof SERVICE_TYPE_CONFIG)[ServiceType]][])
+                  .filter(([key]) => !HIDDEN_TOP_LEVEL.has(key))
+                  .map(([key, cfg]) => (
+                    <TabsTrigger key={key} value={key}>
+                      {cfg.icon}
+                      {cfg.label}
+                    </TabsTrigger>
+                  ))}
+              </TabsList>
 
-            <TabsContent value={ServiceType.TRANSPORT}>
-              <TransportServiceFields index={index} />
-            </TabsContent>
+              <TabsContent value={ServiceType.HOTEL}>
+                <HotelServiceFields index={index} />
+              </TabsContent>
 
-            <TabsContent value={ServiceType.VISA}>
-              <VisaServiceFields index={index} />
-            </TabsContent>
+              <TabsContent value={ServiceType.TRANSPORT}>
+                <TransportServiceFields index={index} />
+              </TabsContent>
 
-            <TabsContent value={ServiceType.ENTRANCE_FEE}>
-              <EntranceFeeServiceFields index={index} />
-            </TabsContent>
+              <TabsContent value={ServiceType.VISA}>
+                <VisaServiceFields index={index} />
+              </TabsContent>
 
-            <TabsContent value={ServiceType.FLIGHT}>
-              <FlightServiceFields index={index} />
-            </TabsContent>
+              <TabsContent value={ServiceType.ENTRANCE_FEE}>
+                <EntranceFeeServiceFields index={index} />
+              </TabsContent>
 
-            <TabsContent value={ServiceType.TOUR_GUIDE}>
-              <TourGuideServiceFields index={index} />
-            </TabsContent>
+              <TabsContent value={ServiceType.FLIGHT}>
+                <FlightServiceFields index={index} />
+              </TabsContent>
 
-            <TabsContent value={ServiceType.RESTAURANT}>
-              <RestaurantServiceFields index={index} />
-            </TabsContent>
-          </Tabs>
-        )}
+              <TabsContent value={ServiceType.TOUR_GUIDE}>
+                <TourGuideServiceFields index={index} />
+              </TabsContent>
+
+              <TabsContent value={ServiceType.RESTAURANT}>
+                <RestaurantServiceFields index={index} />
+              </TabsContent>
+
+              <TabsContent value={ServiceType.ADDON}>
+                <Tabs value={field.value === ServiceType.CUSTOM ? ServiceType.CUSTOM : ServiceType.ADDON} onValueChange={handleAddonSubTabChange}>
+                  <TabsList className='mt-3 w-full'>
+                    <TabsTrigger value={ServiceType.ADDON} className='flex-1'>
+                      Có sẵn
+                    </TabsTrigger>
+                    <TabsTrigger value={ServiceType.CUSTOM} className='flex-1'>
+                      Tùy chỉnh
+                    </TabsTrigger>
+                  </TabsList>
+
+                  <TabsContent value={ServiceType.ADDON}>
+                    <AddonServiceFields index={index} />
+                  </TabsContent>
+
+                  <TabsContent value={ServiceType.CUSTOM}>
+                    <CustomServiceFields index={index} />
+                  </TabsContent>
+                </Tabs>
+              </TabsContent>
+            </Tabs>
+          );
+        }}
       />
     </Section>
   );

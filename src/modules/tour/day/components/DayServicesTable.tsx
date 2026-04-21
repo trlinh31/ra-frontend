@@ -1,4 +1,6 @@
-import { SERVICE_TYPE_CONFIG, type Day, type DayService } from "@/modules/tour/day/types/day.type";
+import { ADDON_ENTITY_LABELS } from "@/modules/masterData/addon/constants/addon.constant";
+import type { AddonEntityType } from "@/modules/masterData/addon/types/addon.type";
+import { SERVICE_TYPE_CONFIG, ServiceType, type Day, type DayService } from "@/modules/tour/day/types/day.type";
 import { AppTable } from "@/shared/components/common/AppTable";
 import { TableCell, TableRow } from "@/shared/components/ui/table";
 import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
@@ -19,11 +21,19 @@ export default function DayServicesTable({ item }: DayServicesTableProps) {
       header: "Loại dịch vụ",
       accessorKey: "serviceType",
       cell: ({ row }) => {
-        const config = SERVICE_TYPE_CONFIG[row.original.serviceType];
+        const svc = row.original;
+        const config = SERVICE_TYPE_CONFIG[svc.serviceType];
+        const addonSubLabel =
+          svc.serviceType === ServiceType.ADDON && svc.addonDetail?.entityType
+            ? ADDON_ENTITY_LABELS[svc.addonDetail.entityType as AddonEntityType]
+            : null;
         return (
           <span className='flex items-center gap-1.5'>
             {config?.icon}
-            {config?.label ?? row.original.serviceType}
+            <span>
+              {config?.label ?? svc.serviceType}
+              {addonSubLabel && <span className='ml-1 text-muted-foreground text-xs'>({addonSubLabel})</span>}
+            </span>
           </span>
         );
       },
@@ -66,7 +76,9 @@ export default function DayServicesTable({ item }: DayServicesTableProps) {
                 Tổng cộng
               </TableCell>
               <TableCell className='font-semibold text-green-700 text-right'>
-                {entries.length ? entries.map(([cur, total]) => `${formatNumberVN(total)} ${cur}`).join(" + ") : (
+                {entries.length ? (
+                  entries.map(([cur, total]) => `${formatNumberVN(total)} ${cur}`).join(" + ")
+                ) : (
                   <span className='font-normal text-muted-foreground italic'>—</span>
                 )}
               </TableCell>

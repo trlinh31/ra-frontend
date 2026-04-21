@@ -1,4 +1,4 @@
-import { Car, FileText, Hotel, Plane, Ticket, UserRound, UtensilsCrossed } from "lucide-react";
+import { Car, FileText, Hotel, Pencil, Plane, PlusCircle, Ticket, UserRound, UtensilsCrossed } from "lucide-react";
 
 export enum ServiceType {
   HOTEL = "hotel",
@@ -8,6 +8,8 @@ export enum ServiceType {
   FLIGHT = "flight",
   TOUR_GUIDE = "tour_guide",
   RESTAURANT = "restaurant",
+  ADDON = "addon",
+  CUSTOM = "custom",
 }
 
 type ServiceConfig = {
@@ -43,6 +45,14 @@ export const SERVICE_TYPE_CONFIG: Record<ServiceType, ServiceConfig> = {
   [ServiceType.RESTAURANT]: {
     label: "Nhà hàng",
     icon: <UtensilsCrossed size={16} />,
+  },
+  [ServiceType.ADDON]: {
+    label: "Dịch vụ thêm",
+    icon: <PlusCircle size={16} />,
+  },
+  [ServiceType.CUSTOM]: {
+    label: "Dịch vụ thêm (custom)",
+    icon: <Pencil size={16} />,
   },
 };
 
@@ -87,6 +97,14 @@ export type DayService = {
     pricingPeriodIndex: string;
     comboPackageIndex: string;
     dayGroupKey: string;
+  };
+  addonDetail?: {
+    entityType: string;
+    entityId: string;
+    addonId: string;
+  };
+  customDetail?: {
+    description: string;
   };
 };
 
