@@ -7,6 +7,7 @@ import AppSelect from "@/shared/components/common/AppSelect";
 import FormSelect from "@/shared/components/form/FormSelect";
 import { Field, FieldLabel } from "@/shared/components/ui/field";
 import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
+import { formatDate } from "date-fns";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import InlinePriceInput from "./InlinePriceInput";
@@ -23,6 +24,9 @@ export default function RestaurantServiceFields({ index }: RestaurantServiceFiel
   const [filterCity, setFilterCity] = useState("");
 
   const restaurantId = useWatch({ control, name: `services.${index}.restaurantDetail.restaurantId` });
+  const pricingPeriodIndex = useWatch({ control, name: `services.${index}.restaurantDetail.pricingPeriodIndex` });
+  const comboPackageIndex = useWatch({ control, name: `services.${index}.restaurantDetail.comboPackageIndex` });
+  const dayGroupKey = useWatch({ control, name: `services.${index}.restaurantDetail.dayGroupKey` });
 
   const allRestaurants = useMemo(() => restaurantMockStore.getAll().filter((r) => r.isActive), []);
 
@@ -41,22 +45,103 @@ export default function RestaurantServiceFields({ index }: RestaurantServiceFiel
 
   const selectedRestaurant = useMemo(() => allRestaurants.find((r) => r.id === restaurantId), [allRestaurants, restaurantId]);
 
-  const menuTotal = useMemo(() => selectedRestaurant?.menuItems.reduce((sum, item) => sum + item.price, 0) ?? 0, [selectedRestaurant]);
+  const pricingPeriodOptions = useMemo(() => {
+    if (!selectedRestaurant) return [];
+    return selectedRestaurant.pricingPeriods.map((p, i) => {
+      const label = p.dateRanges
+        .filter((dr) => dr.from && dr.to)
+        .map((dr) => `${formatDate(new Date(dr.from), "dd/MM/yyyy")} – ${formatDate(new Date(dr.to), "dd/MM/yyyy")}`)
+        .join(", ");
+      return { label: label || `Giai đoạn #${i + 1}`, value: String(i) };
+    });
+  }, [selectedRestaurant]);
 
+  const selectedPeriod = useMemo(() => {
+    if (!selectedRestaurant || pricingPeriodIndex === "") return undefined;
+    return selectedRestaurant.pricingPeriods[Number(pricingPeriodIndex)];
+  }, [selectedRestaurant, pricingPeriodIndex]);
+
+  const comboPackageOptions = useMemo(() => {
+    if (!selectedRestaurant) return [];
+    return selectedRestaurant.comboPackages.map((c, i) => ({
+      label: `${c.name} (tối đa ${c.maxGuests} người)`,
+      value: String(i),
+    }));
+  }, [selectedRestaurant]);
+
+  const selectedCombo = useMemo(() => {
+    if (!selectedRestaurant || comboPackageIndex === "") return undefined;
+    return selectedRestaurant.comboPackages[Number(comboPackageIndex)];
+  }, [selectedRestaurant, comboPackageIndex]);
+
+  // Flatten all dayGroups in selected period filtered by selected combo, deduplicated by label
+  const allDayGroupsInPeriod = useMemo(() => {
+    if (!selectedPeriod) return [];
+    return selectedPeriod.dateRanges.flatMap((dr, rangeIdx) => dr.dayGroups.map((g, groupIdx) => ({ ...g, key: `${rangeIdx}-${groupIdx}` })));
+  }, [selectedPeriod]);
+
+  const dayGroupOptions = useMemo(() => {
+    if (!selectedPeriod || comboPackageIndex === "") return [];
+    const filtered = allDayGroupsInPeriod.filter((g) => g.comboPackageIndex === comboPackageIndex);
+    const seen = new Set<string>();
+    return filtered.filter((g) => (seen.has(g.label) ? false : seen.add(g.label))).map((g) => ({ label: g.label, value: g.key }));
+  }, [selectedPeriod, allDayGroupsInPeriod, comboPackageIndex]);
+
+  const selectedDayGroup = useMemo(() => allDayGroupsInPeriod.find((g) => g.key === dayGroupKey), [allDayGroupsInPeriod, dayGroupKey]);
+
+  const numberOfCombos = useMemo(() => {
+    if (!selectedCombo || selectedCombo.maxGuests <= 0) return 1;
+    return Math.ceil(numberOfPeople / selectedCombo.maxGuests);
+  }, [numberOfPeople, selectedCombo]);
+
+  const computedPrice = useMemo(() => {
+    if (!selectedDayGroup || !selectedPeriod) return null;
+    return {
+      pricePerCombo: selectedDayGroup.price,
+      totalPrice: selectedDayGroup.price * numberOfCombos,
+      currency: selectedPeriod.currency,
+    };
+  }, [selectedDayGroup, selectedPeriod, numberOfCombos]);
+
+  // Sync computed price into form
+  const prevPriceKeyRef = useRef<string | null>(null);
+  useEffect(() => {
+    const key = computedPrice ? `${computedPrice.totalPrice}-${computedPrice.currency}` : null;
+    if (key === prevPriceKeyRef.current) return;
+    prevPriceKeyRef.current = key;
+    if (computedPrice) {
+      setValue(`services.${index}.unitPrice`, computedPrice.totalPrice, { shouldValidate: true });
+      setValue(`services.${index}.currency`, computedPrice.currency, { shouldValidate: true });
+    } else {
+      setValue(`services.${index}.unitPrice`, 0);
+      setValue(`services.${index}.currency`, "");
+    }
+  }, [computedPrice, index, setValue]);
+
+  // Sync name when restaurant changes
   const prevRestaurantIdRef = useRef<string | undefined>(undefined);
-
   useEffect(() => {
     if (restaurantId === prevRestaurantIdRef.current) return;
     prevRestaurantIdRef.current = restaurantId;
     if (selectedRestaurant) {
-      setValue(`services.${index}.name`, selectedRestaurant.name, { shouldValidate: true });
-      setValue(`services.${index}.unitPrice`, menuTotal * numberOfPeople, { shouldValidate: true });
-      setValue(`services.${index}.currency`, "VND", { shouldValidate: true });
+      setValue(`services.${index}.name`, selectedRestaurant.name);
+      setValue(`services.${index}.restaurantDetail.pricingPeriodIndex`, "");
+      setValue(`services.${index}.restaurantDetail.comboPackageIndex`, "");
+      setValue(`services.${index}.restaurantDetail.dayGroupKey`, "");
+      setFilterCountry(selectedRestaurant.country);
+      setFilterCity(selectedRestaurant.city);
     }
-  }, [restaurantId, selectedRestaurant, menuTotal, numberOfPeople, index, setValue]);
+  }, [restaurantId, selectedRestaurant, index, setValue]);
+
+  const resetDownstream = (from: "restaurant" | "period" | "combo") => {
+    if (from === "restaurant") setValue(`services.${index}.restaurantDetail.restaurantId`, "");
+    if (from === "restaurant" || from === "period") setValue(`services.${index}.restaurantDetail.pricingPeriodIndex`, "");
+    setValue(`services.${index}.restaurantDetail.comboPackageIndex`, "");
+    setValue(`services.${index}.restaurantDetail.dayGroupKey`, "");
+  };
 
   return (
-    <div className='space-y-4 mt-3'>
+    <div className='space-y-3 mt-1 pt-3 border-t'>
       <div className='gap-3 grid grid-cols-1 sm:grid-cols-2'>
         <Field>
           <FieldLabel>Lọc theo quốc gia</FieldLabel>
@@ -67,63 +152,81 @@ export default function RestaurantServiceFields({ index }: RestaurantServiceFiel
             onChange={(v) => {
               setFilterCountry(v);
               setFilterCity("");
+              resetDownstream("restaurant");
             }}
           />
         </Field>
 
         <Field>
           <FieldLabel>Lọc theo thành phố</FieldLabel>
-          <AppSelect value={filterCity} options={cityOptions} placeholder='Tất cả thành phố' disabled={!filterCountry} onChange={setFilterCity} />
+          <AppSelect
+            value={filterCity}
+            options={cityOptions}
+            placeholder='Tất cả thành phố'
+            disabled={!filterCountry}
+            onChange={(v) => {
+              setFilterCity(v);
+              resetDownstream("restaurant");
+            }}
+          />
         </Field>
       </div>
 
-      <FormSelect name={`services.${index}.restaurantDetail.restaurantId`} label='Nhà hàng' options={restaurantOptions} required />
+      <div className='gap-3 grid grid-cols-1 sm:grid-cols-2'>
+        <FormSelect
+          name={`services.${index}.restaurantDetail.restaurantId`}
+          label='Nhà hàng'
+          options={restaurantOptions}
+          placeholder='Chọn nhà hàng'
+          onChange={() => {
+            setValue(`services.${index}.restaurantDetail.pricingPeriodIndex`, "");
+            setValue(`services.${index}.restaurantDetail.comboPackageIndex`, "");
+            setValue(`services.${index}.restaurantDetail.dayGroupKey`, "");
+          }}
+          required
+        />
 
-      {selectedRestaurant && (
-        <div className='space-y-2'>
-          <div className='space-y-1 bg-muted/50 p-3 rounded-md text-sm'>
-            <p className='text-muted-foreground'>
-              Địa điểm:{" "}
-              <span className='font-medium text-foreground'>
-                {selectedRestaurant.city}, {selectedRestaurant.country}
-              </span>
-            </p>
-            <p className='text-muted-foreground'>
-              Sức chứa: <span className='font-medium text-foreground'>{selectedRestaurant.capacity} người</span>
-            </p>
-          </div>
+        <FormSelect
+          name={`services.${index}.restaurantDetail.pricingPeriodIndex`}
+          label='Khoảng ngày'
+          options={pricingPeriodOptions}
+          placeholder='Chọn khoảng ngày'
+          disabled={!restaurantId}
+          onChange={() => {
+            setValue(`services.${index}.restaurantDetail.comboPackageIndex`, "");
+            setValue(`services.${index}.restaurantDetail.dayGroupKey`, "");
+          }}
+          required
+        />
+      </div>
 
-          <div className='border rounded-md overflow-hidden text-sm'>
-            <table className='w-full'>
-              <thead>
-                <tr className='bg-muted text-muted-foreground'>
-                  <th className='px-3 py-2 font-medium text-left'>Tên món</th>
-                  <th className='px-3 py-2 font-medium text-right'>Giá</th>
-                </tr>
-              </thead>
-              <tbody>
-                {selectedRestaurant.menuItems.map((item, i) => (
-                  <tr key={i} className='border-t'>
-                    <td className='px-3 py-1.5'>{item.name}</td>
-                    <td className='px-3 py-1.5 text-right'>{formatNumberVN(item.price)} VND</td>
-                  </tr>
-                ))}
-              </tbody>
-              <tfoot>
-                <tr className='bg-muted/50 border-t font-semibold'>
-                  <td className='px-3 py-2'>Tổng/người</td>
-                  <td className='px-3 py-2 text-primary text-right'>{formatNumberVN(menuTotal)} VND</td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-        </div>
+      <div className='gap-3 grid grid-cols-1 sm:grid-cols-2'>
+        <FormSelect
+          name={`services.${index}.restaurantDetail.comboPackageIndex`}
+          label='Gói combo'
+          options={comboPackageOptions}
+          placeholder='Chọn gói combo'
+          disabled={!pricingPeriodIndex}
+          onChange={() => setValue(`services.${index}.restaurantDetail.dayGroupKey`, "")}
+          required
+        />
+
+        <FormSelect
+          name={`services.${index}.restaurantDetail.dayGroupKey`}
+          label='Nhóm ngày'
+          options={dayGroupOptions}
+          placeholder='Chọn nhóm ngày'
+          disabled={!comboPackageIndex}
+          required
+        />
+      </div>
+
+      {computedPrice && (
+        <InlinePriceInput
+          index={index}
+          breakdownText={`${numberOfPeople} khách ÷ ${selectedCombo?.maxGuests ?? "?"} người/combo = ${numberOfCombos} combo × ${formatNumberVN(computedPrice.pricePerCombo)} ${computedPrice.currency}`}
+        />
       )}
-
-      <InlinePriceInput
-        index={index}
-        breakdownText={selectedRestaurant && numberOfPeople > 0 ? `${formatNumberVN(menuTotal)} VND/người × ${numberOfPeople} người` : undefined}
-      />
     </div>
   );
 }

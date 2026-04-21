@@ -1,5 +1,6 @@
 import { countryApi } from "@/modules/masterData/country/api/country.api";
 import RestaurantMenuSection from "@/modules/masterData/restaurant/components/RestaurantMenuSection";
+import RestaurantPricingForm from "@/modules/masterData/restaurant/components/RestaurantPricingForm";
 import { mapRestaurantDataToFormValues } from "@/modules/masterData/restaurant/mappers/restaurant-form.mapper";
 import { restaurantSchema, type RestaurantFormValues } from "@/modules/masterData/restaurant/schemas/restaurant.schema";
 import type { Restaurant } from "@/modules/masterData/restaurant/types/restaurant.type";
@@ -65,8 +66,12 @@ export default function RestaurantForm({ defaultValues, onSubmit, onCancel, isSu
           </div>
         </Section>
 
-        <Section title='3. Menu'>
+        <Section title='3. Danh sách gói combo'>
           <RestaurantMenuSection />
+        </Section>
+
+        <Section title='4. Bảng giá theo khoảng ngày'>
+          <RestaurantPricingForm />
         </Section>
 
         <div className='flex justify-start gap-3'>

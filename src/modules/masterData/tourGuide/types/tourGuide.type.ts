@@ -8,7 +8,6 @@ export type TourGuide = {
   country: string;
   city: string;
   address: string;
-  language: string;
   pricePerDay: number;
   isActive: boolean;
 };

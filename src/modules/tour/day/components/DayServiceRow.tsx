@@ -18,7 +18,21 @@ interface DayServiceRowProps {
 }
 
 export default function DayServiceRow({ index, onRemove }: DayServiceRowProps) {
-  const { control } = useFormContext<DayFormValues>();
+  const { control, setValue } = useFormContext<DayFormValues>();
+
+  const handleServiceTypeChange = (newType: string) => {
+    setValue(`services.${index}.name`, "");
+    setValue(`services.${index}.unitPrice`, 0);
+    setValue(`services.${index}.currency`, "");
+    setValue(`services.${index}.hotelDetail`, undefined as never);
+    setValue(`services.${index}.transportDetail`, undefined as never);
+    setValue(`services.${index}.visaDetail`, undefined as never);
+    setValue(`services.${index}.entranceFeeDetail`, undefined as never);
+    setValue(`services.${index}.flightDetail`, undefined as never);
+    setValue(`services.${index}.tourGuideDetail`, undefined as never);
+    setValue(`services.${index}.restaurantDetail`, undefined as never);
+    setValue(`services.${index}.serviceType`, newType as DayFormValues["services"][number]["serviceType"]);
+  };
 
   return (
     <Section type='dashed' borderColor='red'>
@@ -31,7 +45,7 @@ export default function DayServiceRow({ index, onRemove }: DayServiceRowProps) {
         control={control}
         name={`services.${index}.serviceType`}
         render={({ field }) => (
-          <Tabs value={field.value} onValueChange={field.onChange}>
+          <Tabs value={field.value} onValueChange={handleServiceTypeChange}>
             <TabsList className='flex-wrap gap-1 mt-3 h-auto'>
               {Object.entries(SERVICE_TYPE_CONFIG).map(([key, value]) => (
                 <TabsTrigger key={key} value={key}>

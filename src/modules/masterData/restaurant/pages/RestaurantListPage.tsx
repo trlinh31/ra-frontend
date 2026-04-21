@@ -1,12 +1,11 @@
 import { PATHS } from "@/app/routes/route.constant";
 import RestaurantFilterBar from "@/modules/masterData/restaurant/components/RestaurantFilterBar";
 import { restaurantMockStore } from "@/modules/masterData/restaurant/data/restaurant.mock-store";
-import type { MenuItem, Restaurant } from "@/modules/masterData/restaurant/types/restaurant.type";
+import type { ComboPackage, Restaurant } from "@/modules/masterData/restaurant/types/restaurant.type";
 import { AppTable } from "@/shared/components/common/AppTable";
 import ActionButton from "@/shared/components/table/ActionButton";
 import TableToolbar from "@/shared/components/table/TableToolbar";
 import { Switch } from "@/shared/components/ui/switch";
-import { TableCell, TableRow } from "@/shared/components/ui/table";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import type { ColumnDef } from "@tanstack/react-table";
 import { UtensilsCrossed } from "lucide-react";
@@ -61,7 +60,7 @@ export default function RestaurantListPage() {
     { header: "Mã nhà hàng", accessorKey: "code" },
     { header: "Tên nhà hàng", accessorKey: "name" },
     { header: "Sức chứa", accessorKey: "capacity" },
-    { header: "Số món", accessorKey: "menuItems", cell: ({ row }) => `${row.original.menuItems.length} món` },
+    { header: "Số gói combo", accessorKey: "comboPackages", cell: ({ row }) => `${row.original.comboPackages.length} gói` },
     { header: "Email", accessorKey: "email" },
     { header: "Số điện thoại", accessorKey: "phone" },
     {
@@ -84,35 +83,15 @@ export default function RestaurantListPage() {
   ];
 
   const renderMenu = (restaurant: Restaurant) => {
-    const menuColumns: ColumnDef<MenuItem>[] = [
+    const comboColumns: ColumnDef<ComboPackage>[] = [
       { id: "index", header: "STT", cell: ({ row }) => row.index + 1, enableSorting: false },
-      { header: "Tên món", accessorKey: "name" },
-      {
-        header: "Giá",
-        accessorKey: "price",
-        cell: ({ row }) => <div className='text-right'>{row.original.price.toLocaleString("vi-VN")} ₫</div>,
-      },
+      { header: "Tên gói combo", accessorKey: "name" },
     ];
 
     return (
       <div className='space-y-2'>
-        <p className='mb-2 font-semibold text-muted-foreground text-xs uppercase'>Menu – {restaurant.name}</p>
-        <AppTable
-          columns={menuColumns}
-          data={restaurant.menuItems}
-          enablePagination={false}
-          renderFooter={(items) => {
-            const total = items.reduce((sum, item) => sum + item.price, 0);
-            return (
-              <TableRow>
-                <TableCell colSpan={2} className='font-semibold text-right'>
-                  Tổng cộng
-                </TableCell>
-                <TableCell className='font-bold text-primary text-right'>{total.toLocaleString("vi-VN")} ₫</TableCell>
-              </TableRow>
-            );
-          }}
-        />
+        <p className='mb-2 font-semibold text-muted-foreground text-xs uppercase'>Gói combo – {restaurant.name}</p>
+        <AppTable columns={comboColumns} data={restaurant.comboPackages} enablePagination={false} />
       </div>
     );
   };

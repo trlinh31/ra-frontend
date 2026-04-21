@@ -14,17 +14,6 @@ import { Save } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 
-const LANGUAGE_OPTIONS = [
-  { label: "Tiếng Anh", value: "Tiếng Anh" },
-  { label: "Tiếng Pháp", value: "Tiếng Pháp" },
-  { label: "Tiếng Trung", value: "Tiếng Trung" },
-  { label: "Tiếng Nhật", value: "Tiếng Nhật" },
-  { label: "Tiếng Hàn", value: "Tiếng Hàn" },
-  { label: "Tiếng Đức", value: "Tiếng Đức" },
-  { label: "Tiếng Tây Ban Nha", value: "Tiếng Tây Ban Nha" },
-  { label: "Tiếng Ý", value: "Tiếng Ý" },
-];
-
 interface TourGuideFormProps {
   defaultValues?: TourGuide | undefined;
   onSubmit: (values: TourGuideFormValues) => void;
@@ -73,7 +62,6 @@ export default function TourGuideForm({ defaultValues, onSubmit, onCancel, isSub
             <FormInput name='nationalId' label='CMND/CCCD' required />
             <FormInput name='email' label='Email' required />
             <FormInput name='phone' label='Số điện thoại' required />
-            <FormSelect name='language' options={LANGUAGE_OPTIONS} label='Ngôn ngữ' required />
             <FormCurrencyInput name='pricePerDay' label='Phí thuê / ngày (VNĐ)' required />
           </div>
         </Section>

@@ -11,7 +11,6 @@ export const mapTourGuideDataToFormValues = (data: TourGuide | undefined): TourG
     nationalId: data?.nationalId ?? "",
     email: data?.email ?? "",
     phone: data?.phone ?? "",
-    language: data?.language ?? "",
     pricePerDay: data?.pricePerDay ?? 0,
     isActive: data?.isActive ?? true,
   };

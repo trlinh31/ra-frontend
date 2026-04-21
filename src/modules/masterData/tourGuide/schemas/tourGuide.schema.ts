@@ -9,7 +9,6 @@ export const tourGuideSchema = z.object({
   nationalId: z.string().min(1, "Vui lòng nhập số CMND/CCCD"),
   email: z.string().email("Email không hợp lệ"),
   phone: z.string().min(1, "Vui lòng nhập số điện thoại"),
-  language: z.string().min(1, "Vui lòng nhập ngôn ngữ"),
   pricePerDay: z.number().min(0, "Phí thuê phải lớn hơn hoặc bằng 0"),
   isActive: z.boolean(),
 });

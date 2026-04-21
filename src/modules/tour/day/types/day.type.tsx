@@ -84,6 +84,9 @@ export type DayService = {
   };
   restaurantDetail?: {
     restaurantId: string;
+    pricingPeriodIndex: string;
+    comboPackageIndex: string;
+    dayGroupKey: string;
   };
 };
 

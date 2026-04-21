@@ -11,7 +11,8 @@ export const mapRestaurantDataToFormValues = (data: Restaurant | undefined): Res
     email: data?.email ?? "",
     phone: data?.phone ?? "",
     capacity: data?.capacity ?? 0,
-    menuItems: data?.menuItems ?? [],
+    comboPackages: data?.comboPackages ?? [],
+    pricingPeriods: data?.pricingPeriods ?? [],
     isActive: data?.isActive ?? true,
   };
 };

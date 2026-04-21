@@ -5,7 +5,6 @@ import type { DayFormValues } from "@/modules/tour/day/schemas/day.schema";
 import AppSelect from "@/shared/components/common/AppSelect";
 import FormSelect from "@/shared/components/form/FormSelect";
 import { Field, FieldLabel } from "@/shared/components/ui/field";
-import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import InlinePriceInput from "./InlinePriceInput";
@@ -34,7 +33,7 @@ export default function TourGuideServiceFields({ index }: TourGuideServiceFields
     let items = allGuides;
     if (filterCountry) items = items.filter((g) => g.country === filterCountry);
     if (filterCity) items = items.filter((g) => g.city === filterCity);
-    return items.map((g) => ({ label: `${g.name} (${g.language})`, value: g.id }));
+    return items.map((g) => ({ label: g.name, value: g.id }));
   }, [allGuides, filterCountry, filterCity]);
 
   const selectedGuide = useMemo(() => allGuides.find((g) => g.id === tourGuideId), [allGuides, tourGuideId]);
@@ -48,6 +47,8 @@ export default function TourGuideServiceFields({ index }: TourGuideServiceFields
       setValue(`services.${index}.name`, selectedGuide.name, { shouldValidate: true });
       setValue(`services.${index}.unitPrice`, selectedGuide.pricePerDay, { shouldValidate: true });
       setValue(`services.${index}.currency`, "VND", { shouldValidate: true });
+      setFilterCountry(selectedGuide.country);
+      setFilterCity(selectedGuide.city);
     }
   }, [tourGuideId, selectedGuide, index, setValue]);
 
@@ -75,27 +76,7 @@ export default function TourGuideServiceFields({ index }: TourGuideServiceFields
 
       <FormSelect name={`services.${index}.tourGuideDetail.tourGuideId`} label='Hướng dẫn viên' options={guideOptions} required />
 
-      {selectedGuide && (
-        <div className='space-y-1 bg-muted/50 p-3 rounded-md text-sm'>
-          <p className='text-muted-foreground'>
-            Ngôn ngữ: <span className='font-medium text-foreground'>{selectedGuide.language}</span>
-          </p>
-          <p className='text-muted-foreground'>
-            Địa điểm:{" "}
-            <span className='font-medium text-foreground'>
-              {selectedGuide.city}, {selectedGuide.country}
-            </span>
-          </p>
-          <p className='text-muted-foreground'>
-            Giá/ngày: <span className='font-medium text-primary'>{formatNumberVN(selectedGuide.pricePerDay)} VND</span>
-          </p>
-        </div>
-      )}
-
-      <InlinePriceInput
-        index={index}
-        breakdownText={selectedGuide ? `${selectedGuide.name} — ${formatNumberVN(selectedGuide.pricePerDay)} VND/ngày` : undefined}
-      />
+      <InlinePriceInput index={index} />
     </div>
   );
 }

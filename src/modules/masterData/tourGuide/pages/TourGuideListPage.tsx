@@ -14,7 +14,6 @@ import { useNavigate } from "react-router-dom";
 
 export const DEFAULT_FILTERS = {
   name: "",
-  language: "",
   country: "",
   city: "",
 };
@@ -29,7 +28,6 @@ export default function TourGuideListPage() {
   const filteredTourGuides = useMemo(() => {
     return tourGuides.filter((item) => {
       if (filters.name && !item.name.toLowerCase().includes(filters.name.toLowerCase())) return false;
-      if (filters.language && item.language !== filters.language) return false;
       if (filters.country && item.country !== filters.country) return false;
       if (filters.city && item.city !== filters.city) return false;
       return true;
@@ -64,7 +62,6 @@ export default function TourGuideListPage() {
     { header: "CMND/CCCD", accessorKey: "nationalId" },
     { header: "Số điện thoại", accessorKey: "phone" },
     { header: "Email", accessorKey: "email" },
-    { header: "Ngôn ngữ", accessorKey: "language" },
     { header: "Phí thuê / ngày", accessorKey: "pricePerDay", cell: ({ row }) => row.original.pricePerDay.toLocaleString("vi-VN") + " ₫" },
     {
       header: "Hoạt động",

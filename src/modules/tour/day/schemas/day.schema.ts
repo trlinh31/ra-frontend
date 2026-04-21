@@ -39,6 +39,9 @@ export const tourGuideServiceDetailSchema = z.object({
 
 export const restaurantServiceDetailSchema = z.object({
   restaurantId: z.string().min(1, "Vui lòng chọn nhà hàng"),
+  pricingPeriodIndex: z.string().min(1, "Vui lòng chọn giai đoạn giá"),
+  comboPackageIndex: z.string().min(1, "Vui lòng chọn gói combo"),
+  dayGroupKey: z.string().min(1, "Vui lòng chọn nhóm ngày"),
 });
 
 export const dayServiceSchema = z.object({
