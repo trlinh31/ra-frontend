@@ -45,6 +45,11 @@ export default function CreateCustomerPaymentPage() {
       confirmedTourCode: tour?.code ?? "",
       customerName: tour?.customerName ?? "",
       createdBy: "Kế toán A",
+      installments: values.installments.map((installment) => ({
+        ...installment,
+        id: Math.random().toString(36).substr(2, 9),
+        status: "pending",
+      })),
     });
     navigate(PATHS.ACCOUNTING.CUSTOMER_PAYMENTS);
   };
