@@ -1,0 +1,536 @@
+# TÀI LIỆU NGHIỆP VỤ HỆ THỐNG RA TRAVEL
+
+> **Phiên bản:** 1.0  
+> **Ngày tạo:** 21/04/2026  
+> **Trạng thái:** Draft (UI đang phát triển, chưa tích hợp backend thực)
+
+---
+
+## Mục lục
+
+1. [Tổng quan hệ thống](#1-tổng-quan-hệ-thống)
+2. [Các chức năng chính](#2-các-chức-năng-chính)
+3. [Quy trình nghiệp vụ](#3-quy-trình-nghiệp-vụ)
+4. [Vai trò trong hệ thống](#4-vai-trò-trong-hệ-thống)
+5. [Các thực thể dữ liệu chính](#5-các-thực-thể-dữ-liệu-chính)
+6. [API](#6-api)
+7. [Quy tắc nghiệp vụ](#7-quy-tắc-nghiệp-vụ)
+8. [Xử lý lỗi & ngoại lệ](#8-xử-lý-lỗi--ngoại-lệ)
+9. [Ghi chú & giả định](#9-ghi-chú--giả-định)
+
+---
+
+## 1. Tổng quan hệ thống
+
+### 1.1 Mục đích hệ thống
+
+**RA Travel** là hệ thống quản lý nghiệp vụ dành cho công ty du lịch, hỗ trợ toàn bộ quy trình xây dựng và quản lý tour du lịch — từ dữ liệu nền (nhà cung cấp, khách sạn, nhà hàng, chuyến bay...) đến việc tổng hợp thành các tour hoàn chỉnh kèm tính toán chi phí tự động.
+
+### 1.2 Bài toán giải quyết
+
+- Quản lý tập trung dữ liệu các nhà cung cấp dịch vụ du lịch (khách sạn, nhà hàng, vận chuyển, visa, chuyến bay, phí tham quan...)
+- Xây dựng lịch trình tour theo từng ngày, ghép nối các dịch vụ có sẵn
+- Tính toán tự động chi phí tour theo số lượng người tham gia, đa tiền tệ
+- Quản lý bảng giá phức tạp theo giai đoạn thời gian, ngày trong tuần và loại phòng/hạng vé
+
+### 1.3 Đối tượng người dùng
+
+Nhân viên nội bộ của công ty du lịch, bao gồm: quản trị viên, quản lý, kế toán và nhân viên kinh doanh.
+
+---
+
+## 2. Các chức năng chính
+
+### 2.1 Dashboard – Tổng quan hệ thống
+
+- Màn hình tổng quan sau khi đăng nhập
+- _(Nội dung chi tiết chưa được triển khai đầy đủ — xem mục Ghi chú)_
+
+### 2.2 Quản lý Master Data (Dữ liệu nền)
+
+| STT | Chức năng             | Mô tả                                                 |
+| --- | --------------------- | ----------------------------------------------------- |
+| 1   | **Nhà cung cấp**      | Quản lý danh sách các nhà cung cấp dịch vụ du lịch    |
+| 2   | **Hướng dẫn viên**    | Quản lý hướng dẫn viên du lịch kèm chi phí theo ngày  |
+| 3   | **Nhà hàng**          | Quản lý nhà hàng với gói combo và bảng giá theo mùa   |
+| 4   | **Khách sạn**         | Quản lý khách sạn với loại phòng và bảng giá phức tạp |
+| 5   | **Vận chuyển**        | Quản lý lịch trình vận chuyển theo sức chứa xe        |
+| 6   | **Nhóm Tour**         | Quản lý tour nhóm sẵn có từ nhà cung cấp              |
+| 7   | **Visa + Fast Track** | Quản lý dịch vụ visa và đón/tiễn sân bay              |
+| 8   | **Phí vào cổng**      | Quản lý vé tham quan theo loại đối tượng              |
+| 9   | **Chuyến bay**        | Quản lý chuyến bay theo hạng vé và bảng giá           |
+
+Mỗi chức năng Master Data đều hỗ trợ:
+
+- **Xem danh sách** với bộ lọc (tên, quốc gia, thành phố...)
+- **Thêm mới** bản ghi
+- **Chỉnh sửa** thông tin
+- **Xóa** với xác nhận (không thể hoàn tác)
+- **Bật/tắt trạng thái hoạt động** (`isActive`)
+
+### 2.3 Quản lý Tour
+
+| STT | Chức năng           | Mô tả                                                                           |
+| --- | ------------------- | ------------------------------------------------------------------------------- |
+| 1   | **Ngày hành trình** | Tạo/quản lý từng ngày trong lịch trình, gắn nhiều dịch vụ vào mỗi ngày          |
+| 2   | **Tour du lịch**    | Tổng hợp các ngày hành trình thành tour hoàn chỉnh, tính chi phí theo đầu người |
+
+---
+
+## 3. Quy trình nghiệp vụ
+
+### 3.1 Quy trình tạo mới Master Data (áp dụng chung)
+
+```
+Bước 1: Người dùng nhấn [+ Thêm mới] tại trang danh sách
+Bước 2: Hệ thống hiển thị form nhập liệu
+Bước 3: Người dùng điền thông tin (các trường bắt buộc được đánh dấu *)
+Bước 4: Hệ thống validate dữ liệu realtime (Zod schema)
+   - Nếu lỗi  → hiển thị thông báo lỗi ngay dưới field
+   - Nếu hợp lệ → cho phép submit
+Bước 5: Người dùng nhấn [Lưu]
+Bước 6: Hệ thống lưu dữ liệu → điều hướng về trang danh sách
+```
+
+### 3.2 Quy trình cập nhật Master Data
+
+```
+Bước 1: Tại danh sách, nhấn icon [Chỉnh sửa] trên dòng cần sửa
+Bước 2: Hệ thống load form với dữ liệu hiện tại
+Bước 3: Người dùng chỉnh sửa thông tin
+Bước 4: Validate → Lưu → Quay về danh sách
+```
+
+### 3.3 Quy trình xóa dữ liệu
+
+```
+Bước 1: Nhấn icon [Xóa] tại dòng cần xóa
+Bước 2: Hệ thống hiển thị hộp thoại xác nhận:
+        "Bạn có chắc chắn muốn xóa? Hành động này không thể hoàn tác."
+   - Người dùng nhấn [Hủy]       → đóng hộp thoại, không thực hiện
+   - Người dùng nhấn [Xác nhận]  → tiếp tục
+Bước 3: Hệ thống xóa dữ liệu (không thể hoàn tác)
+Bước 4: Cập nhật lại danh sách
+```
+
+### 3.4 Quy trình xây dựng Bảng giá
+
+Bảng giá được cấu trúc theo **3 cấp lồng nhau**, áp dụng cho: Khách sạn, Nhà hàng, Chuyến bay, Phí vào cổng, Nhóm Tour.
+
+```
+Giai đoạn giá (Pricing Period)
+  └── Khoảng ngày (Date Range: từ ngày → đến ngày)
+        └── Nhóm ngày (Day Group: nhóm ngày trong tuần)
+              └── Giá theo loại phòng / hạng vé / loại đối tượng / gói combo
+```
+
+**Ví dụ thực tế — Bảng giá Khách sạn:**
+
+```
+Giai đoạn "Q1/2026" | Tiền tệ: VND
+  └── Khoảng ngày: 01/01/2026 → 31/03/2026
+        ├── Nhóm "T2-T6" (Thứ 2 → Thứ 6) → Phòng đơn: 700.000 ₫
+        └── Nhóm "T7-CN" (Thứ 7 + Chủ nhật) → Phòng đơn: 850.000 ₫
+```
+
+### 3.5 Quy trình tạo Ngày hành trình (Day)
+
+```
+Bước 1: Tạo mới ngày hành trình với thông tin cơ bản:
+        - Mã ngày, Tiêu đề, Quốc gia, Thành phố, Mô tả
+Bước 2: Thêm các dịch vụ vào ngày (có thể thêm nhiều dịch vụ)
+        - Chọn loại dịch vụ:
+          ┌─────────────────────────────────────────────┐
+          │  Khách sạn   │  Vận chuyển  │  Visa         │
+          │  Phí vào cổng│  Chuyến bay  │  Hướng dẫn viên│
+          │  Nhà hàng    │              │               │
+          └─────────────────────────────────────────────┘
+        - Hệ thống hiển thị form chi tiết tương ứng loại dịch vụ
+        - Chọn nhà cung cấp / giai đoạn giá / nhóm ngày cụ thể
+        - Nhập đơn giá và tiền tệ
+Bước 3: Lưu ngày hành trình
+```
+
+### 3.6 Quy trình tạo Tour
+
+```
+Bước 1: Nhập thông tin cơ bản tour:
+        - Mã tour, Tên tour, Số lượng người, Mô tả, Nội dung (rich text)
+
+Bước 2: Xây dựng lịch trình (Itinerary) bằng cách thêm từng mục:
+        - Loại "Ngày hành trình":
+          → Chọn từ danh sách ngày đã tạo sẵn
+          → Có thể bổ sung / chỉnh sửa dịch vụ trong ngày đó
+        - Loại "Nhóm Tour":
+          → Chọn tour nhóm từ nhà cung cấp
+          → Chọn giai đoạn giá và nhóm ngày
+
+Bước 3: Hệ thống tự động tính chi phí:
+        - Tổng chi phí  = Tổng đơn giá tất cả dịch vụ trong lịch trình
+        - Giá mỗi người = Tổng chi phí ÷ Số lượng người (làm tròn)
+        - Hiển thị riêng theo từng tiền tệ
+
+Bước 4: Lưu tour
+```
+
+---
+
+## 4. Vai trò trong hệ thống
+
+| Role         | Tên hiển thị         | Mô tả (suy luận)                         |
+| ------------ | -------------------- | ---------------------------------------- |
+| `ADMIN`      | Quản trị viên        | Toàn quyền truy cập tất cả chức năng     |
+| `MANAGER`    | Quản lý              | Quản lý nghiệp vụ, xem/tạo/sửa dữ liệu   |
+| `ACCOUNTANT` | Kế toán              | Xem bảng giá, chi phí, báo cáo tài chính |
+| `SELLER`     | Nhân viên kinh doanh | Xem và tạo tour, báo giá cho khách hàng  |
+
+> **Lưu ý:** Phân quyền chi tiết cho từng chức năng chưa được triển khai trong source code hiện tại (đang dùng mock với ADMIN toàn quyền). Bảng trên là giả định dựa trên tên role.
+
+---
+
+## 5. Các thực thể dữ liệu chính
+
+### 5.1 Supplier – Nhà cung cấp
+
+| Field      | Kiểu    | Ý nghĩa                                       |
+| ---------- | ------- | --------------------------------------------- |
+| `id`       | string  | Mã định danh duy nhất                         |
+| `code`     | string  | Mã nhà cung cấp (tự nhập)                     |
+| `name`     | string  | Tên nhà cung cấp                              |
+| `phone`    | string  | Số điện thoại liên hệ                         |
+| `email`    | string  | Địa chỉ email                                 |
+| `taxCode`  | string  | Mã số thuế                                    |
+| `country`  | string  | Quốc gia                                      |
+| `city`     | string  | Thành phố                                     |
+| `address`  | string  | Địa chỉ cụ thể                                |
+| `isActive` | boolean | Trạng thái hoạt động (đang hợp tác hay không) |
+
+### 5.2 Hotel – Khách sạn
+
+| Field                          | Kiểu            | Ý nghĩa                                              |
+| ------------------------------ | --------------- | ---------------------------------------------------- |
+| `id`                           | string          | Mã định danh duy nhất                                |
+| `code`                         | string          | Mã khách sạn                                         |
+| `name`                         | string          | Tên khách sạn                                        |
+| `rate`                         | string          | Hạng sao (1–5 sao)                                   |
+| `country` / `city` / `address` | string          | Địa chỉ                                              |
+| `supplier`                     | string          | Nhà cung cấp liên kết                                |
+| `roomTypes`                    | RoomType[]      | Danh sách loại phòng (tên, sức chứa tối đa, ghi chú) |
+| `pricingPeriods`               | PricingPeriod[] | Bảng giá theo giai đoạn (cấu trúc 3 cấp)             |
+| `note`                         | string          | Ghi chú bổ sung                                      |
+| `isActive`                     | boolean         | Trạng thái hoạt động                                 |
+
+**RoomType – Loại phòng:**
+
+| Field       | Ý nghĩa                                             |
+| ----------- | --------------------------------------------------- |
+| `name`      | Tên loại phòng (Phòng đơn, Phòng đôi, Phòng VIP...) |
+| `maxGuests` | Số khách tối đa (≥ 1)                               |
+| `note`      | Ghi chú (diện tích, tiện nghi...)                   |
+
+### 5.3 Transportation – Vận chuyển
+
+| Field                  | Kiểu                   | Ý nghĩa                         |
+| ---------------------- | ---------------------- | ------------------------------- |
+| `code` / `name`        | string                 | Mã và tên lịch trình vận chuyển |
+| `country` / `city`     | string                 | Địa điểm hoạt động              |
+| `supplier`             | string                 | Nhà cung cấp                    |
+| `km`                   | number                 | Quãng đường (km)                |
+| `vehicleCapacityPrice` | VehicleCapacityPrice[] | Bảng giá theo sức chứa xe       |
+| `notes`                | string                 | Ghi chú                         |
+| `isActive`             | boolean                | Trạng thái hoạt động            |
+
+**VehicleCapacityPrice – Giá theo sức chứa:**
+
+| Field      | Ý nghĩa              |
+| ---------- | -------------------- |
+| `capacity` | Sức chứa xe (số chỗ) |
+| `currency` | Tiền tệ              |
+| `price`    | Giá thuê             |
+
+> Loại dịch vụ gồm: Đón/tiễn sân bay thường; Đón/tiễn sân bay khi chuyến bay delay 3–5 tiếng.
+
+### 5.4 TourGuide – Hướng dẫn viên
+
+| Field                          | Kiểu    | Ý nghĩa              |
+| ------------------------------ | ------- | -------------------- |
+| `code` / `name`                | string  | Mã và họ tên         |
+| `phone` / `email`              | string  | Liên hệ              |
+| `nationalId`                   | string  | Số CMND/CCCD         |
+| `country` / `city` / `address` | string  | Địa chỉ              |
+| `pricePerDay`                  | number  | Giá thuê theo ngày   |
+| `isActive`                     | boolean | Trạng thái hoạt động |
+
+### 5.5 Restaurant – Nhà hàng
+
+| Field                          | Kiểu            | Ý nghĩa                                       |
+| ------------------------------ | --------------- | --------------------------------------------- |
+| `code` / `name`                | string          | Mã và tên nhà hàng                            |
+| `phone` / `email`              | string          | Liên hệ                                       |
+| `country` / `city` / `address` | string          | Địa chỉ                                       |
+| `capacity`                     | number          | Sức chứa (số khách tối đa)                    |
+| `comboPackages`                | ComboPackage[]  | Danh sách gói combo                           |
+| `pricingPeriods`               | PricingPeriod[] | Bảng giá theo giai đoạn, ngày tuần, gói combo |
+| `isActive`                     | boolean         | Trạng thái hoạt động                          |
+
+**ComboPackage – Gói combo:**
+
+| Field       | Ý nghĩa                 |
+| ----------- | ----------------------- |
+| `name`      | Tên gói combo           |
+| `maxGuests` | Số khách tối đa của gói |
+
+### 5.6 Flight – Chuyến bay
+
+| Field                      | Kiểu              | Ý nghĩa                                     |
+| -------------------------- | ----------------- | ------------------------------------------- |
+| `airline`                  | string            | Hãng hàng không                             |
+| `origin` / `destination`   | string            | Mã sân bay đi / đến                         |
+| `fromCountry` / `fromCity` | string            | Quốc gia và thành phố xuất phát             |
+| `toCountry` / `toCity`     | string            | Quốc gia và thành phố đến                   |
+| `flightTime`               | string            | Thời gian bay                               |
+| `provider`                 | string            | Nhà cung cấp / đại lý bán vé                |
+| `seatClasses`              | FlightSeatClass[] | Các hạng vé (tên, ghi chú)                  |
+| `pricingPeriods`           | PricingPeriod[]   | Bảng giá theo giai đoạn, ngày tuần, hạng vé |
+| `isActive`                 | boolean           | Trạng thái hoạt động                        |
+
+### 5.7 VisaService – Dịch vụ Visa + Fast Track
+
+| Field              | Kiểu      | Ý nghĩa                  |
+| ------------------ | --------- | ------------------------ |
+| `provider`         | string    | Tên nhà cung cấp dịch vụ |
+| `country` / `city` | string    | Địa điểm                 |
+| `services`         | Service[] | Danh sách dịch vụ con    |
+
+**Service – Dịch vụ con:**
+
+| Field            | Ý nghĩa                                     |
+| ---------------- | ------------------------------------------- |
+| `group`          | Nhóm dịch vụ: "Đón", "Tiễn", "Dịch vụ thêm" |
+| `serviceName`    | Tên dịch vụ cụ thể                          |
+| `price`          | Giá dịch vụ                                 |
+| `priceUnit`      | Đơn vị tiền tệ                              |
+| `pickupLocation` | Địa điểm đón/tiễn                           |
+| `description`    | Mô tả chi tiết                              |
+
+### 5.8 EntranceFee – Phí vào cổng
+
+| Field              | Kiểu            | Ý nghĩa                                                 |
+| ------------------ | --------------- | ------------------------------------------------------- |
+| `code`             | string          | Mã dịch vụ                                              |
+| `serviceName`      | string          | Tên điểm tham quan / dịch vụ                            |
+| `country` / `city` | string          | Địa điểm                                                |
+| `ticketTypes`      | TicketType[]    | Loại vé theo đối tượng (người lớn, trẻ em, học sinh...) |
+| `pricingPeriods`   | PricingPeriod[] | Bảng giá theo giai đoạn, ngày tuần, loại vé             |
+| `notes`            | string          | Ghi chú                                                 |
+| `isActive`         | boolean         | Trạng thái hoạt động                                    |
+
+### 5.9 GroupTour – Nhóm Tour
+
+| Field               | Kiểu            | Ý nghĩa                                 |
+| ------------------- | --------------- | --------------------------------------- |
+| `code` / `tourName` | string          | Mã và tên tour nhóm                     |
+| `country` / `city`  | string          | Địa điểm                                |
+| `supplier`          | string          | Nhà cung cấp tour nhóm                  |
+| `content`           | string          | Nội dung/mô tả tour (rich text)         |
+| `notes`             | string          | Ghi chú                                 |
+| `pricingPeriods`    | PricingPeriod[] | Bảng giá theo giai đoạn, theo ngày tuần |
+| `isActive`          | boolean         | Trạng thái hoạt động                    |
+
+### 5.10 Day – Ngày hành trình
+
+| Field              | Kiểu         | Ý nghĩa                      |
+| ------------------ | ------------ | ---------------------------- |
+| `id`               | string       | Mã định danh duy nhất        |
+| `code`             | string       | Mã ngày hành trình           |
+| `title`            | string       | Tên/tiêu đề ngày             |
+| `country` / `city` | string       | Địa điểm                     |
+| `description`      | string       | Mô tả hoạt động trong ngày   |
+| `services`         | DayService[] | Danh sách dịch vụ trong ngày |
+
+**DayService – Dịch vụ trong ngày:**
+
+| Field               | Kiểu    | Ý nghĩa                                                                                    |
+| ------------------- | ------- | ------------------------------------------------------------------------------------------ |
+| `serviceType`       | enum    | Loại dịch vụ (xem bảng bên dưới)                                                           |
+| `name`              | string  | Tên dịch vụ hiển thị                                                                       |
+| `unitPrice`         | number  | Đơn giá                                                                                    |
+| `currency`          | string  | Tiền tệ                                                                                    |
+| `hotelDetail`       | object? | Chi tiết khách sạn (hotelId, pricingPeriodId, dayGroupId, roomTypeId)                      |
+| `transportDetail`   | object? | Chi tiết vận chuyển (transportId, capacity)                                                |
+| `visaDetail`        | object? | Chi tiết visa (providerId, serviceName)                                                    |
+| `entranceFeeDetail` | object? | Chi tiết phí vào cổng (entranceFeeId, pricingPeriodId, ticketTypeIndex, dayGroupId, count) |
+| `flightDetail`      | object? | Chi tiết chuyến bay (flightId, pricingPeriodId, seatClassId, dayGroupId)                   |
+| `tourGuideDetail`   | object? | Chi tiết hướng dẫn viên (tourGuideId)                                                      |
+| `restaurantDetail`  | object? | Chi tiết nhà hàng (restaurantId, pricingPeriodIndex, comboPackageIndex, dayGroupKey)       |
+
+**Các loại ServiceType:**
+
+| Giá trị        | Tên hiển thị   |
+| -------------- | -------------- |
+| `hotel`        | Khách sạn      |
+| `transport`    | Vận chuyển     |
+| `visa`         | Visa           |
+| `entrance_fee` | Phí vào cổng   |
+| `flight`       | Chuyến bay     |
+| `tour_guide`   | Hướng dẫn viên |
+| `restaurant`   | Nhà hàng       |
+
+### 5.11 Tour – Tour du lịch
+
+| Field            | Kiểu                | Ý nghĩa                                       |
+| ---------------- | ------------------- | --------------------------------------------- |
+| `id`             | string              | Mã định danh duy nhất                         |
+| `code`           | string              | Mã tour                                       |
+| `name`           | string              | Tên tour                                      |
+| `description`    | string              | Mô tả ngắn                                    |
+| `content`        | string              | Nội dung chi tiết (rich text, WYSIWYG editor) |
+| `numberOfPeople` | number              | Số lượng người tham gia (≥ 1)                 |
+| `itinerary`      | TourItineraryItem[] | Lịch trình — mảng các mục                     |
+
+**TourItineraryItem – Mục lịch trình:**
+
+Có 2 loại mục lịch trình:
+
+| Loại            | `kind`         | Ý nghĩa                                                |
+| --------------- | -------------- | ------------------------------------------------------ |
+| Ngày hành trình | `"day"`        | Sử dụng dữ liệu từ entity Day, có thể bổ sung dịch vụ  |
+| Nhóm Tour       | `"group_tour"` | Mua tour nhóm từ nhà cung cấp, chọn giá theo giai đoạn |
+
+---
+
+## 6. API
+
+### 6.1 API thực tế đang sử dụng
+
+| Endpoint                         | Method | Input                 | Output                            | Mục đích                              |
+| -------------------------------- | ------ | --------------------- | --------------------------------- | ------------------------------------- |
+| `{COUNTRY_URL}/countries`        | GET    | —                     | `{ error, msg, data: Country[] }` | Lấy danh sách quốc gia cho dropdown   |
+| `{COUNTRY_URL}/countries/cities` | POST   | `{ country: string }` | `{ error, msg, data: string[] }`  | Lấy danh sách thành phố theo quốc gia |
+
+**Cấu trúc Country:**
+
+```json
+{
+  "iso2": "VN",
+  "iso3": "VNM",
+  "country": "Vietnam",
+  "cities": ["Hanoi", "Ho Chi Minh City", ...]
+}
+```
+
+### 6.2 Cấu hình HTTP Client
+
+- **Base URL:** biến môi trường `VITE_API_BASE_URL`
+- **Country URL:** biến môi trường `VITE_API_COUNTRY_URL`
+- **Timeout:** 10 giây
+- **Content-Type:** `application/json`
+- **Authentication:** Bearer Token JWT (đã chuẩn bị, chưa kích hoạt)
+
+> **Quan trọng:** Toàn bộ các module nghiệp vụ (hotel, supplier, tour, day...) hiện đang dùng **mock store lưu trong RAM**. Backend API cho các module này chưa được tích hợp vào front-end.
+
+---
+
+## 7. Quy tắc nghiệp vụ
+
+### 7.1 Quy tắc Bảng giá (áp dụng chung)
+
+- Mỗi giai đoạn giá bắt buộc phải có **ít nhất 1 khoảng ngày**
+- Mỗi khoảng ngày bắt buộc phải có **ít nhất 1 nhóm ngày**
+- Mỗi nhóm ngày phải chọn **ít nhất 1 ngày trong tuần**
+- Giá không được là số âm (≥ 0)
+- Hỗ trợ đa tiền tệ: VND, USD, EUR, JPY, GBP, AUD, CAD, CHF, CNY, KRW, SGD, THB, INR, HKD, MYR, IDR, PHP, NZD, RUB, BRL
+
+### 7.2 Quy tắc Tour
+
+- Tour phải có **ít nhất 1 mục lịch trình**
+- Số lượng người tham gia tối thiểu là **1 người**
+- Chi phí mỗi người = Tổng chi phí ÷ Số người (làm tròn đến số nguyên)
+- Chi phí được tính và hiển thị **riêng theo từng loại tiền tệ**
+- Khi lịch trình chưa có dịch vụ nào, phần tóm tắt chi phí **không hiển thị**
+
+### 7.3 Quy tắc Khách sạn
+
+- Phải có **ít nhất 1 loại phòng**
+- Số khách tối đa mỗi phòng phải ≥ 1
+- Hạng sao từ **1 đến 5**
+- **Nhà cung cấp là bắt buộc**
+
+### 7.4 Quy tắc chọn dịch vụ trong Ngày hành trình
+
+| Loại dịch vụ   | Thông tin bắt buộc chọn                                                      |
+| -------------- | ---------------------------------------------------------------------------- |
+| Khách sạn      | Khách sạn → Giai đoạn giá → Nhóm ngày → Hạng phòng                           |
+| Vận chuyển     | Lịch trình → Sức chứa xe                                                     |
+| Visa           | Nhà cung cấp → Tên dịch vụ                                                   |
+| Phí vào cổng   | Điểm tham quan → Giai đoạn giá → Loại đối tượng → Nhóm ngày → Số lượng (≥ 1) |
+| Chuyến bay     | Chuyến bay → Giai đoạn giá → Hạng vé → Nhóm ngày                             |
+| Hướng dẫn viên | Hướng dẫn viên                                                               |
+| Nhà hàng       | Nhà hàng → Giai đoạn giá → Gói combo → Nhóm ngày                             |
+
+### 7.5 Quy tắc Visa + Fast Track
+
+- Mỗi nhà cung cấp phải có **ít nhất 1 dịch vụ**
+- Nhóm dịch vụ gồm 3 loại: **Đón**, **Tiễn**, **Dịch vụ thêm**
+
+### 7.6 Quy tắc trạng thái Active
+
+- Tất cả entity Master Data đều có trạng thái `isActive`
+- Có thể toggle bật/tắt **trực tiếp từ danh sách** (không cần vào form chỉnh sửa)
+
+---
+
+## 8. Xử lý lỗi & ngoại lệ
+
+### 8.1 Lỗi validation form
+
+- Sử dụng **Zod schema** + **React Hook Form**
+- Lỗi hiển thị ngay dưới field khi rời khỏi trường hoặc nhấn submit
+- Thông báo lỗi bằng **tiếng Việt**
+- Submit bị **chặn** nếu form còn lỗi
+
+### 8.2 Không tìm thấy dữ liệu (404)
+
+- Khi truy cập trang chỉnh sửa với ID không tồn tại (VD: `/hotel/999/edit`)
+- Hệ thống hiển thị: _"Không tìm thấy [tên entity]"_
+- Kèm nút **[← Quay lại danh sách]**
+
+### 8.3 Xác nhận trước khi xóa
+
+- Mọi thao tác xóa yêu cầu xác nhận qua **hộp thoại**
+- Nếu người dùng hủy → dữ liệu không bị xóa
+
+### 8.4 Lỗi phân quyền (403)
+
+- Người dùng truy cập route không có quyền → điều hướng đến trang `/forbidden`
+
+### 8.5 Chưa đăng nhập (401)
+
+- Không có token hợp lệ → điều hướng về `/auth/login`
+- Lưu lại URL gốc (`state.from`) để điều hướng lại sau khi đăng nhập thành công
+
+### 8.6 Lỗi API Country
+
+- Nếu API quốc gia/thành phố thất bại → dropdown trống
+- Xử lý tự động bởi **React Query** với cơ chế retry mặc định
+
+---
+
+## 9. Ghi chú & giả định
+
+| STT | Mục                             | Ghi chú                                                                                                                                    |
+| --- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1   | **Mock Store**                  | Toàn bộ dữ liệu nghiệp vụ lưu trong RAM. Khi **refresh trang, dữ liệu bị mất**. Đây là giai đoạn phát triển UI trước khi tích hợp backend. |
+| 2   | **Authentication**              | Hệ thống xác thực đang được mock cứng với role ADMIN toàn quyền. Cấu trúc JWT đã được chuẩn bị nhưng chưa kích hoạt.                       |
+| 3   | **Dashboard**                   | Màn hình Dashboard chưa có nội dung cụ thể. Giả định sẽ hiển thị thống kê tổng quan (số tour, doanh thu, v.v.)                             |
+| 4   | **Phân quyền chi tiết**         | Chỉ có enum Role (ADMIN/MANAGER/ACCOUNTANT/SELLER), chưa có code kiểm soát quyền theo từng trang/chức năng.                                |
+| 5   | **Visa `code` field**           | Field `code` trong entity Visa đang bị comment out — có thể đang tạm bỏ trong giai đoạn thiết kế.                                          |
+| 6   | **Flight `code`/`airlineCode`** | Tương tự, các field `code` và `airlineCode` của Flight bị comment out.                                                                     |
+| 7   | **Xuất báo giá**                | Chưa rõ nghiệp vụ "xuất báo giá tour" hay "gửi tour cho khách hàng" — không có trong source code hiện tại.                                 |
+| 8   | **Backend API**                 | HTTP client (Axios) đã cấu hình với `VITE_API_BASE_URL` — backend đã được thiết kế nhưng chưa tích hợp vào frontend.                       |
+| 9   | **Ngôn ngữ giao diện**          | Toàn bộ UI bằng tiếng Việt; tiền tệ hỗ trợ đa quốc gia nhưng ưu tiên VND.                                                                  |
+| 10  | **Country API**                 | Dữ liệu quốc gia/thành phố lấy từ **API bên thứ ba** (external service), cấu hình qua `VITE_API_COUNTRY_URL`.                              |
+
+---
+
+_Tài liệu này được tổng hợp từ phân tích source code frontend. Mọi thay đổi nghiệp vụ cần được cập nhật đồng bộ._
