@@ -1,4 +1,5 @@
 import { PATHS } from "@/app/routes/route.constant";
+import AddonServiceSection from "@/modules/masterData/addon/components/AddonServiceSection";
 import RestaurantForm from "@/modules/masterData/restaurant/components/RestaurantForm";
 import { restaurantMockStore } from "@/modules/masterData/restaurant/data/restaurant.mock-store";
 import { mapRestaurantFormValuesToPayload } from "@/modules/masterData/restaurant/mappers/restaurant-form.mapper";
@@ -31,6 +32,10 @@ export default function EditRestaurantPage() {
         description={isEdit ? `Cập nhật thông tin cho nhà hàng ${item?.code}` : "Điền thông tin để tạo mới nhà hàng"}
       />
       <RestaurantForm defaultValues={item} onSubmit={handleSubmit} onCancel={handleCancel} isEdit={isEdit} />
+
+      {isEdit && id && (
+        <AddonServiceSection entityType="restaurant" entityId={id} />
+      )}
     </div>
   );
 }

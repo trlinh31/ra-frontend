@@ -1,4 +1,5 @@
 import { PATHS } from "@/app/routes/route.constant";
+import AddonServiceSection from "@/modules/masterData/addon/components/AddonServiceSection";
 import EntranceFeeForm from "@/modules/masterData/entranceFee/components/EntranceFeeForm";
 import { entranceFeeMockStore } from "@/modules/masterData/entranceFee/data/entrance-fee.mock-store";
 import { mapEntranceFeeFormValuesToPayload } from "@/modules/masterData/entranceFee/mappers/entrance-fee-form.mapper";
@@ -32,6 +33,10 @@ export default function EditEntranceFeePage() {
         description={isEdit ? `Cập nhật thông tin cho Phí vào cổng ${item?.code}` : "Điền thông tin để tạo mới Phí vào cổng"}
       />
       <EntranceFeeForm defaultValues={item} onSubmit={handleSubmit} onCancel={handleCancel} isEdit={isEdit} />
+
+      {isEdit && id && (
+        <AddonServiceSection entityType="entrance_fee" entityId={id} />
+      )}
     </div>
   );
 }

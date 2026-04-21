@@ -1,4 +1,5 @@
 import { PATHS } from "@/app/routes/route.constant";
+import AddonServiceSection from "@/modules/masterData/addon/components/AddonServiceSection";
 import TransportationForm from "@/modules/masterData/transportation/components/TransportationForm";
 import { transportMockStore } from "@/modules/masterData/transportation/data/transportation.mock-store";
 import { mapTransportationFormValuesToPayload } from "@/modules/masterData/transportation/mappers/transportation-form.mapper";
@@ -34,6 +35,10 @@ export default function EditTransportationPage() {
         description={isEdit ? `Cập nhật thông tin cho lịch trình ${transportation?.code}` : "Điền thông tin để tạo mới lịch trình vận chuyển"}
       />
       <TransportationForm defaultValues={transportation} onSubmit={handleSubmit} onCancel={handleCancel} isEdit={isEdit} />
+
+      {isEdit && id && (
+        <AddonServiceSection entityType="transport" entityId={id} />
+      )}
     </div>
   );
 }

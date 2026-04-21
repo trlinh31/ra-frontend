@@ -1,4 +1,5 @@
 import { PATHS } from "@/app/routes/route.constant";
+import AddonServiceSection from "@/modules/masterData/addon/components/AddonServiceSection";
 import GroupTourForm from "@/modules/masterData/groupTour/components/GroupTourForm";
 import { groupTourMockStore } from "@/modules/masterData/groupTour/data/group-tour.mock-store";
 import { mapGroupTourFormValuesToPayload } from "@/modules/masterData/groupTour/mappers/group-tour-form.mapper";
@@ -32,6 +33,10 @@ export default function EditGroupTourPage() {
         description={isEdit ? `Cập nhật thông tin cho tour ${item?.code}` : "Điền thông tin để tạo mới nhóm tour"}
       />
       <GroupTourForm defaultValues={item} onSubmit={handleSubmit} onCancel={handleCancel} isEdit={isEdit} />
+
+      {isEdit && id && (
+        <AddonServiceSection entityType="group_tour" entityId={id} />
+      )}
     </div>
   );
 }

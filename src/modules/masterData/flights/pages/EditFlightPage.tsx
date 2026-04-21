@@ -1,4 +1,5 @@
 import { PATHS } from "@/app/routes/route.constant";
+import AddonServiceSection from "@/modules/masterData/addon/components/AddonServiceSection";
 import FlightForm from "@/modules/masterData/flights/components/FlightForm";
 import { flightMockStore } from "@/modules/masterData/flights/data/flight.mock-store";
 import { mapFlightFormValuesToPayload } from "@/modules/masterData/flights/mappers/flight-form.mapper";
@@ -37,6 +38,10 @@ export default function EditFlightPage() {
       />
 
       <FlightForm defaultValues={flight} onSubmit={handleSubmit} onCancel={handleCancel} isEdit={isEdit} />
+
+      {isEdit && id && (
+        <AddonServiceSection entityType="flight" entityId={id} />
+      )}
     </div>
   );
 }

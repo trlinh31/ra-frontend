@@ -1,4 +1,5 @@
 import { PATHS } from "@/app/routes/route.constant";
+import AddonServiceSection from "@/modules/masterData/addon/components/AddonServiceSection";
 import HotelForm from "@/modules/masterData/hotel/components/HotelForm";
 import { hotelMockStore } from "@/modules/masterData/hotel/data/hotel.mock-store";
 import { mapHotelFormValuesToPayload } from "@/modules/masterData/hotel/mappers/hotel-form.mapper";
@@ -39,6 +40,10 @@ export default function EditHotelPage() {
       />
 
       <HotelForm defaultValues={hotel} onSubmit={handleSubmit} onCancel={handleCancel} isEdit={isEdit} />
+
+      {isEdit && id && (
+        <AddonServiceSection entityType="hotel" entityId={id} />
+      )}
     </div>
   );
 }

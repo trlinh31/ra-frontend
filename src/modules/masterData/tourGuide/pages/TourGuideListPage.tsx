@@ -7,6 +7,7 @@ import ActionButton from "@/shared/components/table/ActionButton";
 import TableToolbar from "@/shared/components/table/TableToolbar";
 import { Switch } from "@/shared/components/ui/switch";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
+import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
 import type { ColumnDef } from "@tanstack/react-table";
 import { UserRound } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -62,7 +63,7 @@ export default function TourGuideListPage() {
     { header: "CMND/CCCD", accessorKey: "nationalId" },
     { header: "Số điện thoại", accessorKey: "phone" },
     { header: "Email", accessorKey: "email" },
-    { header: "Phí thuê / ngày", accessorKey: "pricePerDay", cell: ({ row }) => row.original.pricePerDay.toLocaleString("vi-VN") + " ₫" },
+    { header: "Phí thuê / ngày", accessorKey: "pricePerDay", cell: ({ row }) => formatNumberVN(row.original.pricePerDay) },
     {
       header: "Hoạt động",
       accessorKey: "isActive",

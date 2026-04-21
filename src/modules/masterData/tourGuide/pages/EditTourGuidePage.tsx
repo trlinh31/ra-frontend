@@ -1,4 +1,5 @@
 import { PATHS } from "@/app/routes/route.constant";
+import AddonServiceSection from "@/modules/masterData/addon/components/AddonServiceSection";
 import TourGuideForm from "@/modules/masterData/tourGuide/components/TourGuideForm";
 import { tourGuideMockStore } from "@/modules/masterData/tourGuide/data/tourGuide.mock-store";
 import { mapTourGuideFormValuesToPayload } from "@/modules/masterData/tourGuide/mappers/tourGuide-form.mapper";
@@ -31,6 +32,10 @@ export default function EditTourGuidePage() {
         description={isEdit ? `Cập nhật thông tin cho hướng dẫn viên ${item?.code}` : "Điền thông tin để tạo mới hướng dẫn viên"}
       />
       <TourGuideForm defaultValues={item} onSubmit={handleSubmit} onCancel={handleCancel} isEdit={isEdit} />
+
+      {isEdit && id && (
+        <AddonServiceSection entityType="tour_guide" entityId={id} />
+      )}
     </div>
   );
 }

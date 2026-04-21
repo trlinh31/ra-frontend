@@ -1,4 +1,5 @@
 import { PATHS } from "@/app/routes/route.constant";
+import AddonServiceSection from "@/modules/masterData/addon/components/AddonServiceSection";
 import VisaServiceForm from "@/modules/masterData/visaFastTrack/components/VisaServiceForm";
 import { visaFastTrackMockStore } from "@/modules/masterData/visaFastTrack/data/visa-fast-track.mock-store";
 import { mapVisaServiceFormValuesToPayload } from "@/modules/masterData/visaFastTrack/mappers/visa-fast-track-form.mapper";
@@ -32,6 +33,10 @@ export default function EditVisaFastTrackPage() {
         description={isEdit ? `Cập nhật thông tin dịch vụ ${item?.id}` : "Điền thông tin để tạo mới dịch vụ Visa / Fast Track"}
       />
       <ProviderForm defaultValues={item} onSubmit={handleSubmit} onCancel={handleCancel} isEdit={isEdit} />
+
+      {isEdit && id && (
+        <AddonServiceSection entityType="visa" entityId={id} />
+      )}
     </div>
   );
 }
