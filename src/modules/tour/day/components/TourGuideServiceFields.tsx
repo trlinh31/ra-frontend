@@ -56,7 +56,7 @@ export default function TourGuideServiceFields({ index }: TourGuideServiceFields
     <div className='space-y-4 mt-3'>
       <div className='gap-3 grid grid-cols-1 sm:grid-cols-2'>
         <Field>
-          <FieldLabel>Lọc theo quốc gia</FieldLabel>
+          <FieldLabel>Quốc gia</FieldLabel>
           <AppSelect
             value={filterCountry}
             options={countryOptions}
@@ -69,7 +69,7 @@ export default function TourGuideServiceFields({ index }: TourGuideServiceFields
         </Field>
 
         <Field>
-          <FieldLabel>Lọc theo thành phố</FieldLabel>
+          <FieldLabel>Thành phố</FieldLabel>
           <AppSelect value={filterCity} options={cityOptions} placeholder='Tất cả thành phố' disabled={!filterCountry} onChange={setFilterCity} />
         </Field>
       </div>

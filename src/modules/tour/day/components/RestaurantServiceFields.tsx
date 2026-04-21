@@ -144,7 +144,7 @@ export default function RestaurantServiceFields({ index }: RestaurantServiceFiel
     <div className='space-y-3 mt-1 pt-3 border-t'>
       <div className='gap-3 grid grid-cols-1 sm:grid-cols-2'>
         <Field>
-          <FieldLabel>Lọc theo quốc gia</FieldLabel>
+          <FieldLabel>Quốc gia</FieldLabel>
           <AppSelect
             value={filterCountry}
             options={countryOptions}
@@ -158,7 +158,7 @@ export default function RestaurantServiceFields({ index }: RestaurantServiceFiel
         </Field>
 
         <Field>
-          <FieldLabel>Lọc theo thành phố</FieldLabel>
+          <FieldLabel>Thành phố</FieldLabel>
           <AppSelect
             value={filterCity}
             options={cityOptions}
