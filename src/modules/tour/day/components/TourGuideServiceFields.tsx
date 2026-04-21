@@ -74,7 +74,13 @@ export default function TourGuideServiceFields({ index }: TourGuideServiceFields
         </Field>
       </div>
 
-      <FormSelect name={`services.${index}.tourGuideDetail.tourGuideId`} label='Hướng dẫn viên' options={guideOptions} required />
+      <FormSelect
+        name={`services.${index}.tourGuideDetail.tourGuideId`}
+        label='Hướng dẫn viên'
+        placeholder='Chọn hướng dẫn viên'
+        options={guideOptions}
+        required
+      />
 
       <InlinePriceInput index={index} />
     </div>
