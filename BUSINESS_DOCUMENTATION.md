@@ -829,7 +829,6 @@ Có 2 loại mục lịch trình:
 **Add-on:**
 
 - Add-on thuộc về một entity Master Data cụ thể — không dùng chung giữa các entity khác nhau
-- Add-on chỉ hiển thị trong dropdown nếu `isActive = true`
 - Khi add-on được chọn vào lịch trình, giá được **sao chép tại thời điểm chọn** (snapshot) — thay đổi giá add-on sau đó không ảnh hưởng đến tour đã tạo
 - Người dùng **có thể ghi đè giá** khi thêm add-on vào lịch trình (giá gốc từ Master Data vẫn được lưu để tham chiếu)
 - Xóa add-on trong Master Data không xóa dịch vụ đã được thêm vào lịch trình
