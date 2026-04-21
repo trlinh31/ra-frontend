@@ -21,7 +21,7 @@ import type React from "react";
 import { NavLink, useMatch } from "react-router-dom";
 
 function NavItem({ item }: { item: AppRoute }) {
-  const match = useMatch(item.path ?? "");
+  const match = useMatch({ path: item.path ?? "", end: false });
   const isActive = !!match;
 
   return (
