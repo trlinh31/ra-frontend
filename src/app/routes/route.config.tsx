@@ -328,11 +328,11 @@ export const APP_ROUTES: AppRoute[] = [
             element: <QuotationDetailPage />,
             showInSidebar: false,
           },
-          // ── Tour Xác Nhận ──────────────────────────────────────────
+          // ── Xác nhận Tour ──────────────────────────────────────────
           {
             path: PATHS.SALES.CONFIRMED_TOURS,
-            title: "Tour Xác Nhận",
-            pageTitle: "Danh sách Tour Xác Nhận",
+            title: "Xác nhận Tour",
+            pageTitle: "Danh sách Xác nhận Tour",
             element: <ConfirmedTourListPage />,
             icon: ClipboardCheck,
             showInSidebar: true,

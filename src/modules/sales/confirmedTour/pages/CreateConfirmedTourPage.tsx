@@ -79,21 +79,19 @@ export default function CreateConfirmedTourPage() {
   return (
     <div className='space-y-6'>
       <PageHeader
-        title='Tạo Tour Xác Nhận'
+        title='Tạo Xác nhận Tour'
         description={
-          isFromQuotation && quotation
-            ? `Từ báo giá ${quotation.code} — ${quotation.customerName}`
-            : "Tạo tour thực tế từ tour mẫu cho đoàn khách"
+          isFromQuotation && quotation ? `Từ báo giá ${quotation.code} — ${quotation.customerName}` : "Tạo tour thực tế từ tour mẫu cho đoàn khách"
         }
       />
 
       {/* Banner báo giá gốc */}
       {isFromQuotation && quotation && (
-        <div className='flex items-start gap-3 bg-green-50 border border-green-200 rounded-lg p-4 text-sm text-green-800'>
-          <CheckCircle2 className='w-5 h-5 mt-0.5 shrink-0' />
+        <div className='flex items-start gap-3 bg-green-50 p-4 border border-green-200 rounded-lg text-green-800 text-sm'>
+          <CheckCircle2 className='mt-0.5 w-5 h-5 shrink-0' />
           <div>
             <p className='font-semibold'>Tạo từ báo giá đã chấp thuận: {quotation.code}</p>
-            <p className='text-green-700 mt-0.5'>
+            <p className='mt-0.5 text-green-700'>
               Lịch trình và thông tin khách hàng đã được sao chép từ báo giá. Bạn có thể điều chỉnh trước khi tạo tour.
             </p>
           </div>
@@ -121,15 +119,21 @@ export default function CreateConfirmedTourPage() {
 
               {isFromQuotation && quotation?.tourTemplateName && (
                 <div className='md:col-span-2'>
-                  <p className='text-xs text-muted-foreground mb-1'>Tour mẫu cơ sở</p>
-                  <p className='text-sm font-medium'>{quotation.tourTemplateName}</p>
+                  <p className='mb-1 text-muted-foreground text-xs'>Tour mẫu cơ sở</p>
+                  <p className='font-medium text-sm'>{quotation.tourTemplateName}</p>
                 </div>
               )}
 
               <FormInput name='customerName' label='Tên đoàn / Khách hàng' required placeholder='VD: Đoàn công ty ABC' />
               <FormInput name='numberOfPeople' label='Số khách thực tế' required type='number' placeholder='Số lượng khách' min={1} />
               <FormDatePicker name='departureDate' label='Ngày khởi hành chính thức' required />
-              <FormTextarea name='note' label='Ghi chú yêu cầu đặc biệt' placeholder='Yêu cầu đặc biệt, lưu ý cho đoàn...' className='md:col-span-2' rows={3} />
+              <FormTextarea
+                name='note'
+                label='Ghi chú yêu cầu đặc biệt'
+                placeholder='Yêu cầu đặc biệt, lưu ý cho đoàn...'
+                className='md:col-span-2'
+                rows={3}
+              />
             </CardContent>
           </Card>
 
@@ -137,7 +141,7 @@ export default function CreateConfirmedTourPage() {
             <Button type='button' variant='outline' onClick={handleCancel}>
               Hủy
             </Button>
-            <Button type='submit'>Tạo Tour Xác Nhận</Button>
+            <Button type='submit'>Tạo Xác nhận Tour</Button>
           </div>
         </form>
       </FormProvider>

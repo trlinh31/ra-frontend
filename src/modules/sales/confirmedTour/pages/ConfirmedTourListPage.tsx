@@ -67,7 +67,7 @@ export default function ConfirmedTourListPage() {
       cell: ({ row }) => (
         <button
           onClick={() => navigate(PATHS.SALES.CONFIRMED_TOUR_DETAIL.replace(":id", row.original.id))}
-          className='font-medium text-blue-600 hover:underline text-left'>
+          className='font-medium text-blue-600 text-left hover:underline'>
           {row.original.code}
         </button>
       ),
@@ -80,14 +80,10 @@ export default function ConfirmedTourListPage() {
       cell: ({ row }) => {
         const t = row.original;
         if (t.quotationId) {
-          return (
-            <span className='text-xs bg-blue-50 text-blue-700 border border-blue-200 px-2 py-0.5 rounded-full'>
-              Từ báo giá
-            </span>
-          );
+          return <span className='bg-blue-50 px-2 py-0.5 border border-blue-200 rounded-full text-blue-700 text-xs'>Từ báo giá</span>;
         }
         return t.tourTemplateName ? (
-          <span className='text-xs text-muted-foreground'>{t.tourTemplateName}</span>
+          <span className='text-muted-foreground text-xs'>{t.tourTemplateName}</span>
         ) : (
           <span className='text-muted-foreground text-xs'>—</span>
         );
@@ -165,7 +161,7 @@ export default function ConfirmedTourListPage() {
   return (
     <div className='space-y-4'>
       <TableToolbar
-        title='Tour Xác Nhận'
+        title='Xác nhận Tour'
         description='Danh sách tour đã xác nhận với đoàn khách'
         icon={ClipboardCheck}
         onAdd={() => navigate(PATHS.SALES.CONFIRMED_TOUR_CREATE)}

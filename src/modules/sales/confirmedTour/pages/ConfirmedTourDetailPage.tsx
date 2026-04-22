@@ -1,13 +1,13 @@
 import { PATHS } from "@/app/routes/route.constant";
 import AssignTourDialog from "@/modules/sales/confirmedTour/components/AssignTourDialog";
 import ConfirmedTourStatusBadge from "@/modules/sales/confirmedTour/components/ConfirmedTourStatusBadge";
-import { CANCELLATION_REASONS } from "@/modules/sales/quotation/constants/quotation.constant";
 import { CONFIRMED_TOUR_STATUS_LABEL, MOCK_OPERATORS } from "@/modules/sales/confirmedTour/constants/confirmed-tour.constant";
 import { confirmedTourMockStore } from "@/modules/sales/confirmedTour/data/confirmed-tour.mock-store";
 import type { ConfirmedTour } from "@/modules/sales/confirmedTour/types/confirmed-tour.type";
+import { CANCELLATION_REASONS } from "@/modules/sales/quotation/constants/quotation.constant";
 import { quotationMockStore } from "@/modules/sales/quotation/data/quotation.mock-store";
-import PageHeader from "@/shared/components/common/PageHeader";
 import AppSelect from "@/shared/components/common/AppSelect";
+import PageHeader from "@/shared/components/common/PageHeader";
 import { Button } from "@/shared/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
@@ -37,7 +37,7 @@ export default function ConfirmedTourDetailPage() {
   if (!tour) {
     return (
       <div className='space-y-4'>
-        <p className='text-muted-foreground'>Không tìm thấy Tour Xác Nhận.</p>
+        <p className='text-muted-foreground'>Không tìm thấy Xác nhận Tour.</p>
         <Button variant='outline' onClick={() => navigate(PATHS.SALES.CONFIRMED_TOURS)}>
           Quay lại
         </Button>
@@ -56,7 +56,7 @@ export default function ConfirmedTourDetailPage() {
 
   const handleApprove = async () => {
     const ok = await confirm({
-      description: `Phê duyệt Tour Xác Nhận "${tour.code}"? Tour sẽ chuyển sang trạng thái "Đã xác nhận".`,
+      description: `Phê duyệt Xác nhận Tour "${tour.code}"? Tour sẽ chuyển sang trạng thái "Đã xác nhận".`,
     });
     if (!ok) return;
     confirmedTourMockStore.updateStatus(tour.id, "confirmed", { approvedBy: "Sale Manager" });
@@ -65,7 +65,7 @@ export default function ConfirmedTourDetailPage() {
 
   const handleReject = async () => {
     const ok = await confirm({
-      description: `Từ chối Tour Xác Nhận "${tour.code}"? Nhân viên kinh doanh sẽ cần chỉnh sửa và gửi lại.`,
+      description: `Từ chối Xác nhận Tour "${tour.code}"? Nhân viên kinh doanh sẽ cần chỉnh sửa và gửi lại.`,
     });
     if (!ok) return;
     confirmedTourMockStore.updateStatus(tour.id, "rejected");
@@ -110,41 +110,38 @@ export default function ConfirmedTourDetailPage() {
 
   return (
     <div className='space-y-6'>
-      <PageHeader
-        title={`Tour Xác Nhận ${tour.code}`}
-        description={`Tạo bởi ${tour.createdBy} — ${tour.createdAt}`}
-      />
+      <PageHeader title={`Xác nhận Tour ${tour.code}`} description={`Tạo bởi ${tour.createdBy} — ${tour.createdAt}`} />
 
       {/* Trạng thái + hành động */}
       <Card>
         <CardHeader>
-          <div className='flex items-center justify-between flex-wrap gap-3'>
+          <div className='flex flex-wrap justify-between items-center gap-3'>
             <div className='flex items-center gap-3'>
               <CardTitle className='text-base'>Trạng thái</CardTitle>
               <ConfirmedTourStatusBadge status={tour.status} />
             </div>
-            <div className='flex items-center gap-2 flex-wrap'>
+            <div className='flex flex-wrap items-center gap-2'>
               {canApprove && (
                 <Button size='sm' className='bg-green-600 hover:bg-green-700' onClick={handleApprove}>
-                  <CheckCircle2 className='w-4 h-4 mr-2' />
+                  <CheckCircle2 className='mr-2 w-4 h-4' />
                   Phê duyệt
                 </Button>
               )}
               {canReject && (
                 <Button size='sm' variant='outline' onClick={handleReject}>
-                  <XCircle className='w-4 h-4 mr-2' />
+                  <XCircle className='mr-2 w-4 h-4' />
                   Từ chối
                 </Button>
               )}
               {canAssign && (
                 <Button size='sm' variant='outline' onClick={() => setAssignOpen(true)}>
-                  <UserRoundCog className='w-4 h-4 mr-2' />
+                  <UserRoundCog className='mr-2 w-4 h-4' />
                   Assign Vận hành
                 </Button>
               )}
               {canCancel && (
                 <Button size='sm' variant='destructive' onClick={() => setCancelDialogOpen(true)}>
-                  <Ban className='w-4 h-4 mr-2' />
+                  <Ban className='mr-2 w-4 h-4' />
                   {needsSpecialApproval ? "Yêu cầu Hủy Tour (đặc biệt)" : "Hủy Tour"}
                 </Button>
               )}
@@ -154,7 +151,7 @@ export default function ConfirmedTourDetailPage() {
       </Card>
 
       {/* Thông tin tour */}
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+      <div className='gap-6 grid grid-cols-1 md:grid-cols-2'>
         <Card>
           <CardHeader>
             <CardTitle className='text-base'>Thông tin đoàn khách</CardTitle>
@@ -175,9 +172,9 @@ export default function ConfirmedTourDetailPage() {
             {tour.tourTemplateName && <InfoRow label='Tour mẫu' value={tour.tourTemplateName} />}
             {linkedQuotation && (
               <div className='flex flex-col gap-0.5'>
-                <span className='text-xs text-muted-foreground'>Báo giá gốc</span>
+                <span className='text-muted-foreground text-xs'>Báo giá gốc</span>
                 <button
-                  className='font-medium text-blue-600 hover:underline text-left'
+                  className='font-medium text-blue-600 text-left hover:underline'
                   onClick={() => navigate(PATHS.SALES.QUOTATION_DETAIL.replace(":id", linkedQuotation.id))}>
                   {linkedQuotation.code}
                 </button>
@@ -185,7 +182,7 @@ export default function ConfirmedTourDetailPage() {
             )}
             <Separator />
             <div>
-              <p className='text-xs text-muted-foreground mb-1'>Tổng chi phí</p>
+              <p className='mb-1 text-muted-foreground text-xs'>Tổng chi phí</p>
               {Object.entries(tour.totalCost).length > 0 ? (
                 Object.entries(tour.totalCost).map(([cur, amt]) => (
                   <p key={cur} className='font-medium'>
@@ -219,7 +216,7 @@ export default function ConfirmedTourDetailPage() {
       {tour.status === "cancelled" && (
         <Card className='border-red-200'>
           <CardHeader>
-            <CardTitle className='text-base text-red-700'>Thông tin hủy tour</CardTitle>
+            <CardTitle className='text-red-700 text-base'>Thông tin hủy tour</CardTitle>
           </CardHeader>
           <CardContent className='space-y-3 text-sm'>
             <InfoRow label='Người yêu cầu hủy' value={tour.cancelledBy} />
@@ -248,12 +245,12 @@ export default function ConfirmedTourDetailPage() {
           </DialogHeader>
           <div className='space-y-4 py-2'>
             {needsSpecialApproval && (
-              <div className='text-sm bg-yellow-50 border border-yellow-200 rounded-md p-3 text-yellow-800'>
-                ⚠️ Tour đang ở trạng thái <strong>Đang vận hành</strong>. Hủy tour yêu cầu xác nhận đồng thời từ{" "}
-                <strong>Sale Manager</strong> và <strong>Operation Manager</strong>.
+              <div className='bg-yellow-50 p-3 border border-yellow-200 rounded-md text-yellow-800 text-sm'>
+                ⚠️ Tour đang ở trạng thái <strong>Đang vận hành</strong>. Hủy tour yêu cầu xác nhận đồng thời từ <strong>Sale Manager</strong> và{" "}
+                <strong>Operation Manager</strong>.
               </div>
             )}
-            <div className='text-sm bg-muted/40 p-3 rounded-md space-y-1'>
+            <div className='space-y-1 bg-muted/40 p-3 rounded-md text-sm'>
               <p>
                 <span className='text-muted-foreground'>Mã tour: </span>
                 <span className='font-medium'>{tour.code}</span>
@@ -284,12 +281,7 @@ export default function ConfirmedTourDetailPage() {
             </Field>
             <Field>
               <FieldLabel>Ghi chú bổ sung</FieldLabel>
-              <Textarea
-                value={cancelNote}
-                onChange={(e) => setCancelNote(e.target.value)}
-                placeholder='Thông tin thêm về lý do hủy...'
-                rows={3}
-              />
+              <Textarea value={cancelNote} onChange={(e) => setCancelNote(e.target.value)} placeholder='Thông tin thêm về lý do hủy...' rows={3} />
             </Field>
           </div>
           <DialogFooter>
@@ -297,7 +289,7 @@ export default function ConfirmedTourDetailPage() {
               Đóng
             </Button>
             <Button variant='destructive' onClick={handleCancelSubmit}>
-              <Ban className='w-4 h-4 mr-2' />
+              <Ban className='mr-2 w-4 h-4' />
               Xác nhận Hủy
             </Button>
           </DialogFooter>
@@ -310,7 +302,7 @@ export default function ConfirmedTourDetailPage() {
 function InfoRow({ label, value }: { label: string; value?: string }) {
   return (
     <div className='flex flex-col gap-0.5'>
-      <span className='text-xs text-muted-foreground'>{label}</span>
+      <span className='text-muted-foreground text-xs'>{label}</span>
       <span className='font-medium'>{value ?? <span className='text-muted-foreground italic'>—</span>}</span>
     </div>
   );

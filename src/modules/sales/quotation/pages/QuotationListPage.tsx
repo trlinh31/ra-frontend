@@ -1,6 +1,6 @@
 import { PATHS } from "@/app/routes/route.constant";
 import QuotationStatusBadge from "@/modules/sales/quotation/components/QuotationStatusBadge";
-import { QUOTATION_STATUS_LABEL, QUOTATION_STATUS_OPTIONS } from "@/modules/sales/quotation/constants/quotation.constant";
+import { QUOTATION_STATUS_OPTIONS } from "@/modules/sales/quotation/constants/quotation.constant";
 import { quotationMockStore } from "@/modules/sales/quotation/data/quotation.mock-store";
 import type { Quotation } from "@/modules/sales/quotation/types/quotation.type";
 import AppSelect from "@/shared/components/common/AppSelect";
@@ -62,7 +62,7 @@ export default function QuotationListPage() {
       cell: ({ row }) => (
         <button
           onClick={() => navigate(PATHS.SALES.QUOTATION_DETAIL.replace(":id", row.original.id))}
-          className='font-medium text-blue-600 hover:underline text-left'>
+          className='font-medium text-blue-600 text-left hover:underline'>
           {row.original.code}
         </button>
       ),
@@ -102,7 +102,7 @@ export default function QuotationListPage() {
       cell: ({ row }) => <QuotationStatusBadge status={row.original.status} />,
     },
     {
-      header: "Tour Xác Nhận",
+      header: "Xác nhận Tour",
       id: "confirmedTour",
       enableSorting: false,
       cell: ({ row }) =>
@@ -110,7 +110,7 @@ export default function QuotationListPage() {
           <Button
             size='sm'
             variant='ghost'
-            className='text-xs h-7 text-blue-600'
+            className='h-7 text-blue-600 text-xs'
             onClick={() => navigate(PATHS.SALES.CONFIRMED_TOUR_DETAIL.replace(":id", row.original.confirmedTourId!))}>
             Xem tour
           </Button>
@@ -118,10 +118,10 @@ export default function QuotationListPage() {
           <Button
             size='sm'
             variant='outline'
-            className='text-xs h-7'
+            className='h-7 text-xs'
             onClick={() => navigate(`${PATHS.SALES.CONFIRMED_TOUR_CREATE}?quotationId=${row.original.id}`)}>
-            <Plus className='w-3 h-3 mr-1' />
-            Tạo Tour Xác Nhận
+            <Plus className='mr-1 w-3 h-3' />
+            Tạo Xác nhận Tour
           </Button>
         ) : (
           <span className='text-muted-foreground text-xs'>—</span>

@@ -7,11 +7,14 @@ import { Button } from "@/shared/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { Field, FieldLabel } from "@/shared/components/ui/field";
+import { Input } from "@/shared/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/ui/select";
 import { Separator } from "@/shared/components/ui/separator";
 import { Textarea } from "@/shared/components/ui/textarea";
+import { CURRENCY_OPTIONS } from "@/shared/constants/currency.constant";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
-import { CheckCircle2, Clock, FileDown, Plus, Send, XCircle } from "lucide-react";
+import { AlertCircle, CheckCircle2, Clock, FileDown, Plus, XCircle } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -23,6 +26,8 @@ export default function QuotationDetailPage() {
   const [quotation, setQuotation] = useState<Quotation | undefined>(() => (id ? quotationMockStore.getById(id) : undefined));
   const [sendDialogOpen, setSendDialogOpen] = useState(false);
   const [sendNote, setSendNote] = useState("");
+  const [sendSellingPrice, setSendSellingPrice] = useState("");
+  const [sendCurrency, setSendCurrency] = useState("VND");
 
   const refresh = () => setQuotation(id ? quotationMockStore.getById(id) : undefined);
 
@@ -43,16 +48,34 @@ export default function QuotationDetailPage() {
   const canClose = quotation.status === "sent";
   const canCreateConfirmedTour = quotation.status === "approved" && !quotation.confirmedTourId;
 
+  const openSendDialog = () => {
+    // Pre-fill selling price nếu đã có
+    const existing = Object.entries(quotation.sellingPrice);
+    if (existing.length > 0) {
+      const [cur, amt] = existing[0];
+      setSendCurrency(cur);
+      setSendSellingPrice(String(amt));
+    } else {
+      setSendSellingPrice("");
+      setSendCurrency("VND");
+    }
+    setSendNote("");
+    setSendDialogOpen(true);
+  };
+
   const handleSend = () => {
-    quotationMockStore.send(quotation.id, quotation.sellingPrice, quotation.terms, sendNote || undefined);
+    const price = parseFloat(sendSellingPrice);
+    const sellingPrice = sendSellingPrice && price > 0 ? { [sendCurrency]: price } : quotation.sellingPrice;
+    quotationMockStore.send(quotation.id, sellingPrice, quotation.terms, sendNote || undefined);
     setSendDialogOpen(false);
     setSendNote("");
+    setSendSellingPrice("");
     refresh();
   };
 
   const handleApprove = async () => {
     const ok = await confirm({
-      description: `Đánh dấu báo giá "${quotation.code}" là đã được khách chấp thuận? Sau đó có thể tạo Tour Xác Nhận từ báo giá này.`,
+      description: `Đánh dấu báo giá "${quotation.code}" là đã được khách chấp thuận? Sau đó có thể tạo Xác nhận Tour từ báo giá này.`,
     });
     if (!ok) return;
     quotationMockStore.approve(quotation.id);
@@ -85,61 +108,58 @@ export default function QuotationDetailPage() {
 
   return (
     <div className='space-y-6'>
-      <PageHeader
-        title={`Báo giá ${quotation.code}`}
-        description={`Tạo bởi ${quotation.createdBy} — ${quotation.createdAt}`}
-      />
+      <PageHeader title={`Báo giá ${quotation.code}`} description={`Tạo bởi ${quotation.createdBy} — ${quotation.createdAt}`} />
 
       {/* Trạng thái + hành động */}
       <Card>
         <CardHeader>
-          <div className='flex items-center justify-between flex-wrap gap-3'>
+          <div className='flex flex-wrap justify-between items-center gap-3'>
             <div className='flex items-center gap-3'>
               <CardTitle className='text-base'>Trạng thái báo giá</CardTitle>
               <QuotationStatusBadge status={quotation.status} />
               {quotation.currentVersion > 0 && (
-                <span className='text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full'>v{quotation.currentVersion}</span>
+                <span className='bg-muted px-2 py-0.5 rounded-full text-muted-foreground text-xs'>v{quotation.currentVersion}</span>
               )}
             </div>
-            <div className='flex items-center gap-2 flex-wrap'>
+            <div className='flex flex-wrap items-center gap-2'>
               {/* Nút xuất PDF — luôn hiển thị */}
               <Button
                 size='sm'
                 variant='outline'
-                className='border-indigo-300 text-indigo-700 hover:bg-indigo-50'
+                className='hover:bg-indigo-50 border-indigo-300 text-indigo-700'
                 onClick={() => window.open(PATHS.SALES.QUOTATION_PRINT.replace(":id", quotation.id), "_blank")}>
-                <FileDown className='w-4 h-4 mr-2' />
+                <FileDown className='mr-2 w-4 h-4' />
                 Xuất PDF
               </Button>
 
               {canSend && (
-                <Button size='sm' onClick={() => setSendDialogOpen(true)}>
-                  <Send className='w-4 h-4 mr-2' />
-                  {quotation.status === "sent" ? "Gửi lại (phiên bản mới)" : "Gửi báo giá"}
+                <Button size='sm' variant='default' onClick={openSendDialog}>
+                  <CheckCircle2 className='mr-2 w-4 h-4' />
+                  {quotation.status === "sent" ? "Ghi nhận gửi lại (bản mới)" : "Ghi nhận đã gửi cho khách"}
                 </Button>
               )}
               {canApprove && (
                 <Button size='sm' variant='default' className='bg-green-600 hover:bg-green-700' onClick={handleApprove}>
-                  <CheckCircle2 className='w-4 h-4 mr-2' />
+                  <CheckCircle2 className='mr-2 w-4 h-4' />
                   Đánh dấu Đã chấp thuận
                 </Button>
               )}
               {canClose && (
                 <>
                   <Button size='sm' variant='outline' onClick={handleReject}>
-                    <XCircle className='w-4 h-4 mr-2' />
+                    <XCircle className='mr-2 w-4 h-4' />
                     Khách từ chối
                   </Button>
                   <Button size='sm' variant='outline' onClick={handleExpire}>
-                    <Clock className='w-4 h-4 mr-2' />
+                    <Clock className='mr-2 w-4 h-4' />
                     Hết hạn
                   </Button>
                 </>
               )}
               {canCreateConfirmedTour && (
                 <Button size='sm' className='bg-blue-600 hover:bg-blue-700' onClick={handleCreateConfirmedTour}>
-                  <Plus className='w-4 h-4 mr-2' />
-                  Tạo Tour Xác Nhận
+                  <Plus className='mr-2 w-4 h-4' />
+                  Tạo Xác nhận Tour
                 </Button>
               )}
               {quotation.confirmedTourId && (
@@ -147,7 +167,7 @@ export default function QuotationDetailPage() {
                   size='sm'
                   variant='outline'
                   onClick={() => navigate(PATHS.SALES.CONFIRMED_TOUR_DETAIL.replace(":id", quotation.confirmedTourId!))}>
-                  Xem Tour Xác Nhận
+                  Xem Xác nhận Tour
                 </Button>
               )}
             </div>
@@ -156,7 +176,7 @@ export default function QuotationDetailPage() {
       </Card>
 
       {/* Thông tin khách hàng */}
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+      <div className='gap-6 grid grid-cols-1 md:grid-cols-2'>
         <Card>
           <CardHeader>
             <CardTitle className='text-base'>Thông tin khách hàng</CardTitle>
@@ -177,7 +197,7 @@ export default function QuotationDetailPage() {
           </CardHeader>
           <CardContent className='space-y-3 text-sm'>
             <div>
-              <p className='text-xs text-muted-foreground mb-1'>Chi phí (cost)</p>
+              <p className='mb-1 text-muted-foreground text-xs'>Chi phí (cost)</p>
               {costEntries.length > 0 ? (
                 costEntries.map(([cur, amt]) => (
                   <p key={cur} className='font-medium'>
@@ -190,7 +210,7 @@ export default function QuotationDetailPage() {
             </div>
             <Separator />
             <div>
-              <p className='text-xs text-muted-foreground mb-1'>Giá bán đề xuất cho khách</p>
+              <p className='mb-1 text-muted-foreground text-xs'>Giá bán đề xuất cho khách</p>
               {Object.entries(quotation.sellingPrice).length > 0 ? (
                 Object.entries(quotation.sellingPrice).map(([cur, amt]) => (
                   <p key={cur} className='font-medium text-green-700'>
@@ -198,7 +218,7 @@ export default function QuotationDetailPage() {
                   </p>
                 ))
               ) : (
-                <p className='text-muted-foreground italic'>Chưa nhập giá bán (sẽ nhập khi gửi báo giá)</p>
+                <p className='text-muted-foreground italic'>Chưa nhập giá bán (nhập khi ghi nhận đã gửi cho khách)</p>
               )}
             </div>
             {quotation.tourTemplateName && (
@@ -232,16 +252,16 @@ export default function QuotationDetailPage() {
           <CardContent>
             <div className='space-y-3'>
               {[...quotation.versions].reverse().map((v) => (
-                <div key={v.version} className='border rounded-md p-3 text-sm space-y-1'>
+                <div key={v.version} className='space-y-1 p-3 border rounded-md text-sm'>
                   <div className='flex items-center gap-2'>
-                    <span className='font-semibold bg-blue-100 text-blue-800 px-2 py-0.5 rounded text-xs'>v{v.version}</span>
-                    <span className='text-muted-foreground'>Gửi lúc: {v.sentAt}</span>
+                    <span className='bg-blue-100 px-2 py-0.5 rounded font-semibold text-blue-800 text-xs'>v{v.version}</span>
+                    <span className='text-muted-foreground'>Đã gửi lúc: {v.sentAt}</span>
                     {v === quotation.versions[quotation.versions.length - 1] && (
-                      <span className='text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded'>Hiện hành</span>
+                      <span className='bg-green-100 px-2 py-0.5 rounded text-green-700 text-xs'>Hiện hành</span>
                     )}
                   </div>
                   {v.note && <p className='text-muted-foreground italic'>{v.note}</p>}
-                  <div className='text-xs text-muted-foreground'>
+                  <div className='text-muted-foreground text-xs'>
                     Chi phí:{" "}
                     {Object.entries(v.costTotal)
                       .map(([c, a]) => `${formatNumberVN(a)} ${c}`)
@@ -254,14 +274,40 @@ export default function QuotationDetailPage() {
         </Card>
       )}
 
-      {/* Dialog gửi báo giá */}
+      {/* Dialog ghi nhận đã gửi báo giá */}
       <Dialog open={sendDialogOpen} onOpenChange={setSendDialogOpen}>
         <DialogContent className='max-w-md'>
           <DialogHeader>
-            <DialogTitle>{quotation.currentVersion === 0 ? "Gửi báo giá cho khách" : `Gửi lại báo giá (v${quotation.currentVersion + 1})`}</DialogTitle>
+            <DialogTitle>
+              {quotation.currentVersion === 0
+                ? "Ghi nhận đã gửi báo giá cho khách"
+                : `Ghi nhận đã gửi bản cập nhật (v${quotation.currentVersion + 1})`}
+            </DialogTitle>
           </DialogHeader>
-          <div className='space-y-4 py-2'>
-            <div className='text-sm bg-muted/40 p-3 rounded-md space-y-1'>
+
+          <div className='space-y-4 py-1'>
+            {/* Hướng dẫn */}
+            <div className='flex items-start gap-2.5 bg-amber-50 p-3 border border-amber-200 rounded-md text-sm'>
+              <AlertCircle className='mt-0.5 w-4 h-4 text-amber-600 shrink-0' />
+              <div className='space-y-2'>
+                <p className='font-medium text-amber-800'>Quy trình gửi báo giá</p>
+                <p className='text-amber-700 leading-relaxed'>
+                  Xuất PDF → gửi cho khách qua email / Zalo / điện thoại → quay lại đây ghi nhận để cập nhật trạng thái.
+                </p>
+                <Button
+                  type='button'
+                  size='sm'
+                  variant='outline'
+                  className='hover:bg-amber-100 border-amber-300 h-7 text-amber-700'
+                  onClick={() => window.open(PATHS.SALES.QUOTATION_PRINT.replace(":id", quotation.id), "_blank")}>
+                  <FileDown className='mr-1.5 w-3.5 h-3.5' />
+                  Mở PDF báo giá
+                </Button>
+              </div>
+            </div>
+
+            {/* Thông tin tóm tắt */}
+            <div className='space-y-1 bg-muted/40 p-3 rounded-md text-sm'>
               <p>
                 <span className='text-muted-foreground'>Báo giá: </span>
                 <span className='font-medium'>{quotation.code}</span>
@@ -277,23 +323,55 @@ export default function QuotationDetailPage() {
                 </p>
               )}
             </div>
+
+            {/* Giá bán gửi cho khách */}
             <Field>
-              <FieldLabel>Ghi chú thay đổi so với phiên bản trước (nếu có)</FieldLabel>
+              <FieldLabel>
+                Giá bán gửi cho khách <span className='text-red-500'>*</span>
+              </FieldLabel>
+              <div className='flex gap-2'>
+                <Input
+                  type='number'
+                  value={sendSellingPrice}
+                  onChange={(e) => setSendSellingPrice(e.target.value)}
+                  placeholder='VD: 15000000'
+                  className='flex-1'
+                  min={0}
+                />
+                <Select value={sendCurrency} onValueChange={setSendCurrency}>
+                  <SelectTrigger className='w-28'>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CURRENCY_OPTIONS.map((c) => (
+                      <SelectItem key={c.value} value={c.value}>
+                        {c.value}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </Field>
+
+            {/* Ghi chú phiên bản */}
+            <Field>
+              <FieldLabel>Ghi chú thay đổi so với lần trước (nếu có)</FieldLabel>
               <Textarea
                 value={sendNote}
                 onChange={(e) => setSendNote(e.target.value)}
-                placeholder='VD: Đã điều chỉnh giá, thay khách sạn...'
-                rows={3}
+                placeholder='VD: Đã điều chỉnh giá, thay đổi khách sạn, bổ sung dịch vụ...'
+                rows={2}
               />
             </Field>
           </div>
+
           <DialogFooter>
             <Button variant='outline' onClick={() => setSendDialogOpen(false)}>
               Hủy
             </Button>
-            <Button onClick={handleSend}>
-              <Send className='w-4 h-4 mr-2' />
-              Xác nhận Gửi
+            <Button onClick={handleSend} disabled={!sendSellingPrice || parseFloat(sendSellingPrice) <= 0}>
+              <CheckCircle2 className='mr-2 w-4 h-4' />
+              Ghi nhận đã gửi
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -305,7 +383,7 @@ export default function QuotationDetailPage() {
 function InfoRow({ label, value }: { label: string; value?: string }) {
   return (
     <div className='flex flex-col gap-0.5'>
-      <span className='text-xs text-muted-foreground'>{label}</span>
+      <span className='text-muted-foreground text-xs'>{label}</span>
       <span className='font-medium'>{value ?? <span className='text-muted-foreground italic'>—</span>}</span>
     </div>
   );
