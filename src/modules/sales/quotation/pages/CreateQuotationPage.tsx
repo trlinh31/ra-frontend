@@ -1,6 +1,7 @@
 import { PATHS } from "@/app/routes/route.constant";
 import { quotationMockStore } from "@/modules/sales/quotation/data/quotation.mock-store";
 import { createQuotationSchema, type CreateQuotationFormValues } from "@/modules/sales/quotation/schemas/quotation.schema";
+import { tripRequestMockStore } from "@/modules/sales/tripRequest/data/trip-request.mock-store";
 import { tourMockStore } from "@/modules/tour/tour/data/tour.mock-store";
 import PageHeader from "@/shared/components/common/PageHeader";
 import FormDatePicker from "@/shared/components/form/FormDatePicker/FormDatePicker";
@@ -11,12 +12,15 @@ import { Button } from "@/shared/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const NO_TEMPLATE = "__none__";
 
 export default function CreateQuotationPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const tripRequestId = searchParams.get("tripRequestId") ?? undefined;
+  const linkedTripRequest = tripRequestId ? tripRequestMockStore.getById(tripRequestId) : undefined;
 
   const tourOptions = [
     { value: NO_TEMPLATE, label: "— Không chọn (tự xây lịch trình) —" },
@@ -26,21 +30,23 @@ export default function CreateQuotationPage() {
   const methods = useForm<CreateQuotationFormValues>({
     resolver: zodResolver(createQuotationSchema),
     defaultValues: {
-      customerName: "",
-      customerEmail: "",
-      customerPhone: "",
-      numberOfPeople: 1,
-      departureDateEst: "",
-      tourTemplateId: NO_TEMPLATE,
+      customerName: linkedTripRequest?.customerName ?? "",
+      customerEmail: linkedTripRequest?.customerEmail ?? "",
+      customerPhone: linkedTripRequest?.customerPhone ?? "",
+      numberOfPeople: linkedTripRequest
+        ? linkedTripRequest.numberOfAdults + linkedTripRequest.numberOfChildren
+        : 1,
+      departureDateEst: linkedTripRequest?.departureDateEst ?? "",
+      tourTemplateId: linkedTripRequest?.suggestedTourId ?? NO_TEMPLATE,
       terms: "",
-      note: "",
+      note: linkedTripRequest?.specialRequirements ?? "",
     },
   });
 
   const handleSaveDraft = (values: CreateQuotationFormValues) => {
     const templateId = values.tourTemplateId === NO_TEMPLATE ? undefined : values.tourTemplateId;
     const template = templateId ? tourMockStore.getById(templateId) : undefined;
-    quotationMockStore.create({
+    const quotation = quotationMockStore.create({
       ...values,
       tourTemplateId: templateId,
       tourTemplateName: template?.name,
@@ -49,10 +55,21 @@ export default function CreateQuotationPage() {
       status: "draft",
       createdBy: "Seller A",
     });
-    navigate(PATHS.SALES.QUOTATIONS);
+    if (tripRequestId) {
+      tripRequestMockStore.linkQuotation(tripRequestId, quotation.id);
+      navigate(PATHS.SALES.TRIP_REQUEST_DETAIL.replace(":id", tripRequestId));
+    } else {
+      navigate(PATHS.SALES.QUOTATIONS);
+    }
   };
 
-  const handleCancel = () => navigate(PATHS.SALES.QUOTATIONS);
+  const handleCancel = () => {
+    if (tripRequestId) {
+      navigate(PATHS.SALES.TRIP_REQUEST_DETAIL.replace(":id", tripRequestId));
+    } else {
+      navigate(PATHS.SALES.QUOTATIONS);
+    }
+  };
 
   return (
     <div className='space-y-6'>

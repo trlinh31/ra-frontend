@@ -54,6 +54,10 @@ export const PATHS = {
 
   SALES: {
     ROOT: "/sales",
+    /** Trip Request */
+    TRIP_REQUESTS: "/sales/trip-requests",
+    TRIP_REQUEST_CREATE: "/sales/trip-requests/create",
+    TRIP_REQUEST_DETAIL: "/sales/trip-requests/:id",
     /** Báo giá */
     QUOTATIONS: "/sales/quotations",
     QUOTATION_CREATE: "/sales/quotations/create",

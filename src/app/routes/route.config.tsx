@@ -28,6 +28,9 @@ import CreateQuotationPage from "@/modules/sales/quotation/pages/CreateQuotation
 import QuotationDetailPage from "@/modules/sales/quotation/pages/QuotationDetailPage";
 import QuotationListPage from "@/modules/sales/quotation/pages/QuotationListPage";
 import QuotationPrintPage from "@/modules/sales/quotation/pages/QuotationPrintPage";
+import CreateTripRequestPage from "@/modules/sales/tripRequest/pages/CreateTripRequestPage";
+import TripRequestDetailPage from "@/modules/sales/tripRequest/pages/TripRequestDetailPage";
+import TripRequestListPage from "@/modules/sales/tripRequest/pages/TripRequestListPage";
 import DayListPage from "@/modules/tour/day";
 import EditDayPage from "@/modules/tour/day/pages/EditDayPage";
 import TourListPage from "@/modules/tour/tour";
@@ -46,6 +49,7 @@ import {
   Hotel,
   LayoutGrid,
   MapPin,
+  PhoneCall,
   Plane,
   Shield,
   ShoppingBag,
@@ -309,6 +313,25 @@ export const APP_ROUTES: AppRoute[] = [
         icon: ShoppingBag,
         showInSidebar: true,
         children: [
+          // ── Trip Request ──────────────────────────────────────────
+          {
+            path: PATHS.SALES.TRIP_REQUESTS,
+            title: "Trip Request",
+            pageTitle: "Danh sách Trip Request",
+            element: <TripRequestListPage />,
+            icon: PhoneCall,
+            showInSidebar: true,
+          },
+          {
+            path: PATHS.SALES.TRIP_REQUEST_CREATE,
+            element: <CreateTripRequestPage />,
+            showInSidebar: false,
+          },
+          {
+            path: PATHS.SALES.TRIP_REQUEST_DETAIL,
+            element: <TripRequestDetailPage />,
+            showInSidebar: false,
+          },
           // ── Báo giá ──────────────────────────────────────────────
           {
             path: PATHS.SALES.QUOTATIONS,
