@@ -2,8 +2,8 @@ import { z } from "zod";
 
 export const createVendorPaymentSchema = z.object({
   confirmedTourId: z.string().min(1, "Vui lòng chọn tour"),
-  vendorName: z.string().min(1, "Vui lòng nhập tên Vendor"),
-  vendorType: z.string().min(1, "Vui lòng chọn loại Vendor"),
+  vendorName: z.string().min(1, "Vui lòng nhập tên nhà cung cấp"),
+  vendorType: z.string().min(1, "Vui lòng chọn loại nhà cung cấp"),
   serviceDescription: z.string().min(1, "Vui lòng mô tả dịch vụ"),
   expectedAmount: z.number({ error: "Vui lòng nhập số tiền" }).min(0, "Số tiền phải ≥ 0"),
   currency: z.string().min(1, "Vui lòng chọn tiền tệ"),

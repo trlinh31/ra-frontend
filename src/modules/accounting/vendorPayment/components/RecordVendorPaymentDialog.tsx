@@ -48,12 +48,12 @@ export default function RecordVendorPaymentDialog({ open, onOpenChange, vendor, 
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className='max-w-md'>
         <DialogHeader>
-          <DialogTitle>Ghi nhận thanh toán cho Vendor</DialogTitle>
+          <DialogTitle>Ghi nhận thanh toán cho nhà cung cấp</DialogTitle>
         </DialogHeader>
 
         <div className='space-y-1 bg-muted/40 p-3 rounded-md text-sm'>
           <p>
-            <span className='text-muted-foreground'>Vendor: </span>
+            <span className='text-muted-foreground'>Nhà cung cấp: </span>
             <span className='font-medium'>{vendor.vendorName}</span>
           </p>
           <p>

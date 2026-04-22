@@ -67,8 +67,8 @@ export default function CreateVendorPaymentPage() {
                 placeholder='Chọn tour liên quan'
                 className='md:col-span-2'
               />
-              <FormInput name='vendorName' label='Tên Vendor' required placeholder='VD: Khách sạn Ánh Dương' />
-              <FormSelect name='vendorType' label='Loại Vendor' required options={VENDOR_TYPE_OPTIONS} placeholder='Chọn loại' />
+              <FormInput name='vendorName' label='Tên nhà cung cấp' required placeholder='VD: Khách sạn Ánh Dương' />
+              <FormSelect name='vendorType' label='Loại nhà cung cấp' required options={VENDOR_TYPE_OPTIONS} placeholder='Chọn loại' />
               <FormTextarea
                 name='serviceDescription'
                 label='Mô tả dịch vụ'

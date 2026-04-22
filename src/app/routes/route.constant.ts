@@ -54,6 +54,12 @@ export const PATHS = {
 
   SALES: {
     ROOT: "/sales",
+    /** Báo giá */
+    QUOTATIONS: "/sales/quotations",
+    QUOTATION_CREATE: "/sales/quotations/create",
+    QUOTATION_DETAIL: "/sales/quotations/:id",
+    QUOTATION_PRINT: "/sales/quotations/:id/print",
+    /** Confirm Tour */
     CONFIRMED_TOURS: "/sales/confirmed-tours",
     CONFIRMED_TOUR_CREATE: "/sales/confirmed-tours/create",
     CONFIRMED_TOUR_DETAIL: "/sales/confirmed-tours/:id",

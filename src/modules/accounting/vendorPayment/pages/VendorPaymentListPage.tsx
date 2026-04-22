@@ -50,7 +50,7 @@ export default function VendorPaymentListPage() {
   const columns: ColumnDef<VendorPayment>[] = [
     { id: "index", header: "STT", cell: ({ row }) => row.index + 1, maxSize: 60 },
     { header: "Mã tour", accessorKey: "confirmedTourCode", maxSize: 130 },
-    { header: "Vendor", accessorKey: "vendorName" },
+    { header: "Nhà cung cấp", accessorKey: "vendorName" },
     {
       id: "vendorType",
       header: "Loại",
@@ -110,12 +110,12 @@ export default function VendorPaymentListPage() {
   return (
     <div className='space-y-4'>
       <TableToolbar
-        title='Phiếu Chi Vendor'
+        title='Phiếu Chi Nhà Cung Cấp'
         description='Theo dõi các khoản thanh toán cho nhà cung cấp dịch vụ'
         icon={Banknote}
         onAdd={() => navigate(PATHS.ACCOUNTING.VENDOR_PAYMENT_CREATE)}
       />
-      <SearchBox value={search} onChange={setSearch} placeholder='Tìm theo vendor, mã tour, dịch vụ...' />
+      <SearchBox value={search} onChange={setSearch} placeholder='Tìm theo nhà cung cấp, mã tour, dịch vụ...' />
       <AppTable columns={columns} data={filtered} enablePagination={false} />
 
       <RecordVendorPaymentDialog

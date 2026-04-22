@@ -17,7 +17,7 @@ import { Button } from "@/shared/components/ui/button";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
 import type { ColumnDef } from "@tanstack/react-table";
-import { ClipboardList, UserRoundCog } from "lucide-react";
+import { ClipboardCheck, UserRoundCog } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -47,7 +47,7 @@ export default function ConfirmedTourListPage() {
   const handleDelete = async (tour: ConfirmedTour) => {
     if (tour.status === "in_operation" || tour.status === "completed") {
       await confirm({
-        description: `Không thể xóa tour đã ở trạng thái "${CONFIRMED_TOUR_STATUS_LABEL[tour.status]}".`,
+        description: `Không thể xóa tour đã ở trạng thái "${CONFIRMED_TOUR_STATUS_LABEL[tour.status]}". Vui lòng sử dụng chức năng Hủy Tour nếu cần.`,
       });
       return;
     }
@@ -61,9 +61,38 @@ export default function ConfirmedTourListPage() {
 
   const columns: ColumnDef<ConfirmedTour>[] = [
     { id: "index", header: "STT", cell: ({ row }) => row.index + 1 },
-    { header: "Mã tour", accessorKey: "code" },
+    {
+      header: "Mã tour",
+      accessorKey: "code",
+      cell: ({ row }) => (
+        <button
+          onClick={() => navigate(PATHS.SALES.CONFIRMED_TOUR_DETAIL.replace(":id", row.original.id))}
+          className='font-medium text-blue-600 hover:underline text-left'>
+          {row.original.code}
+        </button>
+      ),
+    },
     { header: "Tên đoàn / Khách hàng", accessorKey: "customerName" },
-    { header: "Tour mẫu", accessorKey: "tourTemplateName", enableSorting: false, maxSize: 220 },
+    {
+      header: "Nguồn",
+      id: "source",
+      enableSorting: false,
+      cell: ({ row }) => {
+        const t = row.original;
+        if (t.quotationId) {
+          return (
+            <span className='text-xs bg-blue-50 text-blue-700 border border-blue-200 px-2 py-0.5 rounded-full'>
+              Từ báo giá
+            </span>
+          );
+        }
+        return t.tourTemplateName ? (
+          <span className='text-xs text-muted-foreground'>{t.tourTemplateName}</span>
+        ) : (
+          <span className='text-muted-foreground text-xs'>—</span>
+        );
+      },
+    },
     {
       id: "numberOfPeople",
       header: "Số khách",
@@ -117,9 +146,15 @@ export default function ConfirmedTourListPage() {
               variant='outline'
               onClick={() => setAssignTarget(tour)}
               disabled={tour.status !== "confirmed"}
-              title='Gán nhân viên'>
+              title='Gán nhân viên vận hành'>
               <UserRoundCog className='w-4 h-4' />
             </Button>
+            <ActionButton
+              action='edit'
+              size='icon-sm'
+              variant='outline'
+              onClick={() => navigate(PATHS.SALES.CONFIRMED_TOUR_DETAIL.replace(":id", tour.id))}
+            />
             <ActionButton action='delete' size='icon-sm' variant='destructive' onClick={() => handleDelete(tour)} />
           </div>
         );
@@ -130,9 +165,9 @@ export default function ConfirmedTourListPage() {
   return (
     <div className='space-y-4'>
       <TableToolbar
-        title='Tour Booking'
-        description='Danh sách booking tour của khách hàng'
-        icon={ClipboardList}
+        title='Tour Xác Nhận'
+        description='Danh sách tour đã xác nhận với đoàn khách'
+        icon={ClipboardCheck}
         onAdd={() => navigate(PATHS.SALES.CONFIRMED_TOUR_CREATE)}
       />
 

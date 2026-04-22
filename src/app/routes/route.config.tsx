@@ -21,8 +21,13 @@ import TransportationListPage from "@/modules/masterData/transportation";
 import EditTransportationPage from "@/modules/masterData/transportation/pages/EditTransportationPage";
 import VisaFastTrackListPage from "@/modules/masterData/visaFastTrack";
 import EditVisaFastTrackPage from "@/modules/masterData/visaFastTrack/pages/EditVisaFastTrackPage";
+import ConfirmedTourDetailPage from "@/modules/sales/confirmedTour/pages/ConfirmedTourDetailPage";
 import ConfirmedTourListPage from "@/modules/sales/confirmedTour/pages/ConfirmedTourListPage";
 import CreateConfirmedTourPage from "@/modules/sales/confirmedTour/pages/CreateConfirmedTourPage";
+import CreateQuotationPage from "@/modules/sales/quotation/pages/CreateQuotationPage";
+import QuotationDetailPage from "@/modules/sales/quotation/pages/QuotationDetailPage";
+import QuotationListPage from "@/modules/sales/quotation/pages/QuotationListPage";
+import QuotationPrintPage from "@/modules/sales/quotation/pages/QuotationPrintPage";
 import DayListPage from "@/modules/tour/day";
 import EditDayPage from "@/modules/tour/day/pages/EditDayPage";
 import TourListPage from "@/modules/tour/tour";
@@ -33,10 +38,11 @@ import {
   Box,
   Bus,
   CalendarDays,
-  ClipboardList,
+  ClipboardCheck,
   Compass,
   Container,
   CreditCard,
+  FileText,
   Hotel,
   LayoutGrid,
   MapPin,
@@ -56,6 +62,12 @@ export const APP_ROUTES: AppRoute[] = [
   {
     path: PATHS.ROOT,
     element: <Navigate to={PATHS.DASHBOARD} replace />,
+  },
+  // ── Trang in báo giá — full-screen, ngoài DashboardLayout ──
+  {
+    path: PATHS.SALES.QUOTATION_PRINT,
+    element: <QuotationPrintPage />,
+    showInSidebar: false,
   },
   {
     path: PATHS.ROOT,
@@ -297,17 +309,42 @@ export const APP_ROUTES: AppRoute[] = [
         icon: ShoppingBag,
         showInSidebar: true,
         children: [
+          // ── Báo giá ──────────────────────────────────────────────
+          {
+            path: PATHS.SALES.QUOTATIONS,
+            title: "Báo giá",
+            pageTitle: "Quản lý Báo giá",
+            element: <QuotationListPage />,
+            icon: FileText,
+            showInSidebar: true,
+          },
+          {
+            path: PATHS.SALES.QUOTATION_CREATE,
+            element: <CreateQuotationPage />,
+            showInSidebar: false,
+          },
+          {
+            path: PATHS.SALES.QUOTATION_DETAIL,
+            element: <QuotationDetailPage />,
+            showInSidebar: false,
+          },
+          // ── Tour Xác Nhận ──────────────────────────────────────────
           {
             path: PATHS.SALES.CONFIRMED_TOURS,
-            title: "Tour Booking",
-            pageTitle: "Danh sách Tour Booking",
+            title: "Tour Xác Nhận",
+            pageTitle: "Danh sách Tour Xác Nhận",
             element: <ConfirmedTourListPage />,
-            icon: ClipboardList,
+            icon: ClipboardCheck,
             showInSidebar: true,
           },
           {
             path: PATHS.SALES.CONFIRMED_TOUR_CREATE,
             element: <CreateConfirmedTourPage />,
+            showInSidebar: false,
+          },
+          {
+            path: PATHS.SALES.CONFIRMED_TOUR_DETAIL,
+            element: <ConfirmedTourDetailPage />,
             showInSidebar: false,
           },
         ],
@@ -339,8 +376,8 @@ export const APP_ROUTES: AppRoute[] = [
           },
           {
             path: PATHS.ACCOUNTING.VENDOR_PAYMENTS,
-            title: "Phiếu Chi Vendor",
-            pageTitle: "Phiếu Chi Vendor",
+            title: "Phiếu Chi Nhà Cung Cấp",
+            pageTitle: "Phiếu Chi Nhà Cung Cấp",
             element: <VendorPaymentListPage />,
             icon: Banknote,
             showInSidebar: true,

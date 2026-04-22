@@ -4,8 +4,11 @@ export type ConfirmedTourStatus = "draft" | "pending_approval" | "confirmed" | "
 
 export type ConfirmedTour = {
   id: string;
-  tourTemplateId: string;
-  tourTemplateName: string;
+  /** Tour mẫu gốc (nếu tạo trực tiếp không qua báo giá) */
+  tourTemplateId?: string;
+  tourTemplateName?: string;
+  /** Báo giá gốc đã approved (nếu tạo từ báo giá) */
+  quotationId?: string;
   code: string;
   customerName: string;
   numberOfPeople: number;
@@ -19,5 +22,11 @@ export type ConfirmedTour = {
   assignedTo?: string;
   assignedAt?: string;
   operationNote?: string;
+  /** Người yêu cầu hủy */
+  cancelledBy?: string;
+  /** Thời điểm hủy */
+  cancelledAt?: string;
+  /** Lý do hủy */
+  cancellationReason?: string;
   createdAt: string;
 };
