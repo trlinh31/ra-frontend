@@ -69,7 +69,7 @@ export default function TripRequestListPage() {
       header: "Mã TR",
       cell: ({ row }) => (
         <button
-          className='font-mono text-sm font-semibold text-blue-600 hover:underline'
+          className='font-mono font-semibold text-blue-600 text-sm hover:underline'
           onClick={() => navigate(PATHS.SALES.TRIP_REQUEST_DETAIL.replace(":id", row.original.id))}>
           {row.original.code}
         </button>
@@ -91,9 +91,7 @@ export default function TripRequestListPage() {
         return (
           <span className='text-sm'>
             {total}
-            {r.numberOfChildren > 0 && (
-              <span className='text-muted-foreground text-xs ml-1'>({r.numberOfChildren} trẻ em)</span>
-            )}
+            {r.numberOfChildren > 0 && <span className='ml-1 text-muted-foreground text-xs'>({r.numberOfChildren} trẻ em)</span>}
           </span>
         );
       },
@@ -110,9 +108,7 @@ export default function TripRequestListPage() {
     {
       id: "leadSource",
       header: "Nguồn",
-      cell: ({ row }) => (
-        <span className='text-xs text-muted-foreground'>{LEAD_SOURCE_LABEL[row.original.leadSource]}</span>
-      ),
+      cell: ({ row }) => <span className='text-muted-foreground text-xs'>{LEAD_SOURCE_LABEL[row.original.leadSource]}</span>,
     },
     {
       id: "assignedTo",
@@ -121,7 +117,7 @@ export default function TripRequestListPage() {
         row.original.assignedTo ? (
           <span className='text-sm'>{row.original.assignedTo}</span>
         ) : (
-          <span className='text-xs text-muted-foreground italic'>Chưa phân công</span>
+          <span className='text-muted-foreground text-xs italic'>Chưa phân công</span>
         ),
     },
     {
@@ -136,17 +132,10 @@ export default function TripRequestListPage() {
       enableSorting: false,
       cell: ({ row }) => (
         <div className='flex items-center gap-1.5'>
-          <Button
-            size='sm'
-            variant='outline'
-            onClick={() => navigate(PATHS.SALES.TRIP_REQUEST_DETAIL.replace(":id", row.original.id))}>
+          <Button size='sm' variant='outline' onClick={() => navigate(PATHS.SALES.TRIP_REQUEST_DETAIL.replace(":id", row.original.id))}>
             Xem
           </Button>
-          <Button
-            size='sm'
-            variant='ghost'
-            className='text-red-600 hover:text-red-700 hover:bg-red-50'
-            onClick={() => handleDelete(row.original)}>
+          <Button size='sm' variant='ghost' className='hover:bg-red-50 text-red-600 hover:text-red-700' onClick={() => handleDelete(row.original)}>
             Xóa
           </Button>
         </div>
@@ -165,12 +154,7 @@ export default function TripRequestListPage() {
 
       {/* Filters */}
       <div className='flex flex-wrap items-center gap-3'>
-        <SearchBox
-          value={search}
-          onChange={setSearch}
-          placeholder='Tìm theo tên khách, mã TR, điểm đến...'
-          className='flex-1 min-w-56'
-        />
+        <SearchBox value={search} onChange={setSearch} placeholder='Tìm theo tên khách, mã TR, điểm đến...' />
         <Select value={statusFilter} onValueChange={setStatusFilter}>
           <SelectTrigger className='w-44'>
             <SelectValue placeholder='Tất cả trạng thái' />
