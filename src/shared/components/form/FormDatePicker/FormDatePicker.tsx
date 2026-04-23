@@ -1,4 +1,4 @@
-import AppDatePicker from "@/shared/components/common/AppDatePicker/AppDatePicker";
+import AppDatePicker from "@/shared/components/common/AppDatePicker";
 import { Field, FieldError, FieldLabel } from "@/shared/components/ui/field";
 import type { Matcher } from "react-day-picker";
 import { Controller, useFormContext } from "react-hook-form";

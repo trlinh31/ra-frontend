@@ -2,6 +2,7 @@ import { PATHS } from "@/app/routes/route.constant";
 import QuotationStatusBadge from "@/modules/sales/quotation/components/QuotationStatusBadge";
 import { quotationMockStore } from "@/modules/sales/quotation/data/quotation.mock-store";
 import type { Quotation } from "@/modules/sales/quotation/types/quotation.type";
+import { SERVICE_TYPE_CONFIG } from "@/modules/tour/day/types/day.type";
 import PageHeader from "@/shared/components/common/PageHeader";
 import { Button } from "@/shared/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
@@ -230,6 +231,81 @@ export default function QuotationDetailPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Lịch trình */}
+      {quotation.itinerary.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className='text-base'>Lịch trình báo giá</CardTitle>
+          </CardHeader>
+          <CardContent className='space-y-3 px-4 py-3'>
+            {quotation.itinerary.map((entry, idx) => {
+              if (entry.kind === "group_tour") {
+                return (
+                  <div key={idx} className='border rounded-md overflow-hidden'>
+                    <div className='flex justify-between items-center bg-blue-50 px-3 py-2'>
+                      <span className='font-semibold text-sm'>
+                        Ngày {idx + 1}: [Nhóm tour] {entry.name}
+                      </span>
+                      {entry.unitPrice > 0 && entry.currency && (
+                        <span className='font-medium text-green-700 text-sm'>
+                          {formatNumberVN(entry.unitPrice)} {entry.currency}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                );
+              }
+
+              const dayTotals = entry.services.reduce<Record<string, number>>((acc, svc) => {
+                if (!svc.unitPrice || !svc.currency) return acc;
+                acc[svc.currency] = (acc[svc.currency] ?? 0) + svc.unitPrice;
+                return acc;
+              }, {});
+
+              return (
+                <div key={idx} className='border rounded-md overflow-hidden'>
+                  <div className='flex justify-between items-center bg-muted px-3 py-2'>
+                    <span className='font-semibold text-sm'>
+                      Ngày {idx + 1}: [{entry.code}] {entry.title}
+                    </span>
+                    <div className='flex items-center gap-2 font-medium text-green-700 text-sm'>
+                      {Object.entries(dayTotals).map(([cur, total]) => (
+                        <span key={cur}>
+                          {formatNumberVN(total)} {cur}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  {entry.services.length > 0 ? (
+                    <div className='divide-y text-sm'>
+                      {entry.services.map((svc, sIdx) => {
+                        const config = SERVICE_TYPE_CONFIG[svc.serviceType];
+                        return (
+                          <div key={sIdx} className='flex justify-between items-center px-3 py-2'>
+                            <div className='flex items-center gap-2'>
+                              <span className='flex items-center gap-1 w-28 text-muted-foreground text-xs shrink-0'>
+                                {config?.icon}
+                                {config?.label}
+                              </span>
+                              <span>{svc.name}</span>
+                            </div>
+                            <span className='font-medium text-green-600 whitespace-nowrap'>
+                              {svc.unitPrice ? `${formatNumberVN(svc.unitPrice)} ${svc.currency}` : "—"}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <p className='px-3 py-2 text-muted-foreground text-xs italic'>Không có dịch vụ trong ngày này.</p>
+                  )}
+                </div>
+              );
+            })}
+          </CardContent>
+        </Card>
+      )}
 
       {/* Điều khoản */}
       {quotation.terms && (

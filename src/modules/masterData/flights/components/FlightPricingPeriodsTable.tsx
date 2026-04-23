@@ -1,6 +1,6 @@
 import type { Flight, FlightDayGroup } from "@/modules/masterData/flights/types/flight.type";
+import AppDatePicker from "@/shared/components/common/AppDatePicker";
 import { AppTable } from "@/shared/components/common/AppTable";
-import AppDatePicker from "@/shared/components/common/AppDatePicker/AppDatePicker";
 import { Button } from "@/shared/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/shared/components/ui/collapsible";
 import { formatNumberVN } from "@/shared/helpers/formatNumberVN";

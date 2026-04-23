@@ -64,13 +64,6 @@ export default function ConfirmedTourListPage() {
     {
       header: "Mã tour",
       accessorKey: "code",
-      cell: ({ row }) => (
-        <button
-          onClick={() => navigate(PATHS.SALES.CONFIRMED_TOUR_DETAIL.replace(":id", row.original.id))}
-          className='font-medium text-blue-600 text-left hover:underline'>
-          {row.original.code}
-        </button>
-      ),
     },
     { header: "Tên đoàn / Khách hàng", accessorKey: "customerName" },
     {

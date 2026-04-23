@@ -1,5 +1,5 @@
 import type { DayGroup, Hotel } from "@/modules/masterData/hotel/types/hotel.type";
-import AppDatePicker from "@/shared/components/common/AppDatePicker/AppDatePicker";
+import AppDatePicker from "@/shared/components/common/AppDatePicker";
 import { AppTable } from "@/shared/components/common/AppTable";
 import { Button } from "@/shared/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/shared/components/ui/collapsible";
