@@ -13,4 +13,6 @@ export type AppRoute = {
   isActive?: boolean;
   isGroup?: boolean;
   roles?: Role[];
+  /** Đánh dấu route không cần đăng nhập (vd: /auth/login) */
+  isPublic?: boolean;
 };

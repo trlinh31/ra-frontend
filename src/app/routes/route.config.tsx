@@ -1,3 +1,4 @@
+import { LoginPage } from "@/modules/auth/login";
 import CreateCustomerPaymentPage from "@/modules/accounting/customerPayment/pages/CreateCustomerPaymentPage";
 import CustomerPaymentDetailPage from "@/modules/accounting/customerPayment/pages/CustomerPaymentDetailPage";
 import CustomerPaymentListPage from "@/modules/accounting/customerPayment/pages/CustomerPaymentListPage";
@@ -67,11 +68,19 @@ export const APP_ROUTES: AppRoute[] = [
     path: PATHS.ROOT,
     element: <Navigate to={PATHS.DASHBOARD} replace />,
   },
+  // ── Auth — ngoài DashboardLayout, không cần đăng nhập ────────────────────
+  {
+    path: PATHS.AUTH.LOGIN,
+    element: <LoginPage />,
+    showInSidebar: false,
+    isPublic: true,
+  },
   // ── Trang in báo giá — full-screen, ngoài DashboardLayout ──
   {
     path: PATHS.SALES.QUOTATION_PRINT,
     element: <QuotationPrintPage />,
     showInSidebar: false,
+    isPublic: true,
   },
   {
     path: PATHS.ROOT,

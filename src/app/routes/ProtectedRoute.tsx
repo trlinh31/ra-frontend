@@ -1,7 +1,8 @@
 import { PATHS } from "@/app/routes/route.constant";
 import { Role } from "@/shared/enums/role.enum";
+import { useAuth } from "@/shared/contexts/AuthContext";
 import { type JSX } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 
 interface ProtectedRouteProps {
   children: JSX.Element;
@@ -9,27 +10,22 @@ interface ProtectedRouteProps {
 }
 
 export default function ProtectedRoute({ children, permissions }: ProtectedRouteProps) {
-  // const { isAuthenticated, loading, user } = useAuthStore();
-  // const location = useLocation();
-  // const token = getStorageItem<string | null>(ACCESS_TOKEN, null);
-  const isAuthenticated = true;
-  const loading = false;
-  const user = {
-    roles: [Role.ADMIN],
-  };
-  const token = "dummy-token";
+  const { isAuthenticated, session } = useAuth();
+  const location = useLocation();
 
-  if (loading) {
-    // return <AppLoading loading={loading} />;
-    return null;
-  }
-
-  if (!isAuthenticated && !token) {
+  // Chưa đăng nhập → về trang login, lưu lại trang đang cố truy cập
+  if (!isAuthenticated) {
     return <Navigate to={PATHS.AUTH.LOGIN} replace state={{ from: location }} />;
   }
 
-  if (permissions && user && !permissions.some((permission) => user.roles.includes(permission))) {
-    return <Navigate to={PATHS.FORBIDDEN} replace />;
+  // Đã đăng nhập nhưng không đủ quyền → về trang forbidden
+  if (permissions && permissions.length > 0 && session?.user) {
+    const hasPermission = permissions.some(
+      (p) => p === (session.user.roleKey as Role)
+    );
+    if (!hasPermission) {
+      return <Navigate to={PATHS.FORBIDDEN} replace />;
+    }
   }
 
   return children;
