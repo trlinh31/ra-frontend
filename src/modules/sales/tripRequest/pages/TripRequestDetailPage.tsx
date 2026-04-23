@@ -10,6 +10,7 @@ import {
 } from "@/modules/sales/tripRequest/constants/trip-request.constant";
 import { tripRequestMockStore } from "@/modules/sales/tripRequest/data/trip-request.mock-store";
 import type { TripRequest } from "@/modules/sales/tripRequest/types/trip-request.type";
+import { userMockStore } from "@/modules/userManagement/data/user.mock-store";
 import PageHeader from "@/shared/components/common/PageHeader";
 import { Button } from "@/shared/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
@@ -234,7 +235,16 @@ export default function TripRequestDetailPage() {
             <InfoRow label='Số điện thoại' value={tr.customerPhone} />
             <InfoRow label='Email' value={tr.customerEmail} />
             <InfoRow label='Nguồn lead' value={LEAD_SOURCE_LABEL[tr.leadSource]} />
-            <InfoRow label='Phụ trách' value={tr.assignedTo ?? <span className='text-amber-600 text-xs italic'>Chưa phân công</span>} />
+            <InfoRow
+              label='Phụ trách'
+              value={
+                tr.assignedTo ? (
+                  (userMockStore.getById(tr.assignedTo)?.fullName ?? tr.assignedTo)
+                ) : (
+                  <span className='text-amber-600 text-xs italic'>Chưa phân công</span>
+                )
+              }
+            />
           </CardContent>
         </Card>
 

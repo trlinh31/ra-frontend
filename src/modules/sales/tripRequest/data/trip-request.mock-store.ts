@@ -35,7 +35,7 @@ let _requests: TripRequest[] = [
     specialRequirements: "Team building, cần hoạt động ngoài trời và phòng hội nghị",
     budgetEstimate: 150_000_000,
     budgetCurrency: "VND",
-    assignedTo: "Seller B",
+    assignedTo: "u4",
     status: "assigned",
     quotationIds: [],
     createdBy: "Seller A",
@@ -53,7 +53,7 @@ let _requests: TripRequest[] = [
     numberOfAdults: 12,
     numberOfChildren: 0,
     serviceLevel: "standard",
-    assignedTo: "Seller A",
+    assignedTo: "u3",
     internalNotes: "Khách đã xem báo giá v1, yêu cầu giảm giá và thay khách sạn. Đang chờ phản hồi.",
     status: "in_progress",
     quotationIds: ["q2"],
@@ -106,16 +106,12 @@ export const tripRequestMockStore = {
 
   assign: (id: string, assignedTo: string): void => {
     _requests = _requests.map((r) =>
-      r.id === id
-        ? { ...r, assignedTo, status: r.status === "new" ? ("assigned" as TripRequestStatus) : r.status }
-        : r
+      r.id === id ? { ...r, assignedTo, status: r.status === "new" ? ("assigned" as TripRequestStatus) : r.status } : r
     );
   },
 
   startProgress: (id: string): void => {
-    _requests = _requests.map((r) =>
-      r.id === id ? { ...r, status: "in_progress" as TripRequestStatus } : r
-    );
+    _requests = _requests.map((r) => (r.id === id ? { ...r, status: "in_progress" as TripRequestStatus } : r));
   },
 
   linkQuotation: (id: string, quotationId: string): void => {
@@ -131,23 +127,17 @@ export const tripRequestMockStore = {
   },
 
   markConverted: (id: string, confirmedTourId: string): void => {
-    _requests = _requests.map((r) =>
-      r.id === id ? { ...r, status: "converted" as TripRequestStatus, confirmedTourId } : r
-    );
+    _requests = _requests.map((r) => (r.id === id ? { ...r, status: "converted" as TripRequestStatus, confirmedTourId } : r));
   },
 
   markLost: (id: string, lostReason: string): void => {
-    _requests = _requests.map((r) =>
-      r.id === id ? { ...r, status: "lost" as TripRequestStatus, lostReason } : r
-    );
+    _requests = _requests.map((r) => (r.id === id ? { ...r, status: "lost" as TripRequestStatus, lostReason } : r));
   },
 
   markOnHold: (id: string, holdUntil: string, note?: string): void => {
     _requests = _requests.map((r) => {
       if (r.id !== id) return r;
-      const notes = note
-        ? `${r.internalNotes ? r.internalNotes + "\n" : ""}${note}`
-        : r.internalNotes;
+      const notes = note ? `${r.internalNotes ? r.internalNotes + "\n" : ""}${note}` : r.internalNotes;
       return { ...r, status: "on_hold" as TripRequestStatus, holdUntil, internalNotes: notes };
     });
   },

@@ -1,11 +1,12 @@
 import { PATHS } from "@/app/routes/route.constant";
 import AssignTourDialog from "@/modules/sales/confirmedTour/components/AssignTourDialog";
 import ConfirmedTourStatusBadge from "@/modules/sales/confirmedTour/components/ConfirmedTourStatusBadge";
-import { CONFIRMED_TOUR_STATUS_LABEL, MOCK_OPERATORS } from "@/modules/sales/confirmedTour/constants/confirmed-tour.constant";
+import { CONFIRMED_TOUR_STATUS_LABEL } from "@/modules/sales/confirmedTour/constants/confirmed-tour.constant";
 import { confirmedTourMockStore } from "@/modules/sales/confirmedTour/data/confirmed-tour.mock-store";
 import type { ConfirmedTour } from "@/modules/sales/confirmedTour/types/confirmed-tour.type";
 import { CANCELLATION_REASONS } from "@/modules/sales/quotation/constants/quotation.constant";
 import { quotationMockStore } from "@/modules/sales/quotation/data/quotation.mock-store";
+import { userMockStore } from "@/modules/userManagement/data/user.mock-store";
 import AppSelect from "@/shared/components/common/AppSelect";
 import PageHeader from "@/shared/components/common/PageHeader";
 import { Button } from "@/shared/components/ui/button";
@@ -46,7 +47,7 @@ export default function ConfirmedTourDetailPage() {
   }
 
   const linkedQuotation = tour.quotationId ? quotationMockStore.getById(tour.quotationId) : undefined;
-  const operatorName = MOCK_OPERATORS.find((op) => op.id === tour.assignedTo)?.name;
+  const operatorName = userMockStore.getById(tour.assignedTo ?? "")?.fullName;
 
   const canAssign = tour.status === "confirmed";
   const canApprove = tour.status === "pending_approval";

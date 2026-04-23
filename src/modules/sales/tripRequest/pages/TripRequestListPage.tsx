@@ -8,6 +8,7 @@ import {
 } from "@/modules/sales/tripRequest/constants/trip-request.constant";
 import { tripRequestMockStore } from "@/modules/sales/tripRequest/data/trip-request.mock-store";
 import type { TripRequest } from "@/modules/sales/tripRequest/types/trip-request.type";
+import { userMockStore } from "@/modules/userManagement/data/user.mock-store";
 import { AppTable } from "@/shared/components/common/AppTable";
 import SearchBox from "@/shared/components/common/SearchBox/SearchBox";
 import ActionButton from "@/shared/components/table/ActionButton";
@@ -43,7 +44,8 @@ export default function TripRequestListPage() {
           r.customerName.toLowerCase().includes(q) ||
           r.code.toLowerCase().includes(q) ||
           (r.destination ?? "").toLowerCase().includes(q) ||
-          (r.assignedTo ?? "").toLowerCase().includes(q)
+          (r.assignedTo ?? "").toLowerCase().includes(q) ||
+          (userMockStore.getById(r.assignedTo ?? "")?.fullName ?? "").toLowerCase().includes(q)
       );
     }
     return list;
@@ -108,7 +110,7 @@ export default function TripRequestListPage() {
       header: "Phụ trách",
       cell: ({ row }) =>
         row.original.assignedTo ? (
-          <span className='text-sm'>{row.original.assignedTo}</span>
+          <span className='text-sm'>{userMockStore.getById(row.original.assignedTo)?.fullName ?? row.original.assignedTo}</span>
         ) : (
           <span className='text-muted-foreground text-xs italic'>Chưa phân công</span>
         ),

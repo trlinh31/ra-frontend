@@ -1,13 +1,10 @@
 import { PATHS } from "@/app/routes/route.constant";
 import AssignTourDialog from "@/modules/sales/confirmedTour/components/AssignTourDialog";
 import ConfirmedTourStatusBadge from "@/modules/sales/confirmedTour/components/ConfirmedTourStatusBadge";
-import {
-  CONFIRMED_TOUR_STATUS_LABEL,
-  CONFIRMED_TOUR_STATUS_OPTIONS,
-  MOCK_OPERATORS,
-} from "@/modules/sales/confirmedTour/constants/confirmed-tour.constant";
+import { CONFIRMED_TOUR_STATUS_LABEL, CONFIRMED_TOUR_STATUS_OPTIONS } from "@/modules/sales/confirmedTour/constants/confirmed-tour.constant";
 import { confirmedTourMockStore } from "@/modules/sales/confirmedTour/data/confirmed-tour.mock-store";
 import type { ConfirmedTour } from "@/modules/sales/confirmedTour/types/confirmed-tour.type";
+import { userMockStore } from "@/modules/userManagement/data/user.mock-store";
 import AppSelect from "@/shared/components/common/AppSelect";
 import { AppTable } from "@/shared/components/common/AppTable";
 import SearchBox from "@/shared/components/common/SearchBox/SearchBox";
@@ -111,7 +108,7 @@ export default function ConfirmedTourListPage() {
       header: "Vận hành",
       enableSorting: false,
       cell: ({ row }) => {
-        const name = MOCK_OPERATORS.find((op) => op.id === row.original.assignedTo)?.name;
+        const name = userMockStore.getById(row.original.assignedTo ?? "")?.fullName;
         return name ? <span className='text-sm'>{name}</span> : "";
       },
     },

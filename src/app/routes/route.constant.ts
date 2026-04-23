@@ -77,4 +77,11 @@ export const PATHS = {
     VENDOR_PAYMENTS: "/accounting/vendor-payments",
     VENDOR_PAYMENT_CREATE: "/accounting/vendor-payments/create",
   },
+
+  USER_MANAGEMENT: {
+    ROOT: "/users",
+    USERS: "/users",
+    USER_CREATE: "/users/create",
+    USER_EDIT: "/users/:id/edit",
+  },
 } as const;

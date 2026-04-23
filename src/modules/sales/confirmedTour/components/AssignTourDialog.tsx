@@ -1,6 +1,6 @@
-import { MOCK_OPERATORS } from "@/modules/sales/confirmedTour/constants/confirmed-tour.constant";
 import { confirmedTourMockStore } from "@/modules/sales/confirmedTour/data/confirmed-tour.mock-store";
 import type { ConfirmedTour } from "@/modules/sales/confirmedTour/types/confirmed-tour.type";
+import { userMockStore } from "@/modules/userManagement/data/user.mock-store";
 import AppSelect from "@/shared/components/common/AppSelect";
 import { Button } from "@/shared/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
@@ -15,7 +15,10 @@ interface AssignTourDialogProps {
   onAssigned: () => void;
 }
 
-const operatorOptions = MOCK_OPERATORS.map((op) => ({ label: op.name, value: op.id }));
+const operatorOptions = userMockStore
+  .getAll()
+  .filter((u) => u.role === "OPERATOR" && u.isActive)
+  .map((u) => ({ label: u.fullName, value: u.id }));
 
 export default function AssignTourDialog({ tour, open, onOpenChange, onAssigned }: AssignTourDialogProps) {
   const [operatorId, setOperatorId] = useState("");
@@ -42,7 +45,7 @@ export default function AssignTourDialog({ tour, open, onOpenChange, onAssigned 
 
   if (!tour) return null;
 
-  const selectedOperatorName = MOCK_OPERATORS.find((op) => op.id === operatorId)?.name;
+  const selectedOperatorName = userMockStore.getById(operatorId)?.fullName;
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>

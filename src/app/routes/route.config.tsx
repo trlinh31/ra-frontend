@@ -1,9 +1,9 @@
-import { LoginPage } from "@/modules/auth/login";
 import CreateCustomerPaymentPage from "@/modules/accounting/customerPayment/pages/CreateCustomerPaymentPage";
 import CustomerPaymentDetailPage from "@/modules/accounting/customerPayment/pages/CustomerPaymentDetailPage";
 import CustomerPaymentListPage from "@/modules/accounting/customerPayment/pages/CustomerPaymentListPage";
 import CreateVendorPaymentPage from "@/modules/accounting/vendorPayment/pages/CreateVendorPaymentPage";
 import VendorPaymentListPage from "@/modules/accounting/vendorPayment/pages/VendorPaymentListPage";
+import { LoginPage } from "@/modules/auth/login";
 import DashboardPage from "@/modules/dashboard";
 import EntranceFeeListPage from "@/modules/masterData/entranceFee";
 import EditEntranceFeePage from "@/modules/masterData/entranceFee/pages/EditEntranceFeePage";
@@ -36,6 +36,8 @@ import DayListPage from "@/modules/tour/day";
 import EditDayPage from "@/modules/tour/day/pages/EditDayPage";
 import TourListPage from "@/modules/tour/tour";
 import EditTourPage from "@/modules/tour/tour/pages/EditTourPage";
+import EditUserPage from "@/modules/userManagement/pages/EditUserPage";
+import UserListPage from "@/modules/userManagement/pages/UserListPage";
 import DashboardLayout from "@/shared/layouts/DashboardLayout";
 import {
   Banknote,
@@ -55,7 +57,9 @@ import {
   Shield,
   ShoppingBag,
   Ticket,
+  UserCog,
   UserRound,
+  Users,
   UtensilsCrossed,
   Wallet,
 } from "lucide-react";
@@ -417,6 +421,33 @@ export const APP_ROUTES: AppRoute[] = [
           {
             path: PATHS.ACCOUNTING.VENDOR_PAYMENT_CREATE,
             element: <CreateVendorPaymentPage />,
+            showInSidebar: false,
+          },
+        ],
+      },
+      {
+        path: PATHS.USER_MANAGEMENT.ROOT,
+        title: "Quản lý Người dùng",
+        pageTitle: "Quản lý Người dùng",
+        icon: UserCog,
+        showInSidebar: true,
+        children: [
+          {
+            path: PATHS.USER_MANAGEMENT.USERS,
+            title: "Danh sách người dùng",
+            pageTitle: "Quản lý người dùng",
+            element: <UserListPage />,
+            icon: Users,
+            showInSidebar: true,
+          },
+          {
+            path: PATHS.USER_MANAGEMENT.USER_CREATE,
+            element: <EditUserPage />,
+            showInSidebar: false,
+          },
+          {
+            path: PATHS.USER_MANAGEMENT.USER_EDIT,
+            element: <EditUserPage />,
             showInSidebar: false,
           },
         ],

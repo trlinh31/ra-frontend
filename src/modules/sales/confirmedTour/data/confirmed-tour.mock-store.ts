@@ -72,7 +72,7 @@ let _confirmedTours: ConfirmedTour[] = [
       status: "in_operation" as ConfirmedTourStatus,
       note: "Khách yêu cầu phòng hướng biển, 3 suất ăn chay.",
       createdBy: "Seller A",
-      assignedTo: "op1",
+      assignedTo: "u6",
       assignedAt: "2026-04-20",
       createdAt: "2026-04-20",
     };
