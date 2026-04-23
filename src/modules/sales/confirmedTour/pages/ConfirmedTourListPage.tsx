@@ -178,7 +178,7 @@ export default function ConfirmedTourListPage() {
         />
       </div>
 
-      <AppTable columns={columns} data={filtered} enablePagination={false} />
+      <AppTable columns={columns} data={filtered} />
 
       <AssignTourDialog
         tour={assignTarget}

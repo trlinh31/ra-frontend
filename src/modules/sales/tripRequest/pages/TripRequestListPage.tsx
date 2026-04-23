@@ -67,14 +67,7 @@ export default function TripRequestListPage() {
     {
       id: "code",
       header: "Mã TR",
-      cell: ({ row }) => (
-        <button
-          className='font-mono font-semibold text-blue-600 text-sm hover:underline'
-          onClick={() => navigate(PATHS.SALES.TRIP_REQUEST_DETAIL.replace(":id", row.original.id))}>
-          {row.original.code}
-        </button>
-      ),
-      maxSize: 130,
+      accessorKey: "code",
     },
     { header: "Khách hàng / Đoàn", accessorKey: "customerName" },
     {
@@ -170,7 +163,7 @@ export default function TripRequestListPage() {
         </Select>
       </div>
 
-      <AppTable columns={columns} data={filtered} enablePagination={false} />
+      <AppTable columns={columns} data={filtered} />
     </div>
   );
 }

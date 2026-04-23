@@ -116,7 +116,7 @@ export default function VendorPaymentListPage() {
         onAdd={() => navigate(PATHS.ACCOUNTING.VENDOR_PAYMENT_CREATE)}
       />
       <SearchBox value={search} onChange={setSearch} placeholder='Tìm theo nhà cung cấp, mã tour, dịch vụ...' />
-      <AppTable columns={columns} data={filtered} enablePagination={false} />
+      <AppTable columns={columns} data={filtered} />
 
       <RecordVendorPaymentDialog
         open={Boolean(recordTarget)}

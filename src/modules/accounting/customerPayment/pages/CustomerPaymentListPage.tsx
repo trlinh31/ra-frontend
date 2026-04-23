@@ -111,7 +111,7 @@ export default function CustomerPaymentListPage() {
         onAdd={() => navigate(PATHS.ACCOUNTING.CUSTOMER_PAYMENT_CREATE)}
       />
       <SearchBox value={search} onChange={setSearch} placeholder='Tìm theo tên khách hoặc mã tour...' />
-      <AppTable columns={columns} data={filtered} enablePagination={false} />
+      <AppTable columns={columns} data={filtered} />
     </div>
   );
 }

@@ -8,10 +8,9 @@ import { AppTable } from "@/shared/components/common/AppTable";
 import SearchBox from "@/shared/components/common/SearchBox/SearchBox";
 import ActionButton from "@/shared/components/table/ActionButton";
 import TableToolbar from "@/shared/components/table/TableToolbar";
-import { Button } from "@/shared/components/ui/button";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import type { ColumnDef } from "@tanstack/react-table";
-import { FileText, Plus } from "lucide-react";
+import { FileText } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -59,73 +58,32 @@ export default function QuotationListPage() {
     {
       header: "Mã báo giá",
       accessorKey: "code",
-      cell: ({ row }) => (
-        <button
-          onClick={() => navigate(PATHS.SALES.QUOTATION_DETAIL.replace(":id", row.original.id))}
-          className='font-medium text-blue-600 text-left hover:underline'>
-          {row.original.code}
-        </button>
-      ),
     },
     { header: "Tên khách hàng / Đoàn", accessorKey: "customerName" },
     {
       header: "Tour mẫu",
       accessorKey: "tourTemplateName",
       enableSorting: false,
-      cell: ({ row }) => row.original.tourTemplateName ?? <span className='text-muted-foreground text-xs'>Tự xây dựng</span>,
     },
     {
       header: "Số khách",
       accessorKey: "numberOfPeople",
-      cell: ({ row }) => `${row.original.numberOfPeople} người`,
     },
     {
       header: "Ngày đi (dự kiến)",
       accessorKey: "departureDateEst",
-      cell: ({ row }) => row.original.departureDateEst ?? <span className='text-muted-foreground text-xs'>—</span>,
     },
     {
       header: "Phiên bản",
       id: "version",
       enableSorting: false,
-      cell: ({ row }) =>
-        row.original.currentVersion > 0 ? (
-          <span className='text-sm'>v{row.original.currentVersion}</span>
-        ) : (
-          <span className='text-muted-foreground text-xs'>Chưa gửi</span>
-        ),
+      cell: ({ row }) => row.original.currentVersion > 0 && <span className='text-sm'>v{row.original.currentVersion}</span>,
     },
     {
       header: "Trạng thái",
       id: "status",
       enableSorting: false,
       cell: ({ row }) => <QuotationStatusBadge status={row.original.status} />,
-    },
-    {
-      header: "Xác nhận Tour",
-      id: "confirmedTour",
-      enableSorting: false,
-      cell: ({ row }) =>
-        row.original.confirmedTourId ? (
-          <Button
-            size='sm'
-            variant='ghost'
-            className='h-7 text-blue-600 text-xs'
-            onClick={() => navigate(PATHS.SALES.CONFIRMED_TOUR_DETAIL.replace(":id", row.original.confirmedTourId!))}>
-            Xem tour
-          </Button>
-        ) : row.original.status === "approved" ? (
-          <Button
-            size='sm'
-            variant='outline'
-            className='h-7 text-xs'
-            onClick={() => navigate(`${PATHS.SALES.CONFIRMED_TOUR_CREATE}?quotationId=${row.original.id}`)}>
-            <Plus className='mr-1 w-3 h-3' />
-            Tạo Xác nhận Tour
-          </Button>
-        ) : (
-          <span className='text-muted-foreground text-xs'>—</span>
-        ),
     },
     {
       id: "actions",
@@ -168,7 +126,7 @@ export default function QuotationListPage() {
         />
       </div>
 
-      <AppTable columns={columns} data={filtered} enablePagination={false} />
+      <AppTable columns={columns} data={filtered} />
     </div>
   );
 }
