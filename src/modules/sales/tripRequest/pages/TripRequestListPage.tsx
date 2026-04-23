@@ -10,8 +10,8 @@ import { tripRequestMockStore } from "@/modules/sales/tripRequest/data/trip-requ
 import type { TripRequest } from "@/modules/sales/tripRequest/types/trip-request.type";
 import { AppTable } from "@/shared/components/common/AppTable";
 import SearchBox from "@/shared/components/common/SearchBox/SearchBox";
+import ActionButton from "@/shared/components/table/ActionButton";
 import TableToolbar from "@/shared/components/table/TableToolbar";
-import { Button } from "@/shared/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/ui/select";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import type { ColumnDef } from "@tanstack/react-table";
@@ -125,12 +125,8 @@ export default function TripRequestListPage() {
       enableSorting: false,
       cell: ({ row }) => (
         <div className='flex items-center gap-1.5'>
-          <Button size='sm' variant='outline' onClick={() => navigate(PATHS.SALES.TRIP_REQUEST_DETAIL.replace(":id", row.original.id))}>
-            Xem
-          </Button>
-          <Button size='sm' variant='ghost' className='hover:bg-red-50 text-red-600 hover:text-red-700' onClick={() => handleDelete(row.original)}>
-            Xóa
-          </Button>
+          <ActionButton action='edit' size='icon-sm' onClick={() => navigate(PATHS.SALES.TRIP_REQUEST_DETAIL.replace(":id", row.original.id))} />
+          <ActionButton action='delete' size='icon-sm' variant='destructive' onClick={() => handleDelete(row.original)} />
         </div>
       ),
     },
