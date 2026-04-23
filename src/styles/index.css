@@ -12,19 +12,19 @@
 
 :root {
   /* ── Base surfaces ── */
-  --background: oklch(0.974 0.012 241.7);           /* sky-50  #F0F9FF */
-  --foreground: oklch(0.2 0.035 241.7);             /* deep navy */
+  --background: oklch(0.974 0.012 241.7); /* sky-50  #F0F9FF */
+  --foreground: oklch(0.2 0.035 241.7); /* deep navy */
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.2 0.035 241.7);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.2 0.035 241.7);
 
   /* ── Primary: Sky Blue ── */
-  --primary: oklch(0.635 0.166 241.7);              /* #0EA5E9 sky-500 */
+  --primary: oklch(0.635 0.166 241.7); /* #0EA5E9 sky-500 */
   --primary-foreground: oklch(1 0 0);
 
   /* ── Secondary: Light sky tint ── */
-  --secondary: oklch(0.951 0.022 241.7);            /* sky-100 */
+  --secondary: oklch(0.951 0.022 241.7); /* sky-100 */
   --secondary-foreground: oklch(0.327 0.083 241.7); /* sky-900 */
 
   /* ── Muted ── */
@@ -37,20 +37,20 @@
 
   /* ── Semantic ── */
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.9 0.018 241.7);                 /* sky-200 */
+  --border: oklch(0.9 0.018 241.7); /* sky-200 */
   --input: oklch(0.9 0.018 241.7);
   --ring: oklch(0.635 0.166 241.7);
   --radius: 0.625rem;
 
   /* ── Chart: Travel palette ── */
-  --chart-1: oklch(0.635 0.166 241.7);              /* sky blue */
-  --chart-2: oklch(0.562 0.123 180.8);              /* ocean teal */
-  --chart-3: oklch(0.705 0.195 50.6);               /* sunset orange */
-  --chart-4: oklch(0.568 0.134 142.636);            /* forest green */
-  --chart-5: oklch(0.6 0.15 290);                   /* lavender */
+  --chart-1: oklch(0.635 0.166 241.7); /* sky blue */
+  --chart-2: oklch(0.562 0.123 180.8); /* ocean teal */
+  --chart-3: oklch(0.705 0.195 50.6); /* sunset orange */
+  --chart-4: oklch(0.568 0.134 142.636); /* forest green */
+  --chart-5: oklch(0.6 0.15 290); /* lavender */
 
   /* ── Sidebar: Deep Navy ── */
-  --sidebar: oklch(0.165 0.038 241.7);              /* deep navy */
+  --sidebar: oklch(0.165 0.038 241.7); /* deep navy */
   --sidebar-foreground: oklch(0.93 0.015 241.7);
   --sidebar-primary: oklch(0.635 0.166 241.7);
   --sidebar-primary-foreground: oklch(1 0 0);
@@ -60,19 +60,19 @@
   --sidebar-ring: oklch(0.635 0.166 241.7);
 
   /* ── Travel semantic tokens ── */
-  --travel-sky: oklch(0.635 0.166 241.7);           /* #0EA5E9 */
-  --travel-ocean: oklch(0.562 0.123 180.8);         /* #0D9488 */
-  --travel-sunset: oklch(0.705 0.195 50.6);         /* #F97316 */
-  --travel-sand: oklch(0.91 0.05 90);               /* warm sand */
-  --travel-forest: oklch(0.568 0.134 142.636);      /* forest green */
-  --travel-coral: oklch(0.65 0.2 20);               /* coral */
+  --travel-sky: oklch(0.635 0.166 241.7); /* #0EA5E9 */
+  --travel-ocean: oklch(0.562 0.123 180.8); /* #0D9488 */
+  --travel-sunset: oklch(0.705 0.195 50.6); /* #F97316 */
+  --travel-sand: oklch(0.91 0.05 90); /* warm sand */
+  --travel-forest: oklch(0.568 0.134 142.636); /* forest green */
+  --travel-coral: oklch(0.65 0.2 20); /* coral */
 
   --section-background: oklch(0.96 0.01 241.7);
 }
 
 .dark {
   /* ── Base surfaces ── */
-  --background: oklch(0.12 0.025 241.7);            /* dark navy */
+  --background: oklch(0.12 0.025 241.7); /* dark navy */
   --foreground: oklch(0.97 0.01 241.7);
   --card: oklch(0.17 0.03 241.7);
   --card-foreground: oklch(0.97 0.01 241.7);
@@ -218,11 +218,25 @@
 
 /* ── Travel status badge utilities ── */
 @layer utilities {
-  .badge-sky     { @apply bg-sky-100 text-sky-700 dark:bg-sky-900/40 dark:text-sky-300; }
-  .badge-ocean   { @apply bg-teal-100 text-teal-700 dark:bg-teal-900/40 dark:text-teal-300; }
-  .badge-sunset  { @apply bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300; }
-  .badge-forest  { @apply bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300; }
-  .badge-coral   { @apply bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300; }
-  .badge-sand    { @apply bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300; }
-  .badge-neutral { @apply bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300; }
+  .badge-sky {
+    @apply bg-sky-100 text-sky-700 dark:bg-sky-900/40 dark:text-sky-300;
+  }
+  .badge-ocean {
+    @apply bg-teal-100 text-teal-700 dark:bg-teal-900/40 dark:text-teal-300;
+  }
+  .badge-sunset {
+    @apply bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300;
+  }
+  .badge-forest {
+    @apply bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300;
+  }
+  .badge-coral {
+    @apply bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300;
+  }
+  .badge-sand {
+    @apply bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300;
+  }
+  .badge-neutral {
+    @apply bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300;
+  }
 }
