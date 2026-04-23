@@ -6,7 +6,7 @@ export const userSchema = z.object({
   email: z.string().email("Email không hợp lệ"),
   phone: z.string().optional(),
   role: z.enum(["ADMIN", "SALE_MANAGER", "SELLER", "OPERATION_MANAGER", "OPERATOR", "ACCOUNTANT_MANAGER", "ACCOUNTANT"], {
-    required_error: "Vui lòng chọn vai trò",
+    message: "Vui lòng chọn vai trò",
   }),
   isActive: z.boolean(),
   note: z.string().optional(),
