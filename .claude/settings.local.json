@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python .claude/skills/ui-ux-pro-max/scripts/search.py \"travel tour dashboard adventure booking\" --design-system -p \"Travel Dashboard\" -f markdown)"
+    ]
+  }
+}
