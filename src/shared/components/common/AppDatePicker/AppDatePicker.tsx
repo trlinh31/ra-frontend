@@ -38,7 +38,7 @@ export default function AppDatePicker({ value, onChange, placeholder = "Chọn n
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button type='button' variant='outline' className='justify-start bg-white w-full' disabled={disabled}>
+        <Button type='button' variant='outline' className='justify-start bg-white hover:bg-white w-full' disabled={disabled}>
           <CalendarIcon className='mr-1 w-4 h-4' />
           <span className={!dateValue ? "text-muted-foreground" : ""}>{dateValue ? format(dateValue, "dd/MM/yyyy") : placeholder}</span>
         </Button>

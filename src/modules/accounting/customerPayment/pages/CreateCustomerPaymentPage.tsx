@@ -66,7 +66,7 @@ export default function CreateCustomerPaymentPage() {
           <Section title='Thông tin chung'>
             <div className='gap-4 grid grid-cols-1 md:grid-cols-3'>
               <FormSelect name='confirmedTourId' label='Tour' required options={tourOptions} placeholder='Chọn tour' />
-              <FormCurrencyInput name='totalAmount' label='Tổng giá trị hợp đồng' required />
+              <FormCurrencyInput name='totalAmount' label='Tổng giá trị hợp đồng' placeholder='Nhập giá trị hợp đồng' required />
               <FormSelect name='currency' label='Tiền tệ' required options={CURRENCY_OPTIONS} placeholder='Chọn tiền tệ' />
             </div>
           </Section>
@@ -87,7 +87,12 @@ export default function CreateCustomerPaymentPage() {
                   <div className='gap-3 grid grid-cols-1 md:grid-cols-3'>
                     <FormInput name={`installments.${index}.label`} label='Tên đợt' required placeholder='VD: Đặt cọc 30%' />
                     <FormDatePicker name={`installments.${index}.dueDate`} label='Hạn thanh toán' required />
-                    <FormCurrencyInput name={`installments.${index}.expectedAmount`} label='Số tiền dự kiến' required />
+                    <FormCurrencyInput
+                      name={`installments.${index}.expectedAmount`}
+                      label='Số tiền dự kiến'
+                      placeholder='Nhập số tiền dự kiến'
+                      required
+                    />
                     <FormTextarea name={`installments.${index}.note`} label='Ghi chú' className='md:col-span-3' />
                   </div>
                 </div>

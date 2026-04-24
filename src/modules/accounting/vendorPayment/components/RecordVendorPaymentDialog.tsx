@@ -2,8 +2,9 @@ import { PAYMENT_METHOD_OPTIONS } from "@/modules/accounting/customerPayment/con
 import { vendorPaymentMockStore } from "@/modules/accounting/vendorPayment/data/vendor-payment.mock-store";
 import { recordVendorPaymentSchema, type RecordVendorPaymentFormValues } from "@/modules/accounting/vendorPayment/schemas/vendor-payment.schema";
 import type { VendorPayment } from "@/modules/accounting/vendorPayment/types/vendor-payment.type";
+import Section from "@/shared/components/common/Section";
+import FormCurrencyInput from "@/shared/components/form/FormCurrencyInput";
 import FormDatePicker from "@/shared/components/form/FormDatePicker/FormDatePicker";
-import FormInput from "@/shared/components/form/FormInput/FormInput";
 import FormSelect from "@/shared/components/form/FormSelect/FormSelect";
 import FormTextarea from "@/shared/components/form/FormTextarea/FormTextarea";
 import { Button } from "@/shared/components/ui/button";
@@ -51,7 +52,7 @@ export default function RecordVendorPaymentDialog({ open, onOpenChange, vendor, 
           <DialogTitle>Ghi nhận thanh toán cho nhà cung cấp</DialogTitle>
         </DialogHeader>
 
-        <div className='space-y-1 bg-muted/40 p-3 rounded-md text-sm'>
+        <Section>
           <p>
             <span className='text-muted-foreground'>Nhà cung cấp: </span>
             <span className='font-medium'>{vendor.vendorName}</span>
@@ -66,17 +67,11 @@ export default function RecordVendorPaymentDialog({ open, onOpenChange, vendor, 
               {formatNumberVN(vendor.expectedAmount)} {vendor.currency}
             </span>
           </p>
-        </div>
+        </Section>
 
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(handleSubmit)} className='space-y-4'>
-            <FormInput
-              name='actualAmount'
-              label='Số tiền thực trả'
-              required
-              type='number'
-              placeholder={`VD: ${formatNumberVN(vendor.expectedAmount)}`}
-            />
+            <FormCurrencyInput name='actualAmount' label='Số tiền thực trả' required placeholder={`VD: ${formatNumberVN(vendor.expectedAmount)}`} />
             <FormDatePicker name='paidAt' label='Ngày thanh toán' required />
             <FormSelect name='paymentMethod' label='Hình thức thanh toán' required options={PAYMENT_METHOD_OPTIONS} placeholder='Chọn hình thức' />
             <FormTextarea name='note' label='Ghi chú' placeholder='Số tham chiếu, chứng từ...' rows={2} />
