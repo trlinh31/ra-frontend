@@ -1,9 +1,9 @@
 import type { AppRoute } from "@/app/routes/route.type";
+import logo from "@/assets/logo.avif";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/shared/components/ui/collapsible";
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -12,12 +12,10 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-  SidebarSeparator,
 } from "@/shared/components/ui/sidebar";
 import { APP_NAME } from "@/shared/constants/app.constant";
 import { getSidebarRoutes } from "@/shared/layouts/components/Sidebar/sidebar.config";
 import { ChevronRight } from "lucide-react";
-import logo from "@/assets/logo.avif";
 import type React from "react";
 import { NavLink, useMatch } from "react-router-dom";
 
@@ -42,7 +40,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar {...props}>
       <SidebarHeader className='px-4 py-3 border-b h-16'>
         <div className='flex items-center gap-2.5'>
-          <img src={logo} alt={APP_NAME} className='w-8 h-8 rounded-lg object-contain shrink-0' />
+          <img src={logo} alt={APP_NAME} className='rounded-lg w-8 h-8 object-contain shrink-0' />
           <div className='leading-tight'>
             <p className='font-semibold text-sm'>{APP_NAME}</p>
             <p className='text-muted-foreground text-xs'>Management System</p>
@@ -91,11 +89,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           )
         )}
       </SidebarContent>
-
-      <SidebarSeparator />
-      <SidebarFooter className='px-4 py-3'>
-        <p className='text-muted-foreground text-xs text-center'>© 2026 {APP_NAME}</p>
-      </SidebarFooter>
 
       <SidebarRail />
     </Sidebar>

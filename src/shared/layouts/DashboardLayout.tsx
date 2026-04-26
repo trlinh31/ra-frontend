@@ -2,6 +2,7 @@ import { PATHS } from "@/app/routes/route.constant";
 import { NOTIFICATION_TYPE_ICON_COLOR } from "@/modules/notification/constants/notification.constant";
 import { notificationMockStore } from "@/modules/notification/data/notification.mock-store";
 import type { Notification, NotificationType } from "@/modules/notification/types/notification.type";
+import PageLoader from "@/shared/components/common/PageLoader";
 import { Button } from "@/shared/components/ui/button";
 import {
   DropdownMenu,
@@ -19,7 +20,7 @@ import { useCurrentRoute } from "@/shared/hooks/useCurrentRoute";
 import { AppSidebar } from "@/shared/layouts/components/Sidebar";
 import { cn } from "@/shared/lib/utils";
 import { AlertCircle, Bell, CheckCheck, CheckCircle, Info, LogOut, UserPen, XCircle } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
 // ─── Icon theo loại thông báo ─────────────────────────────────────────────────
@@ -239,7 +240,9 @@ export default function DashboardLayout() {
         </header>
 
         <div className='flex flex-col flex-1 gap-4 p-4'>
-          <Outlet />
+          <Suspense fallback={<PageLoader />}>
+            <Outlet />
+          </Suspense>
         </div>
       </SidebarInset>
     </SidebarProvider>
