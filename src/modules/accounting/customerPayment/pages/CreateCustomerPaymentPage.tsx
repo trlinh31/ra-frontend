@@ -15,14 +15,15 @@ import FormTextarea from "@/shared/components/form/FormTextarea/FormTextarea";
 import ActionButton from "@/shared/components/table/ActionButton";
 import { Button } from "@/shared/components/ui/button";
 import { CURRENCY_OPTIONS } from "@/shared/constants/currency.constant";
+import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trash2 } from "lucide-react";
-import { FormProvider, useFieldArray, useForm } from "react-hook-form";
+import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 const tourOptions = confirmedTourMockStore
   .getAll()
-  .filter((t) => t.status !== "draft")
+  .filter((t) => t.status === "confirmed" || t.status === "in_operation" || t.status === "completed")
   .map((t) => ({ value: t.id, label: `${t.code} – ${t.customerName}` }));
 
 export default function CreateCustomerPaymentPage() {
@@ -34,11 +35,26 @@ export default function CreateCustomerPaymentPage() {
       confirmedTourId: "",
       totalAmount: undefined as unknown as number,
       currency: "VND",
+      customerPhone: "",
+      customerEmail: "",
       installments: [{ label: "", dueDate: "", expectedAmount: undefined as unknown as number, note: "" }],
     },
   });
 
   const { fields, append, remove } = useFieldArray({ control: methods.control, name: "installments" });
+
+  const watchedInstallments = useWatch({ control: methods.control, name: "installments" });
+  const watchedTotal = useWatch({ control: methods.control, name: "totalAmount" });
+  const installmentsSum = (watchedInstallments ?? []).reduce((acc, inst) => acc + (inst.expectedAmount ?? 0), 0);
+  const sumDiff = (watchedTotal ?? 0) > 0 ? installmentsSum - (watchedTotal ?? 0) : 0;
+
+  const handleTourChange = (tourId: string) => {
+    const tour = confirmedTourMockStore.getById(tourId);
+    if (tour) {
+      methods.setValue("customerPhone", tour.customerPhone ?? "");
+      methods.setValue("customerEmail", tour.customerEmail ?? "");
+    }
+  };
 
   const handleSubmit = (values: CreateCustomerPaymentFormValues) => {
     const tour = confirmedTourMockStore.getById(values.confirmedTourId);
@@ -46,6 +62,8 @@ export default function CreateCustomerPaymentPage() {
       ...values,
       confirmedTourCode: tour?.code ?? "",
       customerName: tour?.customerName ?? "",
+      customerPhone: values.customerPhone || undefined,
+      customerEmail: values.customerEmail || undefined,
       createdBy: "Kế toán A",
       installments: values.installments.map((installment) => ({
         ...installment,
@@ -65,9 +83,18 @@ export default function CreateCustomerPaymentPage() {
           {/* Tour & Tổng giá trị */}
           <Section title='Thông tin chung'>
             <div className='gap-4 grid grid-cols-1 md:grid-cols-3'>
-              <FormSelect name='confirmedTourId' label='Tour' required options={tourOptions} placeholder='Chọn tour' />
+              <FormSelect
+                name='confirmedTourId'
+                label='Tour'
+                required
+                options={tourOptions}
+                placeholder='Chọn tour'
+                onChange={(val) => handleTourChange(String(val))}
+              />
               <FormCurrencyInput name='totalAmount' label='Tổng giá trị hợp đồng' placeholder='Nhập giá trị hợp đồng' required />
               <FormSelect name='currency' label='Tiền tệ' required options={CURRENCY_OPTIONS} placeholder='Chọn tiền tệ' />
+              <FormInput name='customerPhone' label='Số điện thoại liên hệ' placeholder='VD: 0901234567' />
+              <FormInput name='customerEmail' label='Email liên hệ' placeholder='VD: khach@email.com' className='md:col-span-2' />
             </div>
           </Section>
 
@@ -107,6 +134,21 @@ export default function CreateCustomerPaymentPage() {
                   onClick={() => append({ label: `Đợt ${fields.length + 1}`, dueDate: "", expectedAmount: undefined as unknown as number, note: "" })}
                 />
               </div>
+
+              {/* Tổng kiểm tra */}
+              {(watchedTotal ?? 0) > 0 && (
+                <div className={`flex justify-between items-center px-4 py-2 rounded-md text-sm font-medium border ${sumDiff === 0 ? "bg-green-50 border-green-200 text-green-700" : "bg-orange-50 border-orange-200 text-orange-700"}`}>
+                  <span>Tổng các đợt</span>
+                  <span>
+                    {formatNumberVN(installmentsSum)}
+                    {sumDiff !== 0 && (
+                      <span className='ml-2 font-normal text-xs'>
+                        ({sumDiff > 0 ? "+" : ""}{formatNumberVN(sumDiff)} so với tổng hợp đồng)
+                      </span>
+                    )}
+                  </span>
+                </div>
+              )}
             </div>
           </Section>
 

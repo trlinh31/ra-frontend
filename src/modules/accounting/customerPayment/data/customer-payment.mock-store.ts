@@ -44,7 +44,9 @@ let _payments: CustomerPayment[] = [
     id: "cp2",
     confirmedTourId: "ct3",
     confirmedTourCode: "CT-2026-003",
-    customerName: "Nhóm bạn Hội đồng hương",
+    customerName: "Công ty TNHH Ánh Sáng",
+    customerPhone: "0901234567",
+    customerEmail: "contact@anhsang.com",
     totalAmount: 80_000_000,
     currency: "VND",
     installments: [
@@ -94,12 +96,30 @@ function deriveInstallmentStatus(inst: Pick<PaymentInstallment, "expectedAmount"
   return "pending";
 }
 
+/** Tính lại trạng thái overdue của từng installment dựa trên ngày hiện tại */
+function withDerivedStatuses(payment: CustomerPayment): CustomerPayment {
+  return {
+    ...payment,
+    installments: payment.installments.map((inst) => {
+      // Không ghi đè nếu đã paid hoặc partial (đã có actualAmount)
+      if (inst.status === "paid" || inst.status === "partial") return inst;
+      return { ...inst, status: deriveInstallmentStatus(inst) };
+    }),
+  };
+}
+
 export const customerPaymentMockStore = {
-  getAll: (): CustomerPayment[] => [..._payments],
+  getAll: (): CustomerPayment[] => [..._payments].map(withDerivedStatuses),
 
-  getById: (id: string): CustomerPayment | undefined => _payments.find((p) => p.id === id),
+  getById: (id: string): CustomerPayment | undefined => {
+    const p = _payments.find((p) => p.id === id);
+    return p ? withDerivedStatuses(p) : undefined;
+  },
 
-  getByTourId: (tourId: string): CustomerPayment | undefined => _payments.find((p) => p.confirmedTourId === tourId),
+  getByTourId: (tourId: string): CustomerPayment | undefined => {
+    const p = _payments.find((p) => p.confirmedTourId === tourId);
+    return p ? withDerivedStatuses(p) : undefined;
+  },
 
   create: (data: Omit<CustomerPayment, "id" | "createdAt">): CustomerPayment => {
     const payment: CustomerPayment = {
@@ -137,8 +157,15 @@ export const customerPaymentMockStore = {
     });
   },
 
-  delete: (id: string): void => {
+  delete: (id: string): { success: boolean; message?: string } => {
+    const payment = _payments.find((p) => p.id === id);
+    if (!payment) return { success: false, message: "Không tìm thấy phiếu thu." };
+    const hasRecorded = payment.installments.some((inst) => inst.actualAmount !== undefined && inst.actualAmount > 0);
+    if (hasRecorded) {
+      return { success: false, message: "Không thể xóa phiếu thu đã có ghi nhận thanh toán. Chỉ được cập nhật trạng thái." };
+    }
     _payments = _payments.filter((p) => p.id !== id);
+    return { success: true };
   },
 
   // Computed helpers

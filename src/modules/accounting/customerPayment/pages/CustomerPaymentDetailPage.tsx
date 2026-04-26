@@ -5,8 +5,9 @@ import { customerPaymentMockStore } from "@/modules/accounting/customerPayment/d
 import type { CustomerPayment, PaymentInstallment } from "@/modules/accounting/customerPayment/types/customer-payment.type";
 import { AppTable } from "@/shared/components/common/AppTable";
 import PageHeader from "@/shared/components/common/PageHeader";
+import Section from "@/shared/components/common/Section";
 import { Button } from "@/shared/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
+import { Card, CardContent } from "@/shared/components/ui/card";
 import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
 import type { ColumnDef } from "@tanstack/react-table";
 import { BadgeDollarSign } from "lucide-react";
@@ -52,26 +53,26 @@ export default function CustomerPaymentDetailPage() {
       header: "Thực thu",
       cell: ({ row }) => {
         const amt = row.original.actualAmount;
-        return amt !== undefined ? (
-          <span className='font-medium text-green-700'>
-            {formatNumberVN(amt)} {payment.currency}
-          </span>
-        ) : (
-          <span className='text-muted-foreground'>—</span>
+        return (
+          amt !== undefined && (
+            <span className='font-medium text-green-700'>
+              {formatNumberVN(amt)} {payment.currency}
+            </span>
+          )
         );
       },
     },
     {
       id: "paidAt",
       header: "Ngày nhận",
-      cell: ({ row }) => row.original.paidAt ?? <span className='text-muted-foreground'>—</span>,
+      cell: ({ row }) => row.original.paidAt,
     },
     {
       id: "paymentMethod",
       header: "Hình thức",
       cell: ({ row }) => {
         const m = row.original.paymentMethod;
-        return m ? (PAYMENT_METHOD_LABEL[m] ?? m) : <span className='text-muted-foreground'>—</span>;
+        return m && (PAYMENT_METHOD_LABEL[m] ?? m);
       },
     },
     {
@@ -98,7 +99,10 @@ export default function CustomerPaymentDetailPage() {
 
   return (
     <div className='space-y-6'>
-      <PageHeader title='Chi tiết Phiếu Thu' description={`${payment.confirmedTourCode} — ${payment.customerName}`} />
+      <PageHeader
+        title='Chi tiết Phiếu Thu'
+        description={`${payment.confirmedTourCode} — ${payment.customerName}${payment.customerPhone ? ` · ${payment.customerPhone}` : ""}${payment.customerEmail ? ` · ${payment.customerEmail}` : ""}`}
+      />
 
       {/* Summary */}
       <div className='gap-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'>
@@ -130,14 +134,18 @@ export default function CustomerPaymentDetailPage() {
       </div>
 
       {/* Installments table */}
-      <Card>
+      {/* <Card>
         <CardHeader>
           <CardTitle className='text-base'>Kế hoạch thu theo đợt</CardTitle>
         </CardHeader>
         <CardContent>
           <AppTable columns={columns} data={payment.installments} enablePagination={false} />
         </CardContent>
-      </Card>
+      </Card> */}
+
+      <Section title='Kế hoạch thu theo đợt'>
+        <AppTable columns={columns} data={payment.installments} enablePagination={false} />
+      </Section>
 
       <RecordPaymentDialog
         open={Boolean(recordTarget)}

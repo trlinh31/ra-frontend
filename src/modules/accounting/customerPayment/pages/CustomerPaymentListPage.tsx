@@ -33,7 +33,16 @@ export default function CustomerPaymentListPage() {
       description: `Bạn có chắc chắn muốn xóa phiếu thu của "${payment.customerName}" (${payment.confirmedTourCode})?`,
     });
     if (!ok) return;
-    customerPaymentMockStore.delete(payment.id);
+    const result = customerPaymentMockStore.delete(payment.id);
+    if (!result.success) {
+      await confirm({
+        title: "Không thể xóa",
+        description: result.message ?? "Không thể xóa phiếu thu này.",
+        cancelText: "",
+        confirmText: "Đã hiểu",
+      });
+      return;
+    }
     refresh();
   };
 

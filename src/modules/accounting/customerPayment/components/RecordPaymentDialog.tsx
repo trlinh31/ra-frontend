@@ -2,8 +2,8 @@ import { PAYMENT_METHOD_OPTIONS } from "@/modules/accounting/customerPayment/con
 import { customerPaymentMockStore } from "@/modules/accounting/customerPayment/data/customer-payment.mock-store";
 import { recordInstallmentSchema, type RecordInstallmentFormValues } from "@/modules/accounting/customerPayment/schemas/customer-payment.schema";
 import type { PaymentInstallment } from "@/modules/accounting/customerPayment/types/customer-payment.type";
+import FormCurrencyInput from "@/shared/components/form/FormCurrencyInput";
 import FormDatePicker from "@/shared/components/form/FormDatePicker/FormDatePicker";
-import FormInput from "@/shared/components/form/FormInput/FormInput";
 import FormSelect from "@/shared/components/form/FormSelect/FormSelect";
 import FormTextarea from "@/shared/components/form/FormTextarea/FormTextarea";
 import { Button } from "@/shared/components/ui/button";
@@ -68,11 +68,10 @@ export default function RecordPaymentDialog({ open, onOpenChange, paymentId, ins
 
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(handleSubmit)} className='space-y-4'>
-            <FormInput
+            <FormCurrencyInput
               name='actualAmount'
               label='Số tiền thực nhận'
               required
-              type='number'
               placeholder={`VD: ${formatNumberVN(installment.expectedAmount)}`}
             />
             <FormDatePicker name='paidAt' label='Ngày nhận tiền' required />

@@ -65,6 +65,8 @@ let _confirmedTours: ConfirmedTour[] = [
       quotationId: "q1",
       code: "CT-2026-003",
       customerName: "Công ty TNHH Ánh Sáng",
+      customerPhone: "0901234567",
+      customerEmail: "contact@anhsang.com",
       numberOfPeople: 15,
       departureDate: "2026-06-10",
       itinerary: template.itinerary,
@@ -129,6 +131,8 @@ export const confirmedTourMockStore = {
       tourTemplateId: quotation.tourTemplateId,
       tourTemplateName: quotation.tourTemplateName,
       customerName: extra.customerName,
+      customerPhone: quotation.customerPhone,
+      customerEmail: quotation.customerEmail,
       numberOfPeople: extra.numberOfPeople,
       departureDate: extra.departureDate,
       itinerary,
@@ -149,17 +153,17 @@ export const confirmedTourMockStore = {
   },
 
   assign: (id: string, operatorId: string, operationNote: string): void => {
-    _confirmedTours = _confirmedTours.map((ct) =>
-      ct.id === id
-        ? {
-            ...ct,
-            status: "in_operation" as ConfirmedTourStatus,
-            assignedTo: operatorId,
-            assignedAt: new Date().toISOString().slice(0, 10),
-            operationNote,
-          }
-        : ct
-    );
+    _confirmedTours = _confirmedTours.map((ct) => {
+      if (ct.id !== id) return ct;
+      return {
+        ...ct,
+        // Nếu đang reassign từ in_operation thì giữ nguyên status
+        status: ct.status === "in_operation" ? "in_operation" : ("in_operation" as ConfirmedTourStatus),
+        assignedTo: operatorId,
+        assignedAt: new Date().toISOString().slice(0, 10),
+        operationNote: operationNote || ct.operationNote,
+      };
+    });
   },
 
   /**

@@ -17,6 +17,8 @@ export type CustomerPayment = {
   confirmedTourId: string;
   confirmedTourCode: string;
   customerName: string;
+  customerPhone?: string;
+  customerEmail?: string;
   totalAmount: number;
   currency: string;
   installments: PaymentInstallment[];

@@ -11,6 +11,8 @@ export type ConfirmedTour = {
   quotationId?: string;
   code: string;
   customerName: string;
+  customerPhone?: string;
+  customerEmail?: string;
   numberOfPeople: number;
   departureDate: string;
   itinerary: TourItineraryItem[];

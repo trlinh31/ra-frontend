@@ -13,6 +13,7 @@ interface AssignTourDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onAssigned: () => void;
+  isReassign?: boolean;
 }
 
 const operatorOptions = userMockStore
@@ -20,7 +21,7 @@ const operatorOptions = userMockStore
   .filter((u) => u.role === "OPERATOR" && u.isActive)
   .map((u) => ({ label: u.fullName, value: u.id }));
 
-export default function AssignTourDialog({ tour, open, onOpenChange, onAssigned }: AssignTourDialogProps) {
+export default function AssignTourDialog({ tour, open, onOpenChange, onAssigned, isReassign = false }: AssignTourDialogProps) {
   const [operatorId, setOperatorId] = useState("");
   const [operationNote, setOperationNote] = useState("");
   const [operatorError, setOperatorError] = useState(false);
@@ -51,7 +52,7 @@ export default function AssignTourDialog({ tour, open, onOpenChange, onAssigned 
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className='max-w-md'>
         <DialogHeader>
-          <DialogTitle>Assign Tour cho Vận hành</DialogTitle>
+          <DialogTitle>{isReassign ? "Reassign Operator Vận hành" : "Assign Tour cho Vận hành"}</DialogTitle>
         </DialogHeader>
 
         <div className='space-y-4 py-2'>
@@ -72,7 +73,7 @@ export default function AssignTourDialog({ tour, open, onOpenChange, onAssigned 
 
           <Field data-invalid={operatorError}>
             <FieldLabel>
-              Operator phụ trách <span className='text-red-500'>*</span>
+              {isReassign ? "Operator mới" : "Operator phụ trách"} <span className='text-red-500'>*</span>
             </FieldLabel>
             <AppSelect
               options={operatorOptions}

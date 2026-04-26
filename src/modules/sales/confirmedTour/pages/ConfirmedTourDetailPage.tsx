@@ -1,4 +1,6 @@
 import { PATHS } from "@/app/routes/route.constant";
+import PaymentStatusBadge from "@/modules/accounting/customerPayment/components/PaymentStatusBadge";
+import { customerPaymentMockStore } from "@/modules/accounting/customerPayment/data/customer-payment.mock-store";
 import AssignTourDialog from "@/modules/sales/confirmedTour/components/AssignTourDialog";
 import ConfirmedTourStatusBadge from "@/modules/sales/confirmedTour/components/ConfirmedTourStatusBadge";
 import { CONFIRMED_TOUR_STATUS_LABEL } from "@/modules/sales/confirmedTour/constants/confirmed-tour.constant";
@@ -17,7 +19,7 @@ import { Separator } from "@/shared/components/ui/separator";
 import { Textarea } from "@/shared/components/ui/textarea";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
-import { Ban, CheckCircle2, UserRoundCog, XCircle } from "lucide-react";
+import { Ban, CheckCircle2, CreditCard, Plus, UserRoundCog, XCircle } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -48,8 +50,9 @@ export default function ConfirmedTourDetailPage() {
 
   const linkedQuotation = tour.quotationId ? quotationMockStore.getById(tour.quotationId) : undefined;
   const operatorName = userMockStore.getById(tour.assignedTo ?? "")?.fullName;
+  const linkedPayment = customerPaymentMockStore.getByTourId(tour.id);
 
-  const canAssign = tour.status === "confirmed";
+  const canAssign = tour.status === "confirmed" || tour.status === "in_operation";
   const canApprove = tour.status === "pending_approval";
   const canReject = tour.status === "pending_approval";
   const canCancel = tour.status !== "completed" && tour.status !== "cancelled";
@@ -137,7 +140,7 @@ export default function ConfirmedTourDetailPage() {
               {canAssign && (
                 <Button size='sm' variant='outline' onClick={() => setAssignOpen(true)}>
                   <UserRoundCog className='mr-2 w-4 h-4' />
-                  Assign Vận hành
+                  {tour.assignedTo ? "Reassign Vận hành" : "Assign Vận hành"}
                 </Button>
               )}
               {canCancel && (
@@ -227,11 +230,66 @@ export default function ConfirmedTourDetailPage() {
         </Card>
       )}
 
+      {/* Phiếu Thu */}
+      <Card>
+        <CardHeader>
+          <div className='flex justify-between items-center'>
+            <div className='flex items-center gap-2'>
+              <CreditCard className='w-4 h-4 text-muted-foreground' />
+              <CardTitle className='text-base'>Phiếu Thu Khách Hàng</CardTitle>
+            </div>
+            {!linkedPayment && tour.status !== "cancelled" && (
+              <Button size='sm' variant='outline' onClick={() => navigate(`${PATHS.ACCOUNTING.CUSTOMER_PAYMENT_CREATE}?tourId=${tour.id}`)}>
+                <Plus className='mr-1 w-4 h-4' />
+                Tạo phiếu thu
+              </Button>
+            )}
+          </div>
+        </CardHeader>
+        <CardContent>
+          {linkedPayment ? (
+            <div className='space-y-3 text-sm'>
+              <div className='flex flex-wrap justify-between items-center gap-2'>
+                <div className='space-y-1'>
+                  <p className='text-muted-foreground text-xs'>Tổng hợp đồng</p>
+                  <p className='font-semibold text-base'>
+                    {formatNumberVN(linkedPayment.totalAmount)} {linkedPayment.currency}
+                  </p>
+                </div>
+                <div className='space-y-1'>
+                  <p className='text-muted-foreground text-xs'>Đã thu</p>
+                  <p className='font-medium text-green-700'>
+                    {formatNumberVN(customerPaymentMockStore.getCollectedAmount(linkedPayment))} {linkedPayment.currency}
+                  </p>
+                </div>
+                <div className='space-y-1'>
+                  <p className='text-muted-foreground text-xs'>Còn lại</p>
+                  <p className='font-medium text-orange-600'>
+                    {formatNumberVN(linkedPayment.totalAmount - customerPaymentMockStore.getCollectedAmount(linkedPayment))} {linkedPayment.currency}
+                  </p>
+                </div>
+                <PaymentStatusBadge status={customerPaymentMockStore.getOverallStatus(linkedPayment)} />
+              </div>
+              <Separator />
+              <Button
+                size='sm'
+                variant='outline'
+                onClick={() => navigate(`/accounting/customer-payments/${linkedPayment.id}`)}>
+                Xem chi tiết phiếu thu →
+              </Button>
+            </div>
+          ) : (
+            <p className='text-muted-foreground text-sm italic'>Chưa có phiếu thu cho tour này.</p>
+          )}
+        </CardContent>
+      </Card>
+
       {/* Dialog Assign */}
       <AssignTourDialog
         tour={assignOpen ? tour : null}
         open={assignOpen}
         onOpenChange={setAssignOpen}
+        isReassign={Boolean(tour.assignedTo)}
         onAssigned={() => {
           setAssignOpen(false);
           refresh();
