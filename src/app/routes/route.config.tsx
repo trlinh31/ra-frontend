@@ -38,6 +38,7 @@ import EditDayPage from "@/modules/tour/day/pages/EditDayPage";
 import TourListPage from "@/modules/tour/tour";
 import EditTourPage from "@/modules/tour/tour/pages/EditTourPage";
 import { NotificationListPage } from "@/modules/notification";
+import { OperationDetailPage, OperatorToursPage } from "@/modules/operations";
 import EditUserPage from "@/modules/userManagement/pages/EditUserPage";
 import UserListPage from "@/modules/userManagement/pages/UserListPage";
 import DashboardLayout from "@/shared/layouts/DashboardLayout";
@@ -60,6 +61,7 @@ import {
   Shield,
   ShoppingBag,
   Ticket,
+  Truck,
   UserCog,
   UserRound,
   Users,
@@ -389,6 +391,29 @@ export const APP_ROUTES: AppRoute[] = [
           {
             path: PATHS.SALES.CONFIRMED_TOUR_DETAIL,
             element: <ConfirmedTourDetailPage />,
+            showInSidebar: false,
+          },
+        ],
+      },
+      // ── Vận hành ─────────────────────────────────────────────────────────
+      {
+        path: PATHS.OPERATIONS.ROOT,
+        title: "Vận hành Tour",
+        pageTitle: "Vận hành Tour",
+        icon: Truck,
+        showInSidebar: true,
+        children: [
+          {
+            path: PATHS.OPERATIONS.TOUR_LIST,
+            title: "Danh sách vận hành",
+            pageTitle: "Vận hành Tour",
+            element: <OperatorToursPage />,
+            icon: Truck,
+            showInSidebar: true,
+          },
+          {
+            path: PATHS.OPERATIONS.TOUR_DETAIL,
+            element: <OperationDetailPage />,
             showInSidebar: false,
           },
         ],

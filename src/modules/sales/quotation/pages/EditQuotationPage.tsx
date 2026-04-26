@@ -1,10 +1,9 @@
 import { PATHS } from "@/app/routes/route.constant";
 import { quotationMockStore } from "@/modules/sales/quotation/data/quotation.mock-store";
 import type { Quotation } from "@/modules/sales/quotation/types/quotation.type";
-import { mapDayDataToFormValues } from "@/modules/tour/day/mappers/day-form.mapper";
-import type { TourItineraryItem } from "@/modules/tour/tour/types/tour.type";
-import { tourItineraryItemSchema, type TourItineraryItemFormValues } from "@/modules/tour/tour/schemas/tour.schema";
 import TourDayForm from "@/modules/tour/tour/components/TourDayForm";
+import { tourItineraryItemSchema, type TourItineraryItemFormValues } from "@/modules/tour/tour/schemas/tour.schema";
+import type { TourItineraryItem } from "@/modules/tour/tour/types/tour.type";
 import PageHeader from "@/shared/components/common/PageHeader";
 import FormDatePicker from "@/shared/components/form/FormDatePicker";
 import FormInput from "@/shared/components/form/FormInput";
@@ -30,11 +29,10 @@ const editQuotationSchema = z.object({
   note: z.string().optional(),
   terms: z.string().optional(),
   itinerary: z.array(tourItineraryItemSchema),
-  // dummy — TourDayForm gọi useFormContext<TourFormValues>() cần các field này
-  code: z.string().default(""),
-  name: z.string().default(""),
-  description: z.string().default(""),
-  content: z.string().default(""),
+  code: z.string().optional(),
+  name: z.string().optional(),
+  description: z.string().optional(),
+  content: z.string().optional(),
 });
 
 type EditQuotationFormValues = z.infer<typeof editQuotationSchema>;
@@ -136,11 +134,13 @@ export default function EditQuotationPage() {
   if (!isEditable) {
     return (
       <div className='space-y-4'>
-        <div className='flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-800'>
+        <div className='flex items-start gap-3 bg-amber-50 p-4 border border-amber-200 rounded-lg text-amber-800 text-sm'>
           <AlertCircle className='mt-0.5 w-4 h-4 shrink-0' />
           <div>
             <p className='font-medium'>Không thể chỉnh sửa</p>
-            <p>Báo giá <strong>{quotation.code}</strong> đang ở trạng thái <strong>{quotation.status}</strong>, không thể chỉnh sửa.</p>
+            <p>
+              Báo giá <strong>{quotation.code}</strong> đang ở trạng thái <strong>{quotation.status}</strong>, không thể chỉnh sửa.
+            </p>
           </div>
         </div>
         <Button variant='outline' onClick={() => navigate(PATHS.SALES.QUOTATION_DETAIL.replace(":id", quotation.id))}>
@@ -169,7 +169,6 @@ function EditForm({ quotation }: { quotation: Quotation }) {
       note: quotation.note ?? "",
       terms: quotation.terms ?? "",
       itinerary: mapItineraryToForm(quotation.itinerary),
-      // dummy
       code: "",
       name: "",
       description: "",
@@ -177,7 +176,10 @@ function EditForm({ quotation }: { quotation: Quotation }) {
     },
   });
 
-  const { handleSubmit, formState: { isDirty, isSubmitting } } = methods;
+  const {
+    handleSubmit,
+    formState: { isDirty, isSubmitting },
+  } = methods;
 
   const onSave = handleSubmit((values) => {
     quotationMockStore.update(quotation.id, {
@@ -206,8 +208,8 @@ function EditForm({ quotation }: { quotation: Quotation }) {
 
         {/* Cảnh báo nếu đang ở trạng thái sent */}
         {quotation.status === "sent" && (
-          <div className='flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-800'>
-            <AlertCircle className='mt-0.5 w-4 h-4 shrink-0 text-amber-500' />
+          <div className='flex items-start gap-3 bg-amber-50 p-4 border border-amber-200 rounded-lg text-amber-800 text-sm'>
+            <AlertCircle className='mt-0.5 w-4 h-4 text-amber-500 shrink-0' />
             <div>
               <p className='font-medium'>Báo giá đã gửi cho khách</p>
               <p>Sau khi lưu thay đổi, hãy nhớ xuất PDF mới và ghi nhận gửi lại để tạo version mới cho khách.</p>
@@ -230,14 +232,7 @@ function EditForm({ quotation }: { quotation: Quotation }) {
             />
             <FormInput name='customerEmail' label='Email liên hệ' placeholder='email@example.com' type='email' />
             <FormInput name='customerPhone' label='Số điện thoại' placeholder='0901234567' />
-            <FormInput
-              name='numberOfPeople'
-              label='Số khách'
-              required
-              type='number'
-              min={1}
-              placeholder='VD: 20'
-            />
+            <FormInput name='numberOfPeople' label='Số khách' required type='number' min={1} placeholder='VD: 20' />
             <FormDatePicker name='departureDateEst' label='Ngày khởi hành dự kiến' />
             <FormTextarea
               name='note'
@@ -274,7 +269,7 @@ function EditForm({ quotation }: { quotation: Quotation }) {
             Hủy
           </Button>
           <Button type='submit' disabled={!isDirty || isSubmitting}>
-            <Save className='w-4 h-4 mr-2' />
+            <Save className='mr-2 w-4 h-4' />
             Lưu thay đổi
           </Button>
         </div>

@@ -4,6 +4,7 @@ import {
   createCustomerPaymentSchema,
   type CreateCustomerPaymentFormValues,
 } from "@/modules/accounting/customerPayment/schemas/customer-payment.schema";
+import { quotationMockStore } from "@/modules/sales/quotation/data/quotation.mock-store";
 import { confirmedTourMockStore } from "@/modules/sales/confirmedTour/data/confirmed-tour.mock-store";
 import PageHeader from "@/shared/components/common/PageHeader";
 import Section from "@/shared/components/common/Section";
@@ -17,17 +18,29 @@ import { Button } from "@/shared/components/ui/button";
 import { CURRENCY_OPTIONS } from "@/shared/constants/currency.constant";
 import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Trash2 } from "lucide-react";
+import { CheckCircle2, Info, Trash2 } from "lucide-react";
+import { useMemo, useState } from "react";
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
-const tourOptions = confirmedTourMockStore
-  .getAll()
-  .filter((t) => t.status === "confirmed" || t.status === "in_operation" || t.status === "completed")
-  .map((t) => ({ value: t.id, label: `${t.code} – ${t.customerName}` }));
+type AutoFillSource =
+  | { kind: "quotation"; code: string; sellingPrice: Record<string, number> }
+  | { kind: "no_quotation" }
+  | { kind: "no_selling_price"; quotationCode: string }
+  | null;
 
 export default function CreateCustomerPaymentPage() {
   const navigate = useNavigate();
+  const [autoFill, setAutoFill] = useState<AutoFillSource>(null);
+
+  const tourOptions = useMemo(
+    () =>
+      confirmedTourMockStore
+        .getAll()
+        .filter((t) => t.status === "confirmed" || t.status === "in_operation" || t.status === "completed")
+        .map((t) => ({ value: t.id, label: `${t.code} – ${t.customerName}` })),
+    []
+  );
 
   const methods = useForm<CreateCustomerPaymentFormValues>({
     resolver: zodResolver(createCustomerPaymentSchema),
@@ -42,7 +55,6 @@ export default function CreateCustomerPaymentPage() {
   });
 
   const { fields, append, remove } = useFieldArray({ control: methods.control, name: "installments" });
-
   const watchedInstallments = useWatch({ control: methods.control, name: "installments" });
   const watchedTotal = useWatch({ control: methods.control, name: "totalAmount" });
   const installmentsSum = (watchedInstallments ?? []).reduce((acc, inst) => acc + (inst.expectedAmount ?? 0), 0);
@@ -50,10 +62,37 @@ export default function CreateCustomerPaymentPage() {
 
   const handleTourChange = (tourId: string) => {
     const tour = confirmedTourMockStore.getById(tourId);
-    if (tour) {
-      methods.setValue("customerPhone", tour.customerPhone ?? "");
-      methods.setValue("customerEmail", tour.customerEmail ?? "");
+    if (!tour) return;
+
+    // Auto-fill thông tin liên lạc
+    methods.setValue("customerPhone", tour.customerPhone ?? "");
+    methods.setValue("customerEmail", tour.customerEmail ?? "");
+
+    // Auto-fill tổng giá trị hợp đồng từ báo giá liên kết
+    if (!tour.quotationId) {
+      setAutoFill({ kind: "no_quotation" });
+      methods.setValue("totalAmount", undefined as unknown as number);
+      return;
     }
+
+    const quotation = quotationMockStore.getById(tour.quotationId);
+    if (!quotation) {
+      setAutoFill({ kind: "no_quotation" });
+      return;
+    }
+
+    const entries = Object.entries(quotation.sellingPrice);
+    if (entries.length === 0) {
+      setAutoFill({ kind: "no_selling_price", quotationCode: quotation.code });
+      methods.setValue("totalAmount", undefined as unknown as number);
+      return;
+    }
+
+    // Lấy entry đầu tiên (thường chỉ có 1 loại tiền tệ)
+    const [currency, amount] = entries[0];
+    methods.setValue("totalAmount", amount);
+    methods.setValue("currency", currency);
+    setAutoFill({ kind: "quotation", code: quotation.code, sellingPrice: quotation.sellingPrice });
   };
 
   const handleSubmit = (values: CreateCustomerPaymentFormValues) => {
@@ -91,7 +130,46 @@ export default function CreateCustomerPaymentPage() {
                 placeholder='Chọn tour'
                 onChange={(val) => handleTourChange(String(val))}
               />
-              <FormCurrencyInput name='totalAmount' label='Tổng giá trị hợp đồng' placeholder='Nhập giá trị hợp đồng' required />
+
+              {/* Tổng giá trị hợp đồng — tự động lấy từ báo giá nếu có */}
+              <div className='flex flex-col gap-1.5'>
+                <FormCurrencyInput
+                  name='totalAmount'
+                  label='Tổng giá trị hợp đồng'
+                  placeholder='Tự động hoặc nhập tay'
+                  required
+                />
+                {/* Thông báo nguồn auto-fill */}
+                {autoFill?.kind === "quotation" && (
+                  <div className='flex items-start gap-1.5 text-xs text-green-700'>
+                    <CheckCircle2 className='w-3.5 h-3.5 mt-0.5 shrink-0' />
+                    <span>
+                      Lấy từ báo giá <strong>{autoFill.code}</strong>
+                      {Object.keys(autoFill.sellingPrice).length > 1 && (
+                        <span className='text-muted-foreground ml-1'>
+                          ({Object.entries(autoFill.sellingPrice).map(([c, a]) => `${formatNumberVN(a)} ${c}`).join(", ")})
+                        </span>
+                      )}
+                      . Có thể chỉnh lại nếu cần.
+                    </span>
+                  </div>
+                )}
+                {autoFill?.kind === "no_selling_price" && (
+                  <div className='flex items-start gap-1.5 text-xs text-amber-600'>
+                    <Info className='w-3.5 h-3.5 mt-0.5 shrink-0' />
+                    <span>
+                      Báo giá <strong>{autoFill.quotationCode}</strong> chưa có giá bán — vui lòng nhập tay.
+                    </span>
+                  </div>
+                )}
+                {autoFill?.kind === "no_quotation" && (
+                  <div className='flex items-start gap-1.5 text-xs text-muted-foreground'>
+                    <Info className='w-3.5 h-3.5 mt-0.5 shrink-0' />
+                    <span>Tour không có báo giá liên kết — vui lòng nhập tổng giá trị hợp đồng.</span>
+                  </div>
+                )}
+              </div>
+
               <FormSelect name='currency' label='Tiền tệ' required options={CURRENCY_OPTIONS} placeholder='Chọn tiền tệ' />
               <FormInput name='customerPhone' label='Số điện thoại liên hệ' placeholder='VD: 0901234567' />
               <FormInput name='customerEmail' label='Email liên hệ' placeholder='VD: khach@email.com' className='md:col-span-2' />
@@ -128,22 +206,31 @@ export default function CreateCustomerPaymentPage() {
               <div className='flex justify-center'>
                 <ActionButton
                   action='add'
-                  text='Thêm giai đoạn'
+                  text='Thêm đợt'
                   variant='default'
                   size='default'
-                  onClick={() => append({ label: `Đợt ${fields.length + 1}`, dueDate: "", expectedAmount: undefined as unknown as number, note: "" })}
+                  onClick={() =>
+                    append({ label: `Đợt ${fields.length + 1}`, dueDate: "", expectedAmount: undefined as unknown as number, note: "" })
+                  }
                 />
               </div>
 
-              {/* Tổng kiểm tra */}
+              {/* Thanh kiểm tra tổng */}
               {(watchedTotal ?? 0) > 0 && (
-                <div className={`flex justify-between items-center px-4 py-2 rounded-md text-sm font-medium border ${sumDiff === 0 ? "bg-green-50 border-green-200 text-green-700" : "bg-orange-50 border-orange-200 text-orange-700"}`}>
-                  <span>Tổng các đợt</span>
+                <div
+                  className={`flex justify-between items-center px-4 py-2.5 rounded-md text-sm font-medium border ${
+                    sumDiff === 0
+                      ? "bg-green-50 border-green-200 text-green-700"
+                      : "bg-orange-50 border-orange-200 text-orange-700"
+                  }`}
+                >
+                  <span>{sumDiff === 0 ? "✓ Tổng các đợt khớp với hợp đồng" : "Tổng các đợt"}</span>
                   <span>
                     {formatNumberVN(installmentsSum)}
                     {sumDiff !== 0 && (
                       <span className='ml-2 font-normal text-xs'>
-                        ({sumDiff > 0 ? "+" : ""}{formatNumberVN(sumDiff)} so với tổng hợp đồng)
+                        ({sumDiff > 0 ? "+" : ""}
+                        {formatNumberVN(sumDiff)} so với tổng hợp đồng)
                       </span>
                     )}
                   </span>

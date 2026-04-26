@@ -34,7 +34,7 @@ let _quotations: Quotation[] = [
     departureDateEst: "2026-06-10",
     itinerary: _t1?.itinerary ?? [],
     costTotal: computeCostTotal(_t1?.itinerary ?? []),
-    sellingPrice: {},
+    sellingPrice: { VND: 78_000_000 },
     terms: "Đã bao gồm: vé máy bay, khách sạn 4 sao, hướng dẫn viên. Không bao gồm: chi tiêu cá nhân.",
     status: "approved",
     currentVersion: 2,
@@ -73,7 +73,7 @@ let _quotations: Quotation[] = [
     departureDateEst: "2026-07-05",
     itinerary: _t2?.itinerary ?? [],
     costTotal: computeCostTotal(_t2?.itinerary ?? []),
-    sellingPrice: {},
+    sellingPrice: { VND: 32_400_000 },
     status: "sent",
     currentVersion: 1,
     versions: [

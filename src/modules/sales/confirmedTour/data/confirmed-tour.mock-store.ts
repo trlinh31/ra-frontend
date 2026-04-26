@@ -1,3 +1,4 @@
+import type { ServiceExecutionStatus } from "@/modules/operations/types/operation.type";
 import { quotationMockStore } from "@/modules/sales/quotation/data/quotation.mock-store";
 import { tourMockStore } from "@/modules/tour/tour/data/tour.mock-store";
 import type { ConfirmedTour, ConfirmedTourStatus } from "../types/confirmed-tour.type";
@@ -57,6 +58,17 @@ let _confirmedTours: ConfirmedTour[] = [
   })(),
   (() => {
     const template = tourMockStore.getById("t1")!;
+    // Seed checklist: mark a few services as done/confirmed to simulate in-progress tour
+    const checklist: Record<string, ServiceExecutionStatus> = {};
+    template.itinerary.forEach((item, itemIdx) => {
+      if (item.kind === "day") {
+        item.services.forEach((svc, svcIdx) => {
+          if (itemIdx === 0) checklist[svc.id] = "done";
+          else if (itemIdx === 1 && svcIdx === 0) checklist[svc.id] = "confirmed";
+          else checklist[svc.id] = "pending";
+        });
+      }
+    });
     return {
       id: "ct3",
       tourTemplateId: "t1",
@@ -76,6 +88,7 @@ let _confirmedTours: ConfirmedTour[] = [
       createdBy: "Seller A",
       assignedTo: "u6",
       assignedAt: "2026-04-20",
+      serviceChecklist: checklist,
       createdAt: "2026-04-20",
     };
   })(),
@@ -150,6 +163,37 @@ export const confirmedTourMockStore = {
 
   updateStatus: (id: string, status: ConfirmedTourStatus, extra?: Partial<ConfirmedTour>): void => {
     _confirmedTours = _confirmedTours.map((ct) => (ct.id === id ? { ...ct, status, ...extra } : ct));
+  },
+
+  /**
+   * Cập nhật trạng thái thực thi một dịch vụ trong checklist
+   */
+  updateServiceStatus: (tourId: string, serviceId: string, status: ServiceExecutionStatus): void => {
+    _confirmedTours = _confirmedTours.map((ct) => {
+      if (ct.id !== tourId) return ct;
+      return {
+        ...ct,
+        serviceChecklist: { ...ct.serviceChecklist, [serviceId]: status },
+      };
+    });
+  },
+
+  /**
+   * Khởi tạo checklist cho tour (lần đầu assign/vận hành)
+   */
+  initChecklist: (tourId: string): void => {
+    _confirmedTours = _confirmedTours.map((ct) => {
+      if (ct.id !== tourId || ct.serviceChecklist) return ct;
+      const checklist: Record<string, ServiceExecutionStatus> = {};
+      ct.itinerary.forEach((item) => {
+        if (item.kind === "day") {
+          item.services.forEach((svc) => {
+            checklist[svc.id] = "pending";
+          });
+        }
+      });
+      return { ...ct, serviceChecklist: checklist };
+    });
   },
 
   assign: (id: string, operatorId: string, operationNote: string): void => {

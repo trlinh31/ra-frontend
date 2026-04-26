@@ -19,7 +19,7 @@ import { Separator } from "@/shared/components/ui/separator";
 import { Textarea } from "@/shared/components/ui/textarea";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
-import { Ban, CheckCircle2, CreditCard, Plus, UserRoundCog, XCircle } from "lucide-react";
+import { Ban, CheckCircle2, CreditCard, Flag, Plus, RotateCcw, Send, UserRoundCog, XCircle } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -52,11 +52,41 @@ export default function ConfirmedTourDetailPage() {
   const operatorName = userMockStore.getById(tour.assignedTo ?? "")?.fullName;
   const linkedPayment = customerPaymentMockStore.getByTourId(tour.id);
 
-  const canAssign = tour.status === "confirmed" || tour.status === "in_operation";
+  const canSubmitForApproval = tour.status === "draft";
+  const canResubmit = tour.status === "rejected";
   const canApprove = tour.status === "pending_approval";
   const canReject = tour.status === "pending_approval";
+  const canAssign = tour.status === "confirmed" || tour.status === "in_operation";
+  const canComplete = tour.status === "in_operation";
   const canCancel = tour.status !== "completed" && tour.status !== "cancelled";
   const needsSpecialApproval = tour.status === "in_operation";
+
+  const handleSubmitForApproval = async () => {
+    const ok = await confirm({
+      description: `Gửi Xác nhận Tour "${tour.code}" để phê duyệt? Tour sẽ chuyển sang trạng thái "Chờ phê duyệt".`,
+    });
+    if (!ok) return;
+    confirmedTourMockStore.updateStatus(tour.id, "pending_approval");
+    refresh();
+  };
+
+  const handleResubmit = async () => {
+    const ok = await confirm({
+      description: `Chuyển tour "${tour.code}" về trạng thái "Bản nháp" để chỉnh sửa và gửi lại?`,
+    });
+    if (!ok) return;
+    confirmedTourMockStore.updateStatus(tour.id, "draft");
+    refresh();
+  };
+
+  const handleComplete = async () => {
+    const ok = await confirm({
+      description: `Xác nhận hoàn thành tour "${tour.code}"? Trạng thái sẽ chuyển thành "Đã hoàn thành" và không thể thay đổi thêm.`,
+    });
+    if (!ok) return;
+    confirmedTourMockStore.updateStatus(tour.id, "completed");
+    refresh();
+  };
 
   const handleApprove = async () => {
     const ok = await confirm({
@@ -125,6 +155,18 @@ export default function ConfirmedTourDetailPage() {
               <ConfirmedTourStatusBadge status={tour.status} />
             </div>
             <div className='flex flex-wrap items-center gap-2'>
+              {canSubmitForApproval && (
+                <Button size='sm' onClick={handleSubmitForApproval}>
+                  <Send className='mr-2 w-4 h-4' />
+                  Gửi phê duyệt
+                </Button>
+              )}
+              {canResubmit && (
+                <Button size='sm' variant='outline' onClick={handleResubmit}>
+                  <RotateCcw className='mr-2 w-4 h-4' />
+                  Chỉnh sửa lại
+                </Button>
+              )}
               {canApprove && (
                 <Button size='sm' className='bg-green-600 hover:bg-green-700' onClick={handleApprove}>
                   <CheckCircle2 className='mr-2 w-4 h-4' />
@@ -141,6 +183,12 @@ export default function ConfirmedTourDetailPage() {
                 <Button size='sm' variant='outline' onClick={() => setAssignOpen(true)}>
                   <UserRoundCog className='mr-2 w-4 h-4' />
                   {tour.assignedTo ? "Reassign Vận hành" : "Assign Vận hành"}
+                </Button>
+              )}
+              {canComplete && (
+                <Button size='sm' className='bg-blue-600 hover:bg-blue-700' onClick={handleComplete}>
+                  <Flag className='mr-2 w-4 h-4' />
+                  Hoàn thành Tour
                 </Button>
               )}
               {canCancel && (

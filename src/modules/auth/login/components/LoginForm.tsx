@@ -1,3 +1,4 @@
+import logo from "@/assets/logo.avif";
 import { loginWithCredentials, MOCK_USERS } from "@/modules/auth/login/data/auth.mock-store";
 import { loginSchema, type LoginFormValues } from "@/modules/auth/login/schemas/login.schema";
 import type { AuthSession } from "@/modules/auth/login/types/auth.type";
@@ -25,7 +26,6 @@ import {
   Lock,
   Mail,
   Plane,
-  ShieldCheck,
   Users,
 } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -100,10 +100,8 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
 
           {/* Logo */}
           <div className="flex items-center gap-3 mb-auto">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-sidebar-primary">
-              <ShieldCheck className="h-5 w-5 text-sidebar-primary-foreground" />
-            </div>
-            <span className="text-base font-semibold tracking-tight">RA System</span>
+            <img src={logo} alt="RA Travel" className="h-9 w-9 rounded-lg object-contain shrink-0" />
+            <span className="text-base font-semibold tracking-tight">RA Travel</span>
           </div>
 
           {/* Headline */}
@@ -145,10 +143,8 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
 
           {/* Header (chỉ hiện trên mobile) */}
           <div className="lg:hidden flex items-center gap-2.5 mb-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-              <ShieldCheck className="h-4 w-4 text-primary-foreground" />
-            </div>
-            <span className="font-semibold">RA System</span>
+            <img src={logo} alt="RA Travel" className="h-8 w-8 rounded-lg object-contain shrink-0" />
+            <span className="font-semibold">RA Travel</span>
           </div>
 
           {/* Title */}

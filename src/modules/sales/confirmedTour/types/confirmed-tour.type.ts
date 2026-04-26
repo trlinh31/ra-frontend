@@ -1,3 +1,4 @@
+import type { ServiceExecutionStatus } from "@/modules/operations/types/operation.type";
 import type { TourItineraryItem } from "@/modules/tour/tour/types/tour.type";
 
 export type ConfirmedTourStatus = "draft" | "pending_approval" | "confirmed" | "in_operation" | "completed" | "rejected" | "cancelled";
@@ -30,5 +31,7 @@ export type ConfirmedTour = {
   cancelledAt?: string;
   /** Lý do hủy */
   cancellationReason?: string;
+  /** Trạng thái thực thi từng dịch vụ trong lịch trình: serviceId → status */
+  serviceChecklist?: Record<string, ServiceExecutionStatus>;
   createdAt: string;
 };

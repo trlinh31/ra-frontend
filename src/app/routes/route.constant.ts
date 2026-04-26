@@ -89,4 +89,10 @@ export const PATHS = {
   NOTIFICATIONS: {
     ROOT: "/notifications",
   },
+
+  OPERATIONS: {
+    ROOT: "/operations",
+    TOUR_LIST: "/operations",
+    TOUR_DETAIL: "/operations/:id",
+  },
 } as const;

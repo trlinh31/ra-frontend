@@ -64,10 +64,10 @@ let _users: User[] = [
   {
     id: "u7",
     code: "USR-007",
-    fullName: "Hoàng Kế Toán Trưởng",
-    email: "acc-manager@ratravel.vn",
+    fullName: "Hoàng Kế Toán",
+    email: "accountant-a@ratravel.vn",
     phone: "0900000007",
-    role: "ACCOUNTANT_MANAGER",
+    role: "ACCOUNTANT",
     isActive: true,
     createdAt: "2026-01-15",
   },

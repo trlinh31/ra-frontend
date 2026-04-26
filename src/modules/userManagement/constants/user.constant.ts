@@ -2,12 +2,11 @@ import type { UserRole } from "@/modules/userManagement/types/user.type";
 
 export const USER_ROLE_LABEL: Record<UserRole, string> = {
   ADMIN: "Quản trị viên",
-  SALE_MANAGER: "Trưởng phòng Sales",
-  SELLER: "Nhân viên kinh doanh",
-  OPERATION_MANAGER: "Trưởng phòng Vận hành",
+  SALE_MANAGER: "Quản lý Sale",
+  SELLER: "Nhân viên Sale",
+  OPERATION_MANAGER: "Quản lý Vận hành",
   OPERATOR: "Nhân viên Vận hành",
-  ACCOUNTANT_MANAGER: "Trưởng phòng Kế toán",
-  ACCOUNTANT: "Kế toán viên",
+  ACCOUNTANT: "Kế toán",
 };
 
 export const USER_ROLE_BADGE: Record<UserRole, string> = {
@@ -16,16 +15,14 @@ export const USER_ROLE_BADGE: Record<UserRole, string> = {
   SELLER: "bg-sky-100 text-sky-800",
   OPERATION_MANAGER: "bg-orange-100 text-orange-800",
   OPERATOR: "bg-amber-100 text-amber-800",
-  ACCOUNTANT_MANAGER: "bg-emerald-100 text-emerald-800",
   ACCOUNTANT: "bg-teal-100 text-teal-800",
 };
 
 export const USER_ROLE_OPTIONS: { label: string; value: UserRole }[] = [
   { value: "ADMIN", label: "Quản trị viên" },
-  { value: "SALE_MANAGER", label: "Trưởng phòng Sales" },
-  { value: "SELLER", label: "Nhân viên kinh doanh" },
-  { value: "OPERATION_MANAGER", label: "Trưởng phòng Vận hành" },
+  { value: "SALE_MANAGER", label: "Quản lý Sale" },
+  { value: "SELLER", label: "Nhân viên Sale" },
+  { value: "OPERATION_MANAGER", label: "Quản lý Vận hành" },
   { value: "OPERATOR", label: "Nhân viên Vận hành" },
-  { value: "ACCOUNTANT_MANAGER", label: "Trưởng phòng Kế toán" },
-  { value: "ACCOUNTANT", label: "Kế toán viên" },
+  { value: "ACCOUNTANT", label: "Kế toán" },
 ];

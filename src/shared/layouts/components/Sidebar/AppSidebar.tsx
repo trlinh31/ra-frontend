@@ -16,7 +16,8 @@ import {
 } from "@/shared/components/ui/sidebar";
 import { APP_NAME } from "@/shared/constants/app.constant";
 import { getSidebarRoutes } from "@/shared/layouts/components/Sidebar/sidebar.config";
-import { ChevronRight, Globe } from "lucide-react";
+import { ChevronRight } from "lucide-react";
+import logo from "@/assets/logo.avif";
 import type React from "react";
 import { NavLink, useMatch } from "react-router-dom";
 
@@ -41,9 +42,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar {...props}>
       <SidebarHeader className='px-4 py-3 border-b h-16'>
         <div className='flex items-center gap-2.5'>
-          <div className='flex justify-center items-center bg-primary rounded-lg w-8 h-8 shrink-0'>
-            <Globe className='w-4 h-4 text-primary-foreground' />
-          </div>
+          <img src={logo} alt={APP_NAME} className='w-8 h-8 rounded-lg object-contain shrink-0' />
           <div className='leading-tight'>
             <p className='font-semibold text-sm'>{APP_NAME}</p>
             <p className='text-muted-foreground text-xs'>Management System</p>

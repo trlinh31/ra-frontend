@@ -22,7 +22,9 @@ import { Separator } from "@/shared/components/ui/separator";
 import { Textarea } from "@/shared/components/ui/textarea";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
-import { ArrowRight, CheckCircle2, FileText, HandHelping, Info, MapPin, MessageSquare, PauseCircle, PhoneCall, Users, XCircle } from "lucide-react";
+import ChatPanel from "@/modules/sales/tripRequest/components/ChatPanel";
+import { chatMockStore } from "@/modules/sales/tripRequest/data/chat.mock-store";
+import { ArrowRight, CheckCircle2, FileText, HandHelping, Info, MapPin, MessageSquare, MessagesSquare, PauseCircle, PhoneCall, Users, XCircle } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -383,6 +385,27 @@ export default function TripRequestDetailPage() {
           ) : (
             <p className='text-muted-foreground text-sm italic'>Chưa có ghi chú.</p>
           )}
+        </CardContent>
+      </Card>
+
+      {/* ── Chat với khách hàng ── */}
+      <Card>
+        <CardHeader>
+          <div className='flex items-center gap-2'>
+            <MessagesSquare className='w-4 h-4 text-primary' />
+            <CardTitle className='text-base'>Chat với khách hàng</CardTitle>
+            {(() => {
+              const unread = chatMockStore.getUnreadCount(tr.id);
+              return unread > 0 ? (
+                <span className='flex items-center justify-center bg-red-500 text-white rounded-full min-w-5 h-5 px-1.5 text-[11px] font-bold'>
+                  {unread}
+                </span>
+              ) : null;
+            })()}
+          </div>
+        </CardHeader>
+        <CardContent className='p-0 overflow-hidden rounded-b-lg'>
+          <ChatPanel tripRequestId={tr.id} customerName={tr.customerName} />
         </CardContent>
       </Card>
 
