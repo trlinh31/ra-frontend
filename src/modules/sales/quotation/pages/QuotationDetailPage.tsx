@@ -15,7 +15,7 @@ import { Textarea } from "@/shared/components/ui/textarea";
 import { CURRENCY_OPTIONS } from "@/shared/constants/currency.constant";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
-import { AlertCircle, CheckCircle2, Clock, FileDown, Plus, XCircle } from "lucide-react";
+import { AlertCircle, CheckCircle2, Clock, FileDown, Pencil, Plus, XCircle } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -43,7 +43,7 @@ export default function QuotationDetailPage() {
     );
   }
 
-  const isEditable = quotation.status === "draft";
+  const isEditable = quotation.status === "draft" || quotation.status === "sent";
   const canSend = quotation.status === "draft" || quotation.status === "sent";
   const canApprove = quotation.status === "sent";
   const canClose = quotation.status === "sent";
@@ -123,6 +123,17 @@ export default function QuotationDetailPage() {
               )}
             </div>
             <div className='flex flex-wrap items-center gap-2'>
+              {/* Nút chỉnh sửa — chỉ khi draft/sent */}
+              {isEditable && (
+                <Button
+                  size='sm'
+                  variant='outline'
+                  onClick={() => navigate(PATHS.SALES.QUOTATION_EDIT.replace(":id", quotation.id))}>
+                  <Pencil className='mr-2 w-4 h-4' />
+                  Chỉnh sửa
+                </Button>
+              )}
+
               {/* Nút xuất PDF — luôn hiển thị */}
               <Button
                 size='sm'

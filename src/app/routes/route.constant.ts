@@ -63,6 +63,7 @@ export const PATHS = {
     QUOTATION_CREATE: "/sales/quotations/create",
     QUOTATION_DETAIL: "/sales/quotations/:id",
     QUOTATION_PRINT: "/sales/quotations/:id/print",
+    QUOTATION_EDIT: "/sales/quotations/:id/edit",
     /** Confirm Tour */
     CONFIRMED_TOURS: "/sales/confirmed-tours",
     CONFIRMED_TOUR_CREATE: "/sales/confirmed-tours/create",
@@ -83,5 +84,9 @@ export const PATHS = {
     USERS: "/users",
     USER_CREATE: "/users/create",
     USER_EDIT: "/users/:id/edit",
+  },
+
+  NOTIFICATIONS: {
+    ROOT: "/notifications",
   },
 } as const;

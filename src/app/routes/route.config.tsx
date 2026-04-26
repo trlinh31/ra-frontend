@@ -26,6 +26,7 @@ import ConfirmedTourDetailPage from "@/modules/sales/confirmedTour/pages/Confirm
 import ConfirmedTourListPage from "@/modules/sales/confirmedTour/pages/ConfirmedTourListPage";
 import CreateConfirmedTourPage from "@/modules/sales/confirmedTour/pages/CreateConfirmedTourPage";
 import CreateQuotationPage from "@/modules/sales/quotation/pages/CreateQuotationPage";
+import EditQuotationPage from "@/modules/sales/quotation/pages/EditQuotationPage";
 import QuotationDetailPage from "@/modules/sales/quotation/pages/QuotationDetailPage";
 import QuotationListPage from "@/modules/sales/quotation/pages/QuotationListPage";
 import QuotationPrintPage from "@/modules/sales/quotation/pages/QuotationPrintPage";
@@ -36,11 +37,13 @@ import DayListPage from "@/modules/tour/day";
 import EditDayPage from "@/modules/tour/day/pages/EditDayPage";
 import TourListPage from "@/modules/tour/tour";
 import EditTourPage from "@/modules/tour/tour/pages/EditTourPage";
+import { NotificationListPage } from "@/modules/notification";
 import EditUserPage from "@/modules/userManagement/pages/EditUserPage";
 import UserListPage from "@/modules/userManagement/pages/UserListPage";
 import DashboardLayout from "@/shared/layouts/DashboardLayout";
 import {
   Banknote,
+  Bell,
   Box,
   Bus,
   CalendarDays,
@@ -364,6 +367,11 @@ export const APP_ROUTES: AppRoute[] = [
             element: <QuotationDetailPage />,
             showInSidebar: false,
           },
+          {
+            path: PATHS.SALES.QUOTATION_EDIT,
+            element: <EditQuotationPage />,
+            showInSidebar: false,
+          },
           // ── Xác nhận Tour ──────────────────────────────────────────
           {
             path: PATHS.SALES.CONFIRMED_TOURS,
@@ -451,6 +459,14 @@ export const APP_ROUTES: AppRoute[] = [
             showInSidebar: false,
           },
         ],
+      },
+      {
+        path: PATHS.NOTIFICATIONS.ROOT,
+        title: "Thông báo",
+        pageTitle: "Thông báo hệ thống",
+        element: <NotificationListPage />,
+        icon: Bell,
+        showInSidebar: true,
       },
     ],
   },

@@ -176,6 +176,25 @@ export const quotationMockStore = {
     _quotations = _quotations.map((q) => (q.id === id ? { ...q, confirmedTourId } : q));
   },
 
+  /** Cập nhật thông tin đoàn + lịch trình (chỉ khi draft/sent) */
+  update: (
+    id: string,
+    data: Partial<
+      Pick<Quotation, "customerName" | "customerEmail" | "customerPhone" | "numberOfPeople" | "departureDateEst" | "note" | "terms" | "itinerary">
+    >,
+  ): void => {
+    _quotations = _quotations.map((q) => {
+      if (q.id !== id) return q;
+      const itinerary = data.itinerary ?? q.itinerary;
+      return {
+        ...q,
+        ...data,
+        itinerary,
+        costTotal: computeCostTotal(itinerary),
+      };
+    });
+  },
+
   delete: (id: string): void => {
     _quotations = _quotations.filter((q) => q.id !== id);
   },
