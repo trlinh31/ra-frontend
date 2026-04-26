@@ -10,16 +10,6 @@ export const USER_ROLE_LABEL: Record<UserRole, string> = {
   ACCOUNTANT: "Kế toán viên",
 };
 
-export const USER_ROLE_DEPARTMENT: Record<UserRole, string> = {
-  ADMIN: "—",
-  SALE_MANAGER: "Sales",
-  SELLER: "Sales",
-  OPERATION_MANAGER: "Vận hành",
-  OPERATOR: "Vận hành",
-  ACCOUNTANT_MANAGER: "Kế toán",
-  ACCOUNTANT: "Kế toán",
-};
-
 export const USER_ROLE_BADGE: Record<UserRole, string> = {
   ADMIN: "bg-purple-100 text-purple-800",
   SALE_MANAGER: "bg-blue-100 text-blue-800",

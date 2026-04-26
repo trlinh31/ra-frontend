@@ -1,6 +1,6 @@
 import { PATHS } from "@/app/routes/route.constant";
 import UserRoleBadge from "@/modules/userManagement/components/UserRoleBadge";
-import { USER_ROLE_DEPARTMENT, USER_ROLE_OPTIONS } from "@/modules/userManagement/constants/user.constant";
+import { USER_ROLE_OPTIONS } from "@/modules/userManagement/constants/user.constant";
 import { userMockStore } from "@/modules/userManagement/data/user.mock-store";
 import type { User } from "@/modules/userManagement/types/user.type";
 import { AppTable } from "@/shared/components/common/AppTable";
@@ -63,12 +63,6 @@ export default function UserListPage() {
       header: "Vai trò",
       accessorKey: "role",
       cell: ({ row }) => <UserRoleBadge role={row.original.role} />,
-    },
-    {
-      header: "Phòng ban",
-      accessorKey: "role",
-      id: "department",
-      cell: ({ row }) => USER_ROLE_DEPARTMENT[row.original.role],
     },
     {
       header: "Hoạt động",
