@@ -10,14 +10,6 @@ export default defineConfig({
       "@": path.resolve(__dirname, "src"),
     },
   },
-  test: {
-    environment: "node",
-    globals: true,
-    include: ["src/**/__tests__/**/*.test.ts"],
-    alias: {
-      "@": path.resolve(__dirname, "src"),
-    },
-  },
   build: {
     rollupOptions: {
       output: {
