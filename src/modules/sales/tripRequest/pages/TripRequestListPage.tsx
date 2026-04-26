@@ -1,11 +1,6 @@
 import { PATHS } from "@/app/routes/route.constant";
 import TripRequestStatusBadge from "@/modules/sales/tripRequest/components/TripRequestStatusBadge";
-import {
-  LEAD_SOURCE_LABEL,
-  SERVICE_LEVEL_BADGE,
-  SERVICE_LEVEL_LABEL,
-  TRIP_REQUEST_STATUS_OPTIONS,
-} from "@/modules/sales/tripRequest/constants/trip-request.constant";
+import { LEAD_SOURCE_LABEL, TRIP_REQUEST_STATUS_OPTIONS } from "@/modules/sales/tripRequest/constants/trip-request.constant";
 import { tripRequestMockStore } from "@/modules/sales/tripRequest/data/trip-request.mock-store";
 import type { TripRequest } from "@/modules/sales/tripRequest/types/trip-request.type";
 import { userMockStore } from "@/modules/userManagement/data/user.mock-store";
@@ -90,15 +85,6 @@ export default function TripRequestListPage() {
           </span>
         );
       },
-    },
-    {
-      id: "serviceLevel",
-      header: "Mức DV",
-      cell: ({ row }) => (
-        <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${SERVICE_LEVEL_BADGE[row.original.serviceLevel]}`}>
-          {SERVICE_LEVEL_LABEL[row.original.serviceLevel]}
-        </span>
-      ),
     },
     {
       id: "leadSource",

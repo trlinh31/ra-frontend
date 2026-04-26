@@ -1,47 +1,3 @@
-import CreateCustomerPaymentPage from "@/modules/accounting/customerPayment/pages/CreateCustomerPaymentPage";
-import CustomerPaymentDetailPage from "@/modules/accounting/customerPayment/pages/CustomerPaymentDetailPage";
-import CustomerPaymentListPage from "@/modules/accounting/customerPayment/pages/CustomerPaymentListPage";
-import CreateVendorPaymentPage from "@/modules/accounting/vendorPayment/pages/CreateVendorPaymentPage";
-import VendorPaymentListPage from "@/modules/accounting/vendorPayment/pages/VendorPaymentListPage";
-import { LoginPage } from "@/modules/auth/login";
-import DashboardPage from "@/modules/dashboard";
-import EntranceFeeListPage from "@/modules/masterData/entranceFee";
-import EditEntranceFeePage from "@/modules/masterData/entranceFee/pages/EditEntranceFeePage";
-import FlightListPage from "@/modules/masterData/flights";
-import EditFlightPage from "@/modules/masterData/flights/pages/EditFlightPage";
-import GroupTourListPage from "@/modules/masterData/groupTour";
-import EditGroupTourPage from "@/modules/masterData/groupTour/pages/EditGroupTourPage";
-import { EditHotelPage, HotelDetailPage, HotelListPage } from "@/modules/masterData/hotel";
-import EditRestaurantPage from "@/modules/masterData/restaurant/pages/EditRestaurantPage";
-import RestaurantListPage from "@/modules/masterData/restaurant/pages/RestaurantListPage";
-import EditSupplierPage from "@/modules/masterData/supplier/pages/EditSupplierPage";
-import SupplierListPage from "@/modules/masterData/supplier/pages/SupplierListPage";
-import EditTourGuidePage from "@/modules/masterData/tourGuide/pages/EditTourGuidePage";
-import TourGuideListPage from "@/modules/masterData/tourGuide/pages/TourGuideListPage";
-import TransportationListPage from "@/modules/masterData/transportation";
-import EditTransportationPage from "@/modules/masterData/transportation/pages/EditTransportationPage";
-import VisaFastTrackListPage from "@/modules/masterData/visaFastTrack";
-import EditVisaFastTrackPage from "@/modules/masterData/visaFastTrack/pages/EditVisaFastTrackPage";
-import ConfirmedTourDetailPage from "@/modules/sales/confirmedTour/pages/ConfirmedTourDetailPage";
-import ConfirmedTourListPage from "@/modules/sales/confirmedTour/pages/ConfirmedTourListPage";
-import CreateConfirmedTourPage from "@/modules/sales/confirmedTour/pages/CreateConfirmedTourPage";
-import CreateQuotationPage from "@/modules/sales/quotation/pages/CreateQuotationPage";
-import EditQuotationPage from "@/modules/sales/quotation/pages/EditQuotationPage";
-import QuotationDetailPage from "@/modules/sales/quotation/pages/QuotationDetailPage";
-import QuotationListPage from "@/modules/sales/quotation/pages/QuotationListPage";
-import QuotationPrintPage from "@/modules/sales/quotation/pages/QuotationPrintPage";
-import CreateTripRequestPage from "@/modules/sales/tripRequest/pages/CreateTripRequestPage";
-import TripRequestDetailPage from "@/modules/sales/tripRequest/pages/TripRequestDetailPage";
-import TripRequestListPage from "@/modules/sales/tripRequest/pages/TripRequestListPage";
-import DayListPage from "@/modules/tour/day";
-import EditDayPage from "@/modules/tour/day/pages/EditDayPage";
-import TourListPage from "@/modules/tour/tour";
-import EditTourPage from "@/modules/tour/tour/pages/EditTourPage";
-import { NotificationListPage } from "@/modules/notification";
-import { OperationDetailPage, OperatorToursPage } from "@/modules/operations";
-import EditUserPage from "@/modules/userManagement/pages/EditUserPage";
-import UserListPage from "@/modules/userManagement/pages/UserListPage";
-import DashboardLayout from "@/shared/layouts/DashboardLayout";
 import {
   Banknote,
   Bell,
@@ -68,9 +24,71 @@ import {
   UtensilsCrossed,
   Wallet,
 } from "lucide-react";
+import { lazy } from "react";
 import { Navigate } from "react-router-dom";
 import { PATHS } from "./route.constant";
 import type { AppRoute } from "./route.type";
+
+// ── Lazy page imports ──────────────────────────────────────────────────────
+// Accounting
+const CreateCustomerPaymentPage = lazy(() => import("@/modules/accounting/customerPayment/pages/CreateCustomerPaymentPage"));
+const CustomerPaymentDetailPage = lazy(() => import("@/modules/accounting/customerPayment/pages/CustomerPaymentDetailPage"));
+const CustomerPaymentListPage = lazy(() => import("@/modules/accounting/customerPayment/pages/CustomerPaymentListPage"));
+const CreateVendorPaymentPage = lazy(() => import("@/modules/accounting/vendorPayment/pages/CreateVendorPaymentPage"));
+const VendorPaymentListPage = lazy(() => import("@/modules/accounting/vendorPayment/pages/VendorPaymentListPage"));
+// Auth
+const LoginPage = lazy(() => import("@/modules/auth/login").then((m) => ({ default: m.LoginPage })));
+// Dashboard
+const DashboardPage = lazy(() => import("@/modules/dashboard"));
+// Master Data
+const EntranceFeeListPage = lazy(() => import("@/modules/masterData/entranceFee"));
+const EditEntranceFeePage = lazy(() => import("@/modules/masterData/entranceFee/pages/EditEntranceFeePage"));
+const FlightListPage = lazy(() => import("@/modules/masterData/flights"));
+const EditFlightPage = lazy(() => import("@/modules/masterData/flights/pages/EditFlightPage"));
+const GroupTourListPage = lazy(() => import("@/modules/masterData/groupTour"));
+const EditGroupTourPage = lazy(() => import("@/modules/masterData/groupTour/pages/EditGroupTourPage"));
+const HotelListPage = lazy(() => import("@/modules/masterData/hotel").then((m) => ({ default: m.HotelListPage })));
+const EditHotelPage = lazy(() => import("@/modules/masterData/hotel").then((m) => ({ default: m.EditHotelPage })));
+const HotelDetailPage = lazy(() => import("@/modules/masterData/hotel").then((m) => ({ default: m.HotelDetailPage })));
+const EditRestaurantPage = lazy(() => import("@/modules/masterData/restaurant/pages/EditRestaurantPage"));
+const RestaurantListPage = lazy(() => import("@/modules/masterData/restaurant/pages/RestaurantListPage"));
+const EditSupplierPage = lazy(() => import("@/modules/masterData/supplier/pages/EditSupplierPage"));
+const SupplierListPage = lazy(() => import("@/modules/masterData/supplier/pages/SupplierListPage"));
+const EditTourGuidePage = lazy(() => import("@/modules/masterData/tourGuide/pages/EditTourGuidePage"));
+const TourGuideListPage = lazy(() => import("@/modules/masterData/tourGuide/pages/TourGuideListPage"));
+const TransportationListPage = lazy(() => import("@/modules/masterData/transportation"));
+const EditTransportationPage = lazy(() => import("@/modules/masterData/transportation/pages/EditTransportationPage"));
+const VisaFastTrackListPage = lazy(() => import("@/modules/masterData/visaFastTrack"));
+const EditVisaFastTrackPage = lazy(() => import("@/modules/masterData/visaFastTrack/pages/EditVisaFastTrackPage"));
+// Sales — Confirmed Tour
+const ConfirmedTourDetailPage = lazy(() => import("@/modules/sales/confirmedTour/pages/ConfirmedTourDetailPage"));
+const ConfirmedTourListPage = lazy(() => import("@/modules/sales/confirmedTour/pages/ConfirmedTourListPage"));
+const CreateConfirmedTourPage = lazy(() => import("@/modules/sales/confirmedTour/pages/CreateConfirmedTourPage"));
+// Sales — Quotation
+const CreateQuotationPage = lazy(() => import("@/modules/sales/quotation/pages/CreateQuotationPage"));
+const EditQuotationPage = lazy(() => import("@/modules/sales/quotation/pages/EditQuotationPage"));
+const QuotationDetailPage = lazy(() => import("@/modules/sales/quotation/pages/QuotationDetailPage"));
+const QuotationListPage = lazy(() => import("@/modules/sales/quotation/pages/QuotationListPage"));
+const QuotationPrintPage = lazy(() => import("@/modules/sales/quotation/pages/QuotationPrintPage"));
+// Sales — Trip Request
+const CreateTripRequestPage = lazy(() => import("@/modules/sales/tripRequest/pages/CreateTripRequestPage"));
+const TripRequestDetailPage = lazy(() => import("@/modules/sales/tripRequest/pages/TripRequestDetailPage"));
+const TripRequestListPage = lazy(() => import("@/modules/sales/tripRequest/pages/TripRequestListPage"));
+// Tour
+const DayListPage = lazy(() => import("@/modules/tour/day"));
+const EditDayPage = lazy(() => import("@/modules/tour/day/pages/EditDayPage"));
+const TourListPage = lazy(() => import("@/modules/tour/tour"));
+const EditTourPage = lazy(() => import("@/modules/tour/tour/pages/EditTourPage"));
+// Notification
+const NotificationListPage = lazy(() => import("@/modules/notification").then((m) => ({ default: m.NotificationListPage })));
+// Operations
+const OperationDetailPage = lazy(() => import("@/modules/operations").then((m) => ({ default: m.OperationDetailPage })));
+const OperatorToursPage = lazy(() => import("@/modules/operations").then((m) => ({ default: m.OperatorToursPage })));
+// User Management
+const EditUserPage = lazy(() => import("@/modules/userManagement/pages/EditUserPage"));
+const UserListPage = lazy(() => import("@/modules/userManagement/pages/UserListPage"));
+// Layout
+import DashboardLayout from "@/shared/layouts/DashboardLayout";
 
 export const APP_ROUTES: AppRoute[] = [
   {

@@ -1,13 +1,9 @@
 import { PATHS } from "@/app/routes/route.constant";
 import { quotationMockStore } from "@/modules/sales/quotation/data/quotation.mock-store";
+import ChatPanel from "@/modules/sales/tripRequest/components/ChatPanel";
 import TripRequestStatusBadge from "@/modules/sales/tripRequest/components/TripRequestStatusBadge";
-import {
-  LEAD_SOURCE_LABEL,
-  LOST_REASON_OPTIONS,
-  SELLER_OPTIONS,
-  SERVICE_LEVEL_BADGE,
-  SERVICE_LEVEL_LABEL,
-} from "@/modules/sales/tripRequest/constants/trip-request.constant";
+import { LEAD_SOURCE_LABEL, LOST_REASON_OPTIONS, SELLER_OPTIONS } from "@/modules/sales/tripRequest/constants/trip-request.constant";
+import { chatMockStore } from "@/modules/sales/tripRequest/data/chat.mock-store";
 import { tripRequestMockStore } from "@/modules/sales/tripRequest/data/trip-request.mock-store";
 import type { TripRequest } from "@/modules/sales/tripRequest/types/trip-request.type";
 import { userMockStore } from "@/modules/userManagement/data/user.mock-store";
@@ -22,9 +18,20 @@ import { Separator } from "@/shared/components/ui/separator";
 import { Textarea } from "@/shared/components/ui/textarea";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
-import ChatPanel from "@/modules/sales/tripRequest/components/ChatPanel";
-import { chatMockStore } from "@/modules/sales/tripRequest/data/chat.mock-store";
-import { ArrowRight, CheckCircle2, FileText, HandHelping, Info, MapPin, MessageSquare, MessagesSquare, PauseCircle, PhoneCall, Users, XCircle } from "lucide-react";
+import {
+  ArrowRight,
+  CheckCircle2,
+  FileText,
+  HandHelping,
+  Info,
+  MapPin,
+  MessageSquare,
+  MessagesSquare,
+  PauseCircle,
+  PhoneCall,
+  Users,
+  XCircle,
+} from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -272,14 +279,6 @@ export default function TripRequestDetailPage() {
                 </div>
               }
             />
-            <InfoRow
-              label='Mức dịch vụ'
-              value={
-                <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${SERVICE_LEVEL_BADGE[tr.serviceLevel]}`}>
-                  {SERVICE_LEVEL_LABEL[tr.serviceLevel]}
-                </span>
-              }
-            />
             {tr.budgetEstimate && (
               <InfoRow label='Ngân sách tham khảo' value={`${formatNumberVN(tr.budgetEstimate)} ${tr.budgetCurrency ?? "VND"}`} />
             )}
@@ -397,14 +396,14 @@ export default function TripRequestDetailPage() {
             {(() => {
               const unread = chatMockStore.getUnreadCount(tr.id);
               return unread > 0 ? (
-                <span className='flex items-center justify-center bg-red-500 text-white rounded-full min-w-5 h-5 px-1.5 text-[11px] font-bold'>
+                <span className='flex justify-center items-center bg-red-500 px-1.5 rounded-full min-w-5 h-5 font-bold text-[11px] text-white'>
                   {unread}
                 </span>
               ) : null;
             })()}
           </div>
         </CardHeader>
-        <CardContent className='p-0 overflow-hidden rounded-b-lg'>
+        <CardContent className='p-0 rounded-b-lg overflow-hidden'>
           <ChatPanel tripRequestId={tr.id} customerName={tr.customerName} />
         </CardContent>
       </Card>

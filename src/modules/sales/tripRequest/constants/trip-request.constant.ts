@@ -33,24 +33,6 @@ export const LEAD_SOURCE_LABEL: Record<string, string> = {
   other: "Khác",
 };
 
-export const SERVICE_LEVEL_OPTIONS = [
-  { value: "budget", label: "Budget" },
-  { value: "standard", label: "Standard" },
-  { value: "luxury", label: "Luxury" },
-];
-
-export const SERVICE_LEVEL_LABEL: Record<string, string> = {
-  budget: "Budget",
-  standard: "Standard",
-  luxury: "Luxury",
-};
-
-export const SERVICE_LEVEL_BADGE: Record<string, string> = {
-  budget: "bg-gray-100 text-gray-700",
-  standard: "bg-blue-100 text-blue-700",
-  luxury: "bg-amber-100 text-amber-800",
-};
-
 export const LOST_REASON_OPTIONS = [
   { value: "no_response", label: "Khách không phản hồi" },
   { value: "price_too_high", label: "Giá quá cao" },

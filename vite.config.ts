@@ -15,10 +15,19 @@ export default defineConfig({
       output: {
         manualChunks: {
           "vendor-react": ["react", "react-dom", "react-router-dom"],
-          "vendor-ui": ["@radix-ui/react-dialog", "@radix-ui/react-select", "@radix-ui/react-switch", "@radix-ui/react-slot"],
-          "vendor-table": ["@tanstack/react-table"],
+          "vendor-query": ["@tanstack/react-query", "@tanstack/react-table"],
           "vendor-form": ["react-hook-form", "@hookform/resolvers", "zod"],
-          "vendor-misc": ["lucide-react", "clsx", "tailwind-merge"],
+          "vendor-ui": ["radix-ui", "class-variance-authority", "clsx", "tailwind-merge"],
+          "vendor-editor": [
+            "@tiptap/react",
+            "@tiptap/starter-kit",
+            "@tiptap/extension-link",
+            "@tiptap/extension-placeholder",
+            "@tiptap/extension-text-align",
+            "@tiptap/extension-underline",
+          ],
+          "vendor-date": ["date-fns", "react-day-picker"],
+          "vendor-misc": ["lucide-react", "axios", "react-hot-toast", "react-number-format"],
         },
       },
     },

@@ -92,9 +92,177 @@ let _confirmedTours: ConfirmedTour[] = [
       createdAt: "2026-04-20",
     };
   })(),
+  // ct4 – tạo từ báo giá q5 (Singapore - Malaysia, Vingroup)
+  (() => {
+    const template = tourMockStore.getById("t7")!;
+    return {
+      id: "ct4",
+      tourTemplateId: "t7",
+      tourTemplateName: template.name,
+      quotationId: "q5",
+      code: "CT-2026-004",
+      customerName: "Đoàn khách Công ty Vingroup",
+      customerPhone: "0912000999",
+      customerEmail: "travel@vingroup.net",
+      numberOfPeople: 30,
+      departureDate: "2026-10-05",
+      itinerary: template.itinerary,
+      totalCost: computeTotalCost(template.itinerary),
+      status: "confirmed" as ConfirmedTourStatus,
+      note: "Khách yêu cầu phòng suite, 5 suất ăn chay.",
+      createdBy: "Seller B",
+      approvedBy: "u2",
+      assignedTo: "u5",
+      assignedAt: "2026-04-24",
+      createdAt: "2026-04-23",
+    };
+  })(),
+  // ct5 – Đà Nẵng - Hội An, đã hoàn thành
+  (() => {
+    const template = tourMockStore.getById("t3")!;
+    return {
+      id: "ct5",
+      tourTemplateId: "t3",
+      tourTemplateName: template.name,
+      code: "CT-2026-005",
+      customerName: "Đoàn khách Ngân hàng BIDV",
+      customerPhone: "0243332211",
+      numberOfPeople: 35,
+      departureDate: "2026-03-10",
+      itinerary: template.itinerary,
+      totalCost: computeTotalCost(template.itinerary),
+      status: "completed" as ConfirmedTourStatus,
+      note: "Tour đã hoàn thành tốt đẹp, khách rất hài lòng.",
+      createdBy: "Seller A",
+      approvedBy: "u2",
+      assignedTo: "u6",
+      assignedAt: "2026-02-28",
+      operationNote: "Tất cả dịch vụ thực hiện đúng lịch, không phát sinh sự cố.",
+      createdAt: "2026-02-25",
+    };
+  })(),
+  // ct6 – Phú Quốc, đã hủy
+  (() => {
+    const template = tourMockStore.getById("t5")!;
+    return {
+      id: "ct6",
+      tourTemplateId: "t5",
+      tourTemplateName: template.name,
+      code: "CT-2026-006",
+      customerName: "Nhóm khách lẻ Phú Quốc",
+      customerPhone: "0977998877",
+      numberOfPeople: 10,
+      departureDate: "2026-05-01",
+      itinerary: template.itinerary,
+      totalCost: computeTotalCost(template.itinerary),
+      status: "cancelled" as ConfirmedTourStatus,
+      note: "",
+      cancelledBy: "Seller B",
+      cancelledAt: "2026-04-10",
+      cancellationReason: "Khách hủy do sự cố cá nhân, đã hoàn tiền 80%.",
+      createdBy: "Seller B",
+      createdAt: "2026-03-18",
+    };
+  })(),
+  // ct7 – Sapa - Fansipan, bản nháp
+  (() => {
+    const template = tourMockStore.getById("t8")!;
+    return {
+      id: "ct7",
+      tourTemplateId: "t8",
+      tourTemplateName: template.name,
+      code: "CT-2026-007",
+      customerName: "Câu lạc bộ leo núi Hà Nội",
+      customerPhone: "0989334455",
+      numberOfPeople: 15,
+      departureDate: "2026-06-15",
+      itinerary: template.itinerary,
+      totalCost: computeTotalCost(template.itinerary),
+      status: "draft" as ConfirmedTourStatus,
+      note: "Đang chờ khách xác nhận lịch trình cuối cùng.",
+      createdBy: "Seller B",
+      createdAt: "2026-04-24",
+    };
+  })(),
+  // ct8 – TP.HCM - Củ Chi, chờ phê duyệt
+  (() => {
+    const template = tourMockStore.getById("t4")!;
+    return {
+      id: "ct8",
+      tourTemplateId: "t4",
+      tourTemplateName: template.name,
+      code: "CT-2026-008",
+      customerName: "Trường THPT Chu Văn An",
+      customerPhone: "0243456789",
+      customerEmail: "chuvan.travel@gmail.com",
+      numberOfPeople: 125,
+      departureDate: "2026-05-25",
+      itinerary: template.itinerary,
+      totalCost: computeTotalCost(template.itinerary),
+      status: "pending_approval" as ConfirmedTourStatus,
+      note: "Đoàn học sinh, cần bố trí 3 xe 45 chỗ.",
+      createdBy: "Seller A",
+      createdAt: "2026-04-25",
+    };
+  })(),
+  // ct9 – Nha Trang - Đà Lạt, đang vận hành
+  (() => {
+    const template = tourMockStore.getById("t9")!;
+    const checklist: Record<string, import("@/modules/operations/types/operation.type").ServiceExecutionStatus> = {};
+    template.itinerary.forEach((item) => {
+      if (item.kind === "day") {
+        item.services.forEach((svc) => {
+          checklist[svc.id] = "done";
+        });
+      }
+    });
+    return {
+      id: "ct9",
+      tourTemplateId: "t9",
+      tourTemplateName: template.name,
+      code: "CT-2026-009",
+      customerName: "Đoàn khách Tập đoàn Masan",
+      customerPhone: "0288000333",
+      numberOfPeople: 50,
+      departureDate: "2026-04-24",
+      itinerary: template.itinerary,
+      totalCost: computeTotalCost(template.itinerary),
+      status: "in_operation" as ConfirmedTourStatus,
+      note: "Tour đang diễn ra, ngày 2/5 đêm tại Nha Trang.",
+      createdBy: "Seller A",
+      approvedBy: "u2",
+      assignedTo: "u6",
+      assignedAt: "2026-04-20",
+      serviceChecklist: checklist,
+      createdAt: "2026-04-15",
+    };
+  })(),
+  // ct10 – Nhật Bản, tạo từ báo giá q10
+  (() => {
+    const template = tourMockStore.getById("t10")!;
+    return {
+      id: "ct10",
+      tourTemplateId: "t10",
+      tourTemplateName: template.name,
+      quotationId: "q10",
+      code: "CT-2026-010",
+      customerName: "Gia đình anh Khôi",
+      customerPhone: "0908765432",
+      customerEmail: "khoi.family@gmail.com",
+      numberOfPeople: 4,
+      departureDate: "2026-11-10",
+      itinerary: template.itinerary,
+      totalCost: computeTotalCost(template.itinerary),
+      status: "confirmed" as ConfirmedTourStatus,
+      note: "Phòng kết nối, 2 vợ chồng + 2 con nhỏ.",
+      createdBy: "Seller B",
+      approvedBy: "u2",
+      createdAt: "2026-04-25",
+    };
+  })(),
 ];
 
-let _counter = 4;
+let _counter = 11;
 
 export const confirmedTourMockStore = {
   getAll: (): ConfirmedTour[] => [..._confirmedTours],

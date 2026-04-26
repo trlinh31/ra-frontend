@@ -1,6 +1,5 @@
 export type TripRequestStatus = "new" | "assigned" | "in_progress" | "converted" | "lost" | "on_hold";
 export type LeadSource = "email" | "phone" | "zalo" | "referral" | "walk_in" | "other";
-export type ServiceLevel = "budget" | "standard" | "luxury";
 
 export type TripRequest = {
   id: string;
@@ -16,7 +15,6 @@ export type TripRequest = {
   durationDays?: number;
   numberOfAdults: number;
   numberOfChildren: number;
-  serviceLevel: ServiceLevel;
   specialRequirements?: string;
   budgetEstimate?: number;
   budgetCurrency?: string;
