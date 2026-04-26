@@ -27,6 +27,7 @@ export default defineConfig({
             "@tiptap/extension-underline",
           ],
           "vendor-date": ["date-fns", "react-day-picker"],
+          "vendor-charts": ["recharts"],
           "vendor-misc": ["lucide-react", "axios", "react-hot-toast", "react-number-format"],
         },
       },
