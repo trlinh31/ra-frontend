@@ -412,6 +412,8 @@ let _payments: CustomerPayment[] = [
   },
 ];
 
+let _cpCounter = 10;
+
 function deriveInstallmentStatus(inst: Pick<PaymentInstallment, "expectedAmount" | "actualAmount" | "dueDate">): PaymentInstallmentStatus {
   const paid = inst.actualAmount ?? 0;
   if (paid >= inst.expectedAmount) return "paid";
@@ -446,13 +448,14 @@ export const customerPaymentMockStore = {
   },
 
   create: (data: Omit<CustomerPayment, "id" | "createdAt">): CustomerPayment => {
+    const paymentId = `cp-${++_cpCounter}`;
     const payment: CustomerPayment = {
       ...data,
-      id: `cp${Date.now()}`,
+      id: paymentId,
       createdAt: new Date().toISOString().slice(0, 10),
       installments: data.installments.map((inst, i) => ({
         ...inst,
-        id: `inst${Date.now()}-${i}`,
+        id: `${paymentId}-inst-${i + 1}`,
         status: "pending" as PaymentInstallmentStatus,
       })),
     };

@@ -275,9 +275,10 @@ export const confirmedTourMockStore = {
   create: (data: Omit<ConfirmedTour, "id" | "code" | "totalCost" | "createdAt">): ConfirmedTour => {
     const template = data.tourTemplateId ? tourMockStore.getById(data.tourTemplateId) : undefined;
     const itinerary = template?.itinerary ?? data.itinerary ?? [];
+    const nextId = _counter;
     const ct: ConfirmedTour = {
       ...data,
-      id: `ct${Date.now()}`,
+      id: `ct-${nextId}`,
       code: `CT-2026-${String(_counter++).padStart(3, "0")}`,
       itinerary,
       totalCost: computeTotalCost(itinerary),
@@ -305,8 +306,9 @@ export const confirmedTourMockStore = {
     if (quotation.confirmedTourId) return null; // Đã tạo trước đó
 
     const itinerary = quotation.itinerary;
+    const nextId = _counter;
     const ct: ConfirmedTour = {
-      id: `ct${Date.now()}`,
+      id: `ct-${nextId}`,
       code: `CT-2026-${String(_counter++).padStart(3, "0")}`,
       quotationId,
       tourTemplateId: quotation.tourTemplateId,

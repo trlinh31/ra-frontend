@@ -341,9 +341,10 @@ export const quotationMockStore = {
     const itinerary = template?.itinerary ?? data.itinerary ?? [];
     const costTotal = computeCostTotal(itinerary);
 
+    const nextId = _counter;
     const q: Quotation = {
       ...data,
-      id: `q${Date.now()}`,
+      id: `q-${nextId}`,
       code: `BG-2026-${String(_counter++).padStart(3, "0")}`,
       itinerary,
       costTotal,
