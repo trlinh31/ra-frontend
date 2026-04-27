@@ -20,6 +20,7 @@ import { Separator } from "@/shared/components/ui/separator";
 import { Textarea } from "@/shared/components/ui/textarea";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { ArrowRight, FileText, HandHelping, Info, MapPin, MessageSquare, MessagesSquare, PauseCircle, PhoneCall, Users, XCircle } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -199,186 +200,194 @@ export default function TripRequestDetailPage() {
         </div>
       </Section>
 
-      {/* ── On Hold info ── */}
-      {tr.status === "on_hold" && tr.holdUntil && (
-        <div className='flex items-center gap-2 bg-purple-50 p-3 border border-purple-200 rounded-md text-purple-800 text-sm'>
-          <PauseCircle className='w-4 h-4 shrink-0' />
-          <span>
-            Tạm hoãn — Hẹn liên hệ lại vào ngày <strong>{formatDate(tr.holdUntil)}</strong>
-          </span>
-        </div>
-      )}
-
-      {/* ── Main grid ── */}
-      <div className='gap-6 grid grid-cols-1 md:grid-cols-2'>
-        {/* Thông tin khách hàng */}
-        <Section>
-          <div className='flex items-center gap-2 mb-3'>
-            <PhoneCall className='w-4 h-4 text-blue-500' />
-            <p className='font-bold text-base'>Thông tin khách hàng</p>
-          </div>
-          <div className='space-y-3'>
-            <InfoRow label='Tên khách / Đoàn' value={tr.customerName} />
-            <InfoRow label='Số điện thoại' value={tr.customerPhone} />
-            <InfoRow label='Email' value={tr.customerEmail} />
-            <InfoRow label='Nguồn lead' value={LEAD_SOURCE_LABEL[tr.leadSource]} />
-            <InfoRow
-              label='Phụ trách'
-              value={
-                tr.assignedTo ? (
-                  (userMockStore.getById(tr.assignedTo)?.fullName ?? tr.assignedTo)
-                ) : (
-                  <span className='text-amber-600 text-xs italic'>Chưa phân công</span>
-                )
-              }
-            />
-          </div>
-        </Section>
-
-        {/* Nhu cầu chuyến đi */}
-        <Section>
-          <div className='flex items-center gap-2 mb-3'>
-            <MapPin className='w-4 h-4 text-indigo-500' />
-            <p className='font-bold text-base'>Nhu cầu chuyến đi</p>
-          </div>
-          <div className='space-y-3'>
-            <InfoRow label='Điểm đến' value={tr.destination} />
-            <InfoRow label='Ngày đi dự kiến' value={formatDate(tr.departureDateEst)} />
-            <InfoRow label='Số ngày dự kiến' value={tr.durationDays ? `${tr.durationDays} ngày` : undefined} />
-            <InfoRow
-              label='Số khách'
-              value={
-                <div className='flex items-center gap-1'>
-                  <Users className='w-3.5 h-3.5 text-muted-foreground' />
-                  {tr.numberOfAdults} người lớn
-                  {tr.numberOfChildren > 0 && ` + ${tr.numberOfChildren} trẻ em`}
-                </div>
-              }
-            />
-            {tr.budgetEstimate && (
-              <InfoRow label='Ngân sách tham khảo' value={`${formatNumberVN(tr.budgetEstimate)} ${tr.budgetCurrency ?? "VND"}`} />
-            )}
-            {tr.suggestedTourName && (
-              <>
-                <Separator />
-                <InfoRow label='Tour mẫu gợi ý' value={tr.suggestedTourName} />
-              </>
-            )}
-          </div>
-        </Section>
-      </div>
-
-      {/* Yêu cầu đặc biệt */}
-      {tr.specialRequirements && (
-        <Section>
-          <div className='flex items-center gap-2 mb-3'>
-            <Info className='w-4 h-4 text-amber-500' />
-            <p className='font-bold text-base'>Yêu cầu đặc biệt</p>
-          </div>
-          <p className='text-sm whitespace-pre-wrap'>{tr.specialRequirements}</p>
-        </Section>
-      )}
-
-      {/* Báo giá liên kết */}
-      <Section>
-        <div className='flex justify-between items-center mb-3'>
-          <div className='flex items-center gap-2'>
-            <FileText className='w-4 h-4 text-blue-500' />
-            <p className='font-bold text-base'>Báo giá liên kết</p>
-          </div>
-          {canCreateQuotation && <ActionButton action='add' text='Tạo Báo giá mới' onClick={handleCreateQuotation} size='sm' />}
-        </div>
-        {linkedQuotations.length === 0 ? (
-          <p className='text-muted-foreground text-sm italic'>Chưa có báo giá nào được tạo từ trip request này.</p>
-        ) : (
-          <div className='space-y-2'>
-            {linkedQuotations.map((q) => {
-              if (!q) return null;
-              return (
-                <div
-                  key={q.id}
-                  className='flex justify-between items-center hover:bg-muted/40 p-2.5 border rounded-md transition-colors cursor-pointer'
-                  onClick={() => navigate(PATHS.SALES.QUOTATION_DETAIL.replace(":id", q.id))}>
-                  <div>
-                    <p className='font-medium text-sm'>{q.code}</p>
-                    <p className='text-muted-foreground text-xs'>
-                      v{q.currentVersion} · {q.status}
-                    </p>
-                  </div>
-                  <ArrowRight className='w-4 h-4 text-muted-foreground' />
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </Section>
-
-      {/* Ghi chú nội bộ */}
-      <Section>
-        <div className='flex justify-between items-center mb-3'>
-          <div className='flex items-center gap-2'>
-            <MessageSquare className='w-4 h-4 text-gray-500' />
-            <p className='font-bold text-base'>Ghi chú nội bộ</p>
-          </div>
-          {!isClosed && (
-            <ActionButton
-              action='edit'
-              text={editingNotes ? "Lưu ghi chú" : "Chỉnh sửa"}
-              size='sm'
-              variant='ghost'
-              onClick={() => {
-                if (editingNotes) handleSaveNotes();
-                else setEditingNotes(true);
-              }}
-            />
-          )}
-        </div>
-        {editingNotes ? (
-          <Textarea
-            value={notesValue}
-            onChange={(e) => setNotesValue(e.target.value)}
-            rows={4}
-            placeholder='Ghi chú tiến độ, thông tin thêm...'
-            autoFocus
-          />
-        ) : tr.internalNotes ? (
-          <p className='text-sm whitespace-pre-wrap'>{tr.internalNotes}</p>
-        ) : (
-          <p className='text-muted-foreground text-sm italic'>Chưa có ghi chú.</p>
-        )}
-      </Section>
-
-      {/* ── Follow-up Reminders ── */}
-      <Section>
-        <FollowUpSection tripRequestId={tr.id} tripRequestCode={tr.code} readonly={isClosed} />
-      </Section>
-
-      {/* ── Chat với khách hàng ── */}
-      <Section className='!p-0 overflow-hidden'>
-        <div className='flex items-center gap-2 p-5 pb-3'>
-          <MessagesSquare className='w-4 h-4 text-primary' />
-          <p className='font-bold text-base'>Chat với khách hàng</p>
-          {(() => {
-            const unread = chatMockStore.getUnreadCount(tr.id);
-            return unread > 0 ? (
-              <span className='flex justify-center items-center bg-red-500 px-1.5 rounded-full min-w-5 h-5 font-bold text-[11px] text-white'>
-                {unread}
+      <Tabs defaultValue='info'>
+        <TabsList>
+          <TabsTrigger value='info'>Thông tin</TabsTrigger>
+          <TabsTrigger value='chat'>
+            <MessagesSquare className='w-3.5 h-3.5' />
+            Chat
+            {chatMockStore.getUnreadCount(tr.id) > 0 && (
+              <span className='inline-flex justify-center items-center bg-red-500 ml-1 px-1.5 rounded-full min-w-4 h-4 font-bold text-[10px] text-white'>
+                {chatMockStore.getUnreadCount(tr.id)}
               </span>
-            ) : null;
-          })()}
-        </div>
-        <ChatPanel tripRequestId={tr.id} customerName={tr.customerName} />
-      </Section>
+            )}
+          </TabsTrigger>
+        </TabsList>
 
-      {/* Lost reason */}
-      {tr.status === "lost" && tr.lostReason && (
-        <div className='flex items-start gap-2 bg-red-50 p-3 border border-red-200 rounded-md text-red-800 text-sm'>
-          <XCircle className='mt-0.5 w-4 h-4 shrink-0' />
-          <span>
-            Lý do mất lead: <strong>{tr.lostReason}</strong>
-          </span>
-        </div>
-      )}
+        {/* ── Tab: Thông tin ── */}
+        <TabsContent value='info' className='space-y-6'>
+          {/* On Hold info */}
+          {tr.status === "on_hold" && tr.holdUntil && (
+            <div className='flex items-center gap-2 bg-purple-50 p-3 border border-purple-200 rounded-md text-purple-800 text-sm'>
+              <PauseCircle className='w-4 h-4 shrink-0' />
+              <span>
+                Tạm hoãn — Hẹn liên hệ lại vào ngày <strong>{formatDate(tr.holdUntil)}</strong>
+              </span>
+            </div>
+          )}
+
+          {/* Main grid */}
+          <div className='gap-6 grid grid-cols-1 md:grid-cols-2'>
+            {/* Thông tin khách hàng */}
+            <Section>
+              <div className='flex items-center gap-2 mb-3'>
+                <PhoneCall className='w-4 h-4 text-blue-500' />
+                <p className='font-bold text-base'>Thông tin khách hàng</p>
+              </div>
+              <div className='space-y-3'>
+                <InfoRow label='Tên khách / Đoàn' value={tr.customerName} />
+                <InfoRow label='Số điện thoại' value={tr.customerPhone} />
+                <InfoRow label='Email' value={tr.customerEmail} />
+                <InfoRow label='Nguồn lead' value={LEAD_SOURCE_LABEL[tr.leadSource]} />
+                <InfoRow
+                  label='Phụ trách'
+                  value={
+                    tr.assignedTo ? (
+                      (userMockStore.getById(tr.assignedTo)?.fullName ?? tr.assignedTo)
+                    ) : (
+                      <span className='text-amber-600 text-xs italic'>Chưa phân công</span>
+                    )
+                  }
+                />
+              </div>
+            </Section>
+
+            {/* Nhu cầu chuyến đi */}
+            <Section>
+              <div className='flex items-center gap-2 mb-3'>
+                <MapPin className='w-4 h-4 text-indigo-500' />
+                <p className='font-bold text-base'>Nhu cầu chuyến đi</p>
+              </div>
+              <div className='space-y-3'>
+                <InfoRow label='Điểm đến' value={tr.destination} />
+                <InfoRow label='Ngày đi dự kiến' value={formatDate(tr.departureDateEst)} />
+                <InfoRow label='Số ngày dự kiến' value={tr.durationDays ? `${tr.durationDays} ngày` : undefined} />
+                <InfoRow
+                  label='Số khách'
+                  value={
+                    <div className='flex items-center gap-1'>
+                      <Users className='w-3.5 h-3.5 text-muted-foreground' />
+                      {tr.numberOfAdults} người lớn
+                      {tr.numberOfChildren > 0 && ` + ${tr.numberOfChildren} trẻ em`}
+                    </div>
+                  }
+                />
+                {tr.budgetEstimate && (
+                  <InfoRow label='Ngân sách tham khảo' value={`${formatNumberVN(tr.budgetEstimate)} ${tr.budgetCurrency ?? "VND"}`} />
+                )}
+                {tr.suggestedTourName && (
+                  <>
+                    <Separator />
+                    <InfoRow label='Tour mẫu gợi ý' value={tr.suggestedTourName} />
+                  </>
+                )}
+              </div>
+            </Section>
+          </div>
+
+          {/* Yêu cầu đặc biệt */}
+          {tr.specialRequirements && (
+            <Section>
+              <div className='flex items-center gap-2 mb-3'>
+                <Info className='w-4 h-4 text-amber-500' />
+                <p className='font-bold text-base'>Yêu cầu đặc biệt</p>
+              </div>
+              <p className='text-sm whitespace-pre-wrap'>{tr.specialRequirements}</p>
+            </Section>
+          )}
+
+          {/* Báo giá liên kết */}
+          <Section>
+            <div className='flex justify-between items-center mb-3'>
+              <div className='flex items-center gap-2'>
+                <FileText className='w-4 h-4 text-blue-500' />
+                <p className='font-bold text-base'>Báo giá liên kết</p>
+              </div>
+              {canCreateQuotation && <ActionButton action='add' text='Tạo Báo giá mới' onClick={handleCreateQuotation} size='sm' />}
+            </div>
+            {linkedQuotations.length === 0 ? (
+              <p className='text-muted-foreground text-sm italic'>Chưa có báo giá nào được tạo từ trip request này.</p>
+            ) : (
+              <div className='space-y-2'>
+                {linkedQuotations.map((q) => {
+                  if (!q) return null;
+                  return (
+                    <div
+                      key={q.id}
+                      className='flex justify-between items-center hover:bg-muted/40 p-2.5 border rounded-md transition-colors cursor-pointer'
+                      onClick={() => navigate(PATHS.SALES.QUOTATION_DETAIL.replace(":id", q.id))}>
+                      <div>
+                        <p className='font-medium text-sm'>{q.code}</p>
+                        <p className='text-muted-foreground text-xs'>
+                          v{q.currentVersion} · {q.status}
+                        </p>
+                      </div>
+                      <ArrowRight className='w-4 h-4 text-muted-foreground' />
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </Section>
+
+          {/* Ghi chú nội bộ */}
+          <Section>
+            <div className='flex justify-between items-center mb-3'>
+              <div className='flex items-center gap-2'>
+                <MessageSquare className='w-4 h-4 text-gray-500' />
+                <p className='font-bold text-base'>Ghi chú nội bộ</p>
+              </div>
+              {!isClosed && (
+                <ActionButton
+                  action='edit'
+                  text={editingNotes ? "Lưu ghi chú" : "Chỉnh sửa"}
+                  size='sm'
+                  variant='ghost'
+                  onClick={() => {
+                    if (editingNotes) handleSaveNotes();
+                    else setEditingNotes(true);
+                  }}
+                />
+              )}
+            </div>
+            {editingNotes ? (
+              <Textarea
+                value={notesValue}
+                onChange={(e) => setNotesValue(e.target.value)}
+                rows={4}
+                placeholder='Ghi chú tiến độ, thông tin thêm...'
+                autoFocus
+              />
+            ) : tr.internalNotes ? (
+              <p className='text-sm whitespace-pre-wrap'>{tr.internalNotes}</p>
+            ) : (
+              <p className='text-muted-foreground text-sm italic'>Chưa có ghi chú.</p>
+            )}
+          </Section>
+
+          {/* Follow-up Reminders */}
+          <Section>
+            <FollowUpSection tripRequestId={tr.id} tripRequestCode={tr.code} readonly={isClosed} />
+          </Section>
+
+          {/* Lost reason */}
+          {tr.status === "lost" && tr.lostReason && (
+            <div className='flex items-start gap-2 bg-red-50 p-3 border border-red-200 rounded-md text-red-800 text-sm'>
+              <XCircle className='mt-0.5 w-4 h-4 shrink-0' />
+              <span>
+                Lý do mất lead: <strong>{tr.lostReason}</strong>
+              </span>
+            </div>
+          )}
+        </TabsContent>
+
+        {/* ── Tab: Chat ── */}
+        <TabsContent value='chat'>
+          <Section className='!p-0 overflow-hidden'>
+            <ChatPanel tripRequestId={tr.id} customerName={tr.customerName} />
+          </Section>
+        </TabsContent>
+      </Tabs>
 
       {/* ── Dialogs ── */}
 
