@@ -39,7 +39,7 @@ interface LoginFormProps {
 const FEATURES = [
   { icon: BarChart3, label: "Dashboard tổng quan hệ thống" },
   { icon: Plane,     label: "Quản lý Tour & Hành trình"   },
-  { icon: FileText,  label: "Báo giá & Xác nhận tour"     },
+  { icon: FileText,  label: "Báo giá & Booking Tour"       },
   { icon: Users,     label: "Quản lý Nhà cung cấp"        },
   { icon: BarChart3, label: "Kế toán Thu – Chi"           },
 ];

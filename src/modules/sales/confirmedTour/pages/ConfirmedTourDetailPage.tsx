@@ -40,7 +40,7 @@ export default function ConfirmedTourDetailPage() {
   if (!tour) {
     return (
       <div className='space-y-4'>
-        <p className='text-muted-foreground'>Không tìm thấy Xác nhận Tour.</p>
+        <p className='text-muted-foreground'>Không tìm thấy Booking Tour.</p>
         <Button variant='outline' onClick={() => navigate(PATHS.SALES.CONFIRMED_TOURS)}>
           Quay lại
         </Button>
@@ -63,7 +63,7 @@ export default function ConfirmedTourDetailPage() {
 
   const handleSubmitForApproval = async () => {
     const ok = await confirm({
-      description: `Gửi Xác nhận Tour "${tour.code}" để phê duyệt? Tour sẽ chuyển sang trạng thái "Chờ phê duyệt".`,
+      description: `Gửi Booking Tour "${tour.code}" để phê duyệt? Tour sẽ chuyển sang trạng thái "Chờ phê duyệt".`,
     });
     if (!ok) return;
     confirmedTourMockStore.updateStatus(tour.id, "pending_approval");
@@ -90,7 +90,7 @@ export default function ConfirmedTourDetailPage() {
 
   const handleApprove = async () => {
     const ok = await confirm({
-      description: `Phê duyệt Xác nhận Tour "${tour.code}"? Tour sẽ chuyển sang trạng thái "Đã xác nhận".`,
+      description: `Phê duyệt Booking Tour "${tour.code}"? Tour sẽ chuyển sang trạng thái "Đã xác nhận".`,
     });
     if (!ok) return;
     confirmedTourMockStore.updateStatus(tour.id, "confirmed", { approvedBy: "Sale Manager" });
@@ -99,7 +99,7 @@ export default function ConfirmedTourDetailPage() {
 
   const handleReject = async () => {
     const ok = await confirm({
-      description: `Từ chối Xác nhận Tour "${tour.code}"? Nhân viên kinh doanh sẽ cần chỉnh sửa và gửi lại.`,
+      description: `Từ chối Booking Tour "${tour.code}"? Nhân viên kinh doanh sẽ cần chỉnh sửa và gửi lại.`,
     });
     if (!ok) return;
     confirmedTourMockStore.updateStatus(tour.id, "rejected");
@@ -144,7 +144,7 @@ export default function ConfirmedTourDetailPage() {
 
   return (
     <div className='space-y-6'>
-      <PageHeader title={`Xác nhận Tour ${tour.code}`} description={`Tạo bởi ${tour.createdBy} — ${tour.createdAt}`} />
+      <PageHeader title={`Booking Tour ${tour.code}`} description={`Tạo bởi ${tour.createdBy} — ${tour.createdAt}`} />
 
       {/* Trạng thái + hành động */}
       <Card>

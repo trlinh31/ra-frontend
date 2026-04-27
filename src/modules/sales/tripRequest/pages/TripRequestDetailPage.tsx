@@ -1,6 +1,7 @@
 import { PATHS } from "@/app/routes/route.constant";
 import { quotationMockStore } from "@/modules/sales/quotation/data/quotation.mock-store";
 import ChatPanel from "@/modules/sales/tripRequest/components/ChatPanel";
+import FollowUpSection from "@/modules/sales/tripRequest/components/FollowUpSection";
 import TripRequestStatusBadge from "@/modules/sales/tripRequest/components/TripRequestStatusBadge";
 import { LEAD_SOURCE_LABEL, LOST_REASON_OPTIONS, SELLER_OPTIONS } from "@/modules/sales/tripRequest/constants/trip-request.constant";
 import { chatMockStore } from "@/modules/sales/tripRequest/data/chat.mock-store";
@@ -8,8 +9,9 @@ import { tripRequestMockStore } from "@/modules/sales/tripRequest/data/trip-requ
 import type { TripRequest } from "@/modules/sales/tripRequest/types/trip-request.type";
 import { userMockStore } from "@/modules/userManagement/data/user.mock-store";
 import PageHeader from "@/shared/components/common/PageHeader";
+import Section from "@/shared/components/common/Section";
+import ActionButton from "@/shared/components/table/ActionButton/ActionButton";
 import { Button } from "@/shared/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { Field, FieldLabel } from "@/shared/components/ui/field";
 import { Input } from "@/shared/components/ui/input";
@@ -18,20 +20,7 @@ import { Separator } from "@/shared/components/ui/separator";
 import { Textarea } from "@/shared/components/ui/textarea";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import { formatNumberVN } from "@/shared/helpers/formatNumberVN";
-import {
-  ArrowRight,
-  CheckCircle2,
-  FileText,
-  HandHelping,
-  Info,
-  MapPin,
-  MessageSquare,
-  MessagesSquare,
-  PauseCircle,
-  PhoneCall,
-  Users,
-  XCircle,
-} from "lucide-react";
+import { ArrowRight, FileText, HandHelping, Info, MapPin, MessageSquare, MessagesSquare, PauseCircle, PhoneCall, Users, XCircle } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -147,77 +136,68 @@ export default function TripRequestDetailPage() {
       <PageHeader title={`Trip Request ${tr.code}`} description={`Tạo bởi ${tr.createdBy} — ${formatDate(tr.createdAt)}`} />
 
       {/* ── Trạng thái + hành động ── */}
-      <Card>
-        <CardHeader>
-          <div className='flex flex-wrap justify-between items-center gap-3'>
-            <div className='flex items-center gap-3'>
-              <CardTitle className='text-base'>Trạng thái</CardTitle>
-              <TripRequestStatusBadge status={tr.status} />
-            </div>
-            <div className='flex flex-wrap items-center gap-2'>
-              {/* Assign */}
-              {tr.status === "new" && (
-                <Button size='sm' variant='outline' onClick={() => setAssignDialog(true)}>
-                  <HandHelping className='mr-2 w-4 h-4' />
-                  Phân công Seller
-                </Button>
-              )}
-
-              {/* Bắt đầu xử lý */}
-              {tr.status === "assigned" && (
-                <Button size='sm' variant='outline' onClick={handleStartProgress}>
-                  <ArrowRight className='mr-2 w-4 h-4' />
-                  Bắt đầu xử lý
-                </Button>
-              )}
-
-              {/* Tạo Báo giá */}
-              {canCreateQuotation && (
-                <Button size='sm' onClick={handleCreateQuotation}>
-                  <FileText className='mr-2 w-4 h-4' />
-                  Tạo Báo giá
-                </Button>
-              )}
-
-              {/* Tiếp tục (từ on_hold) */}
-              {tr.status === "on_hold" && (
-                <Button size='sm' variant='outline' onClick={handleResume}>
-                  <ArrowRight className='mr-2 w-4 h-4' />
-                  Tiếp tục xử lý
-                </Button>
-              )}
-
-              {/* Tạm hoãn */}
-              {canMarkOnHold && (
-                <Button size='sm' variant='outline' onClick={() => setHoldDialog(true)}>
-                  <PauseCircle className='mr-2 w-4 h-4' />
-                  Tạm hoãn
-                </Button>
-              )}
-
-              {/* Mất lead */}
-              {canMarkLost && (
-                <Button size='sm' variant='outline' className='hover:bg-red-50 border-red-300 text-red-600' onClick={() => setLostDialog(true)}>
-                  <XCircle className='mr-2 w-4 h-4' />
-                  Mất lead
-                </Button>
-              )}
-
-              {/* Xem ConfirmedTour khi converted */}
-              {tr.status === "converted" && tr.confirmedTourId && (
-                <Button
-                  size='sm'
-                  variant='outline'
-                  className='border-green-300 text-green-700'
-                  onClick={() => navigate(PATHS.SALES.CONFIRMED_TOUR_DETAIL.replace(":id", tr.confirmedTourId!))}>
-                  <CheckCircle2 className='mr-2 w-4 h-4' />
-                  Xem Tour Xác Nhận
-                </Button>
-              )}
-            </div>
+      <Section>
+        <div className='flex flex-wrap justify-between items-center gap-3'>
+          <div className='flex items-center gap-3'>
+            <p className='font-bold text-base'>Trạng thái</p>
+            <TripRequestStatusBadge status={tr.status} />
           </div>
-        </CardHeader>
-      </Card>
+          <div className='flex flex-wrap items-center gap-2'>
+            {/* Assign */}
+            {tr.status === "new" && (
+              <Button size='sm' variant='outline' onClick={() => setAssignDialog(true)}>
+                <HandHelping className='mr-2 w-4 h-4' />
+                Phân công Seller
+              </Button>
+            )}
+
+            {/* Bắt đầu xử lý */}
+            {tr.status === "assigned" && (
+              <Button size='sm' variant='outline' onClick={handleStartProgress}>
+                <ArrowRight className='mr-2 w-4 h-4' />
+                Bắt đầu xử lý
+              </Button>
+            )}
+
+            {/* Tạo Báo giá */}
+            {canCreateQuotation && <ActionButton action='add' text='Tạo Báo giá' onClick={handleCreateQuotation} size='sm' variant='default' />}
+
+            {/* Tiếp tục (từ on_hold) */}
+            {tr.status === "on_hold" && (
+              <Button size='sm' variant='outline' onClick={handleResume}>
+                <ArrowRight className='mr-2 w-4 h-4' />
+                Tiếp tục xử lý
+              </Button>
+            )}
+
+            {/* Tạm hoãn */}
+            {canMarkOnHold && (
+              <Button size='sm' variant='outline' onClick={() => setHoldDialog(true)}>
+                <PauseCircle className='mr-2 w-4 h-4' />
+                Tạm hoãn
+              </Button>
+            )}
+
+            {/* Mất lead */}
+            {canMarkLost && (
+              <Button size='sm' variant='outline' className='hover:bg-red-50 border-red-300 text-red-600' onClick={() => setLostDialog(true)}>
+                <XCircle className='mr-2 w-4 h-4' />
+                Mất lead
+              </Button>
+            )}
+
+            {/* Xem ConfirmedTour khi converted */}
+            {tr.status === "converted" && tr.confirmedTourId && (
+              <ActionButton
+                action='view'
+                text='Xem Tour Xác Nhận'
+                size='sm'
+                onClick={() => navigate(PATHS.SALES.CONFIRMED_TOUR_DETAIL.replace(":id", tr.confirmedTourId!))}
+              />
+            )}
+          </div>
+        </div>
+      </Section>
 
       {/* ── On Hold info ── */}
       {tr.status === "on_hold" && tr.holdUntil && (
@@ -232,14 +212,12 @@ export default function TripRequestDetailPage() {
       {/* ── Main grid ── */}
       <div className='gap-6 grid grid-cols-1 md:grid-cols-2'>
         {/* Thông tin khách hàng */}
-        <Card>
-          <CardHeader>
-            <CardTitle className='flex items-center gap-2 text-base'>
-              <PhoneCall className='w-4 h-4 text-blue-500' />
-              Thông tin khách hàng
-            </CardTitle>
-          </CardHeader>
-          <CardContent className='space-y-3'>
+        <Section>
+          <div className='flex items-center gap-2 mb-3'>
+            <PhoneCall className='w-4 h-4 text-blue-500' />
+            <p className='font-bold text-base'>Thông tin khách hàng</p>
+          </div>
+          <div className='space-y-3'>
             <InfoRow label='Tên khách / Đoàn' value={tr.customerName} />
             <InfoRow label='Số điện thoại' value={tr.customerPhone} />
             <InfoRow label='Email' value={tr.customerEmail} />
@@ -254,18 +232,16 @@ export default function TripRequestDetailPage() {
                 )
               }
             />
-          </CardContent>
-        </Card>
+          </div>
+        </Section>
 
         {/* Nhu cầu chuyến đi */}
-        <Card>
-          <CardHeader>
-            <CardTitle className='flex items-center gap-2 text-base'>
-              <MapPin className='w-4 h-4 text-indigo-500' />
-              Nhu cầu chuyến đi
-            </CardTitle>
-          </CardHeader>
-          <CardContent className='space-y-3'>
+        <Section>
+          <div className='flex items-center gap-2 mb-3'>
+            <MapPin className='w-4 h-4 text-indigo-500' />
+            <p className='font-bold text-base'>Nhu cầu chuyến đi</p>
+          </div>
+          <div className='space-y-3'>
             <InfoRow label='Điểm đến' value={tr.destination} />
             <InfoRow label='Ngày đi dự kiến' value={formatDate(tr.departureDateEst)} />
             <InfoRow label='Số ngày dự kiến' value={tr.durationDays ? `${tr.durationDays} ngày` : undefined} />
@@ -288,125 +264,111 @@ export default function TripRequestDetailPage() {
                 <InfoRow label='Tour mẫu gợi ý' value={tr.suggestedTourName} />
               </>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </Section>
       </div>
 
       {/* Yêu cầu đặc biệt */}
       {tr.specialRequirements && (
-        <Card>
-          <CardHeader>
-            <CardTitle className='flex items-center gap-2 text-base'>
-              <Info className='w-4 h-4 text-amber-500' />
-              Yêu cầu đặc biệt
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className='text-sm whitespace-pre-wrap'>{tr.specialRequirements}</p>
-          </CardContent>
-        </Card>
+        <Section>
+          <div className='flex items-center gap-2 mb-3'>
+            <Info className='w-4 h-4 text-amber-500' />
+            <p className='font-bold text-base'>Yêu cầu đặc biệt</p>
+          </div>
+          <p className='text-sm whitespace-pre-wrap'>{tr.specialRequirements}</p>
+        </Section>
       )}
 
       {/* Báo giá liên kết */}
-      <Card>
-        <CardHeader>
-          <div className='flex justify-between items-center'>
-            <CardTitle className='flex items-center gap-2 text-base'>
-              <FileText className='w-4 h-4 text-blue-500' />
-              Báo giá liên kết
-            </CardTitle>
-            {canCreateQuotation && (
-              <Button size='sm' variant='outline' onClick={handleCreateQuotation}>
-                + Tạo Báo giá mới
-              </Button>
-            )}
+      <Section>
+        <div className='flex justify-between items-center mb-3'>
+          <div className='flex items-center gap-2'>
+            <FileText className='w-4 h-4 text-blue-500' />
+            <p className='font-bold text-base'>Báo giá liên kết</p>
           </div>
-        </CardHeader>
-        <CardContent>
-          {linkedQuotations.length === 0 ? (
-            <p className='text-muted-foreground text-sm italic'>Chưa có báo giá nào được tạo từ trip request này.</p>
-          ) : (
-            <div className='space-y-2'>
-              {linkedQuotations.map((q) => {
-                if (!q) return null;
-                return (
-                  <div
-                    key={q.id}
-                    className='flex justify-between items-center hover:bg-muted/40 p-2.5 border rounded-md transition-colors cursor-pointer'
-                    onClick={() => navigate(PATHS.SALES.QUOTATION_DETAIL.replace(":id", q.id))}>
-                    <div>
-                      <p className='font-medium text-sm'>{q.code}</p>
-                      <p className='text-muted-foreground text-xs'>
-                        v{q.currentVersion} · {q.status}
-                      </p>
-                    </div>
-                    <ArrowRight className='w-4 h-4 text-muted-foreground' />
+          {canCreateQuotation && <ActionButton action='add' text='Tạo Báo giá mới' onClick={handleCreateQuotation} size='sm' />}
+        </div>
+        {linkedQuotations.length === 0 ? (
+          <p className='text-muted-foreground text-sm italic'>Chưa có báo giá nào được tạo từ trip request này.</p>
+        ) : (
+          <div className='space-y-2'>
+            {linkedQuotations.map((q) => {
+              if (!q) return null;
+              return (
+                <div
+                  key={q.id}
+                  className='flex justify-between items-center hover:bg-muted/40 p-2.5 border rounded-md transition-colors cursor-pointer'
+                  onClick={() => navigate(PATHS.SALES.QUOTATION_DETAIL.replace(":id", q.id))}>
+                  <div>
+                    <p className='font-medium text-sm'>{q.code}</p>
+                    <p className='text-muted-foreground text-xs'>
+                      v{q.currentVersion} · {q.status}
+                    </p>
                   </div>
-                );
-              })}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                  <ArrowRight className='w-4 h-4 text-muted-foreground' />
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </Section>
 
       {/* Ghi chú nội bộ */}
-      <Card>
-        <CardHeader>
-          <div className='flex justify-between items-center'>
-            <CardTitle className='flex items-center gap-2 text-base'>
-              <MessageSquare className='w-4 h-4 text-gray-500' />
-              Ghi chú nội bộ
-            </CardTitle>
-            {!isClosed && (
-              <Button
-                size='sm'
-                variant='ghost'
-                onClick={() => {
-                  if (editingNotes) handleSaveNotes();
-                  else setEditingNotes(true);
-                }}>
-                {editingNotes ? "Lưu ghi chú" : "Chỉnh sửa"}
-              </Button>
-            )}
+      <Section>
+        <div className='flex justify-between items-center mb-3'>
+          <div className='flex items-center gap-2'>
+            <MessageSquare className='w-4 h-4 text-gray-500' />
+            <p className='font-bold text-base'>Ghi chú nội bộ</p>
           </div>
-        </CardHeader>
-        <CardContent>
-          {editingNotes ? (
-            <Textarea
-              value={notesValue}
-              onChange={(e) => setNotesValue(e.target.value)}
-              rows={4}
-              placeholder='Ghi chú tiến độ, thông tin thêm...'
-              autoFocus
+          {!isClosed && (
+            <ActionButton
+              action='edit'
+              text={editingNotes ? "Lưu ghi chú" : "Chỉnh sửa"}
+              size='sm'
+              variant='ghost'
+              onClick={() => {
+                if (editingNotes) handleSaveNotes();
+                else setEditingNotes(true);
+              }}
             />
-          ) : tr.internalNotes ? (
-            <p className='text-sm whitespace-pre-wrap'>{tr.internalNotes}</p>
-          ) : (
-            <p className='text-muted-foreground text-sm italic'>Chưa có ghi chú.</p>
           )}
-        </CardContent>
-      </Card>
+        </div>
+        {editingNotes ? (
+          <Textarea
+            value={notesValue}
+            onChange={(e) => setNotesValue(e.target.value)}
+            rows={4}
+            placeholder='Ghi chú tiến độ, thông tin thêm...'
+            autoFocus
+          />
+        ) : tr.internalNotes ? (
+          <p className='text-sm whitespace-pre-wrap'>{tr.internalNotes}</p>
+        ) : (
+          <p className='text-muted-foreground text-sm italic'>Chưa có ghi chú.</p>
+        )}
+      </Section>
+
+      {/* ── Follow-up Reminders ── */}
+      <Section>
+        <FollowUpSection tripRequestId={tr.id} tripRequestCode={tr.code} readonly={isClosed} />
+      </Section>
 
       {/* ── Chat với khách hàng ── */}
-      <Card>
-        <CardHeader>
-          <div className='flex items-center gap-2'>
-            <MessagesSquare className='w-4 h-4 text-primary' />
-            <CardTitle className='text-base'>Chat với khách hàng</CardTitle>
-            {(() => {
-              const unread = chatMockStore.getUnreadCount(tr.id);
-              return unread > 0 ? (
-                <span className='flex justify-center items-center bg-red-500 px-1.5 rounded-full min-w-5 h-5 font-bold text-[11px] text-white'>
-                  {unread}
-                </span>
-              ) : null;
-            })()}
-          </div>
-        </CardHeader>
-        <CardContent className='p-0 rounded-b-lg overflow-hidden'>
-          <ChatPanel tripRequestId={tr.id} customerName={tr.customerName} />
-        </CardContent>
-      </Card>
+      <Section className='!p-0 overflow-hidden'>
+        <div className='flex items-center gap-2 p-5 pb-3'>
+          <MessagesSquare className='w-4 h-4 text-primary' />
+          <p className='font-bold text-base'>Chat với khách hàng</p>
+          {(() => {
+            const unread = chatMockStore.getUnreadCount(tr.id);
+            return unread > 0 ? (
+              <span className='flex justify-center items-center bg-red-500 px-1.5 rounded-full min-w-5 h-5 font-bold text-[11px] text-white'>
+                {unread}
+              </span>
+            ) : null;
+          })()}
+        </div>
+        <ChatPanel tripRequestId={tr.id} customerName={tr.customerName} />
+      </Section>
 
       {/* Lost reason */}
       {tr.status === "lost" && tr.lostReason && (

@@ -79,7 +79,7 @@ export default function CreateConfirmedTourPage() {
   return (
     <div className='space-y-6'>
       <PageHeader
-        title='Tạo Xác nhận Tour'
+        title='Tạo Booking Tour'
         description={
           isFromQuotation && quotation ? `Từ báo giá ${quotation.code} — ${quotation.customerName}` : "Tạo tour thực tế từ tour mẫu cho đoàn khách"
         }
@@ -141,7 +141,7 @@ export default function CreateConfirmedTourPage() {
             <Button type='button' variant='outline' onClick={handleCancel}>
               Hủy
             </Button>
-            <Button type='submit'>Tạo Xác nhận Tour</Button>
+            <Button type='submit'>Tạo Booking Tour</Button>
           </div>
         </form>
       </FormProvider>

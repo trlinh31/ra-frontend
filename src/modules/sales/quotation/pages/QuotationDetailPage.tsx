@@ -76,7 +76,7 @@ export default function QuotationDetailPage() {
 
   const handleApprove = async () => {
     const ok = await confirm({
-      description: `Đánh dấu báo giá "${quotation.code}" là đã được khách chấp thuận? Sau đó có thể tạo Xác nhận Tour từ báo giá này.`,
+      description: `Đánh dấu báo giá "${quotation.code}" là đã được khách chấp thuận? Sau đó có thể tạo Booking Tour từ báo giá này.`,
     });
     if (!ok) return;
     quotationMockStore.approve(quotation.id);
@@ -171,7 +171,7 @@ export default function QuotationDetailPage() {
               {canCreateConfirmedTour && (
                 <Button size='sm' className='bg-blue-600 hover:bg-blue-700' onClick={handleCreateConfirmedTour}>
                   <Plus className='mr-2 w-4 h-4' />
-                  Tạo Xác nhận Tour
+                  Tạo Booking Tour
                 </Button>
               )}
               {quotation.confirmedTourId && (
@@ -179,7 +179,7 @@ export default function QuotationDetailPage() {
                   size='sm'
                   variant='outline'
                   onClick={() => navigate(PATHS.SALES.CONFIRMED_TOUR_DETAIL.replace(":id", quotation.confirmedTourId!))}>
-                  Xem Xác nhận Tour
+                  Xem Booking Tour
                 </Button>
               )}
             </div>

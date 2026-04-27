@@ -392,11 +392,11 @@ export const APP_ROUTES: AppRoute[] = [
             element: <EditQuotationPage />,
             showInSidebar: false,
           },
-          // ── Xác nhận Tour ──────────────────────────────────────────
+          // ── Booking Tour ──────────────────────────────────────────
           {
             path: PATHS.SALES.CONFIRMED_TOURS,
-            title: "Xác nhận Tour",
-            pageTitle: "Danh sách Xác nhận Tour",
+            title: "Booking Tour",
+            pageTitle: "Danh sách Booking Tour",
             element: <ConfirmedTourListPage />,
             icon: ClipboardCheck,
             showInSidebar: true,

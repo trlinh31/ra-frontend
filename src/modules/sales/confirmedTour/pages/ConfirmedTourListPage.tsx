@@ -151,8 +151,8 @@ export default function ConfirmedTourListPage() {
   return (
     <div className='space-y-4'>
       <TableToolbar
-        title='Xác nhận Tour'
-        description='Danh sách tour đã xác nhận với đoàn khách'
+        title='Booking Tour'
+        description='Danh sách Booking Tour đã xác nhận với đoàn khách'
         icon={ClipboardCheck}
         onAdd={() => navigate(PATHS.SALES.CONFIRMED_TOUR_CREATE)}
       />

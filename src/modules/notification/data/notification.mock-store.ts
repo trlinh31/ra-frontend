@@ -130,4 +130,18 @@ export const notificationMockStore = {
   delete: (id: string): void => {
     _notifications = _notifications.filter((n) => n.id !== id);
   },
+
+  /** Tạo thông báo nhắc follow-up cho một Trip Request */
+  pushFollowUpReminder: (params: { tripRequestCode: string; tripRequestId: string; note: string }): void => {
+    const newNotif: Notification = {
+      id: `n${_nextId++}`,
+      title: `Nhắc follow-up: ${params.tripRequestCode}`,
+      message: params.note || `Đã đến giờ follow-up Trip Request ${params.tripRequestCode}.`,
+      type: "warning",
+      isRead: false,
+      createdAt: new Date().toISOString(),
+      link: `/sales/trip-requests/${params.tripRequestId}`,
+    };
+    _notifications = [newNotif, ..._notifications];
+  },
 };
