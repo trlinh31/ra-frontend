@@ -16,8 +16,8 @@ export const getSidebarRoutes = (userRoles: Role[] = []): AppRoute[] => {
   // Xử lý routes, bao gồm cả groups
   return sidebarRoutes
     .map((route) => {
-      // Nếu là group, filter children dựa trên roles
-      if (route.isGroup && route.children) {
+      // Route có children (group/collapsible): filter children theo role
+      if (route.children) {
         const filteredChildren = route.children.filter((child) => child.showInSidebar && hasAccess(child));
 
         // Chỉ hiển thị group nếu có ít nhất 1 child được phép truy cập
@@ -31,7 +31,7 @@ export const getSidebarRoutes = (userRoles: Role[] = []): AppRoute[] => {
         };
       }
 
-      // Route thông thường
+      // Route đơn (không có children)
       return hasAccess(route) ? route : null;
     })
     .filter((route): route is AppRoute => route !== null);

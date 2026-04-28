@@ -7,13 +7,14 @@
 
 **Lịch sử thay đổi:**
 
-| Phiên bản | Ngày       | Người cập nhật | Nội dung thay đổi                                                                                    |
-| --------- | ---------- | -------------- | ---------------------------------------------------------------------------------------------------- |
-| 1.2       | 21/04/2026 | —              | Phiên bản gốc                                                                                        |
-| 1.3       | 22/04/2026 | —              | Bổ sung quy trình Báo giá; cập nhật vòng đời ConfirmedTour; thêm quy trình Hủy tour                  |
-| 1.4       | 22/04/2026 | —              | Bổ sung module TripRequest (Lead); cập nhật liên kết Quotation & ConfirmedTour; sơ đồ luồng tổng thể |
-| 1.5       | 25/04/2026 | —              | Đồng bộ field names với source code thực tế (TripRequest, Quotation, CustomerPayment, VendorPayment, AddonService); sửa đánh số mục 3.9 trùng; cập nhật chức năng in báo giá |
+| Phiên bản | Ngày       | Người cập nhật | Nội dung thay đổi                                                                                                                                                                                                 |
+| --------- | ---------- | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1.2       | 21/04/2026 | —              | Phiên bản gốc                                                                                                                                                                                                     |
+| 1.3       | 22/04/2026 | —              | Bổ sung quy trình Báo giá; cập nhật vòng đời ConfirmedTour; thêm quy trình Hủy tour                                                                                                                               |
+| 1.4       | 22/04/2026 | —              | Bổ sung module TripRequest (Lead); cập nhật liên kết Quotation & ConfirmedTour; sơ đồ luồng tổng thể                                                                                                              |
+| 1.5       | 25/04/2026 | —              | Đồng bộ field names với source code thực tế (TripRequest, Quotation, CustomerPayment, VendorPayment, AddonService); sửa đánh số mục 3.9 trùng; cập nhật chức năng in báo giá                                      |
 | 1.6       | 25/04/2026 | —              | Cập nhật Dashboard (đã triển khai đầy đủ); bổ sung mô tả module User Management; thêm field `confirmedTourId` vào Quotation; ghi chú sự không đồng nhất Role enum vs UserRole type; cập nhật các ghi chú lỗi thời |
+| 1.7       | 28/04/2026 | —              | Bổ sung ma trận phân quyền chi tiết theo từng module cho 6 role; đồng nhất tài liệu về 6 role thực tế (bỏ ACCOUNTANT_MANAGER); cập nhật quy tắc 7.10 và ghi chú 9.4                                               |
 
 ---
 
@@ -134,8 +135,8 @@ Trip Request ──► Quotation ──► Confirmed Tour ──► In Operation
 
 ### 2.7 Quản lý Người dùng
 
-| STT | Chức năng                | Mô tả                                                                |
-| --- | ------------------------ | -------------------------------------------------------------------- |
+| STT | Chức năng                | Mô tả                                                               |
+| --- | ------------------------ | ------------------------------------------------------------------- |
 | 1   | **Danh sách người dùng** | Xem toàn bộ tài khoản trong hệ thống, lọc theo role và trạng thái   |
 | 2   | **Thêm / Chỉnh sửa**     | Tạo tài khoản mới hoặc cập nhật thông tin, vai trò, trạng thái user |
 
@@ -717,27 +718,94 @@ Bước 4: Lưu → dịch vụ được thêm vào lịch trình
 
 **Phân chia theo phòng ban:**
 
-| Role                 | Team     | Tên hiển thị          | Quyền                                                                                       |
-| -------------------- | -------- | --------------------- | ------------------------------------------------------------------------------------------- |
-| `ADMIN`              | —        | Quản trị viên         | Xem toàn bộ mọi team, mọi chức năng, không hạn chế                                          |
-| `SALE_MANAGER`       | Sales    | Trưởng phòng Sales    | Xem/duyệt toàn bộ tour của team Sales; approve/reject confirm tour; duyệt hủy tour đặc biệt |
-| `SELLER`             | Sales    | Nhân viên kinh doanh  | Tạo báo giá, confirm tour, custom lịch trình, yêu cầu hủy tour                              |
-| `OPERATION_MANAGER`  | Vận hành | Trưởng phòng Vận hành | Assign tour cho Operator; duyệt hủy tour đặc biệt; xem toàn bộ tour đang vận hành           |
-| `OPERATOR`           | Vận hành | Nhân viên Vận hành    | Follow và cập nhật các tour được assign; sửa detail dịch vụ thực tế                         |
-| `ACCOUNTANT_MANAGER` | Kế toán  | Trưởng phòng Kế toán  | Xem tổng công nợ toàn hệ thống; duyệt các phiếu thanh toán                                  |
-| `ACCOUNTANT`         | Kế toán  | Kế toán viên          | Nhập/cập nhật trạng thái thu/chi; tạo phiếu hoàn tiền                                       |
+| Role                | Team     | Tên hiển thị          | Mô tả chung                                                                                |
+| ------------------- | -------- | --------------------- | ------------------------------------------------------------------------------------------ |
+| `ADMIN`             | —        | Quản trị viên         | Toàn quyền hệ thống, quản lý người dùng, xem mọi chức năng không hạn chế                   |
+| `SALE_MANAGER`      | Sales    | Trưởng phòng Sales    | Quản lý toàn bộ luồng sales; approve/reject confirm tour; duyệt hủy tour đặc biệt          |
+| `SELLER`            | Sales    | Nhân viên kinh doanh  | Tạo báo giá, confirm tour, custom lịch trình, yêu cầu hủy tour                             |
+| `OPERATION_MANAGER` | Vận hành | Trưởng phòng Vận hành | Assign tour cho Operator; duyệt hủy tour đặc biệt; xem toàn bộ tour đang vận hành          |
+| `OPERATOR`          | Vận hành | Nhân viên Vận hành    | Follow và cập nhật các tour được assign; sửa detail dịch vụ thực tế                        |
+| `ACCOUNTANT`        | Kế toán  | Kế toán               | Quản lý toàn bộ thu/chi; nhập trạng thái thanh toán; tạo phiếu hoàn tiền; xem tổng công nợ |
+
+---
+
+**Ma trận phân quyền chi tiết:**
+
+> **Chú thích:**
+>
+> - **Full** = Xem + Tạo + Sửa + Xóa
+> - **R/W** = Xem + Tạo + Sửa (không xóa)
+> - **R** = Chỉ xem
+> - **—** = Không có quyền truy cập
+
+#### Dashboard & Quản lý người dùng
+
+| Chức năng          | ADMIN | SALE_MANAGER | SELLER | OPERATION_MANAGER | OPERATOR | ACCOUNTANT |
+| ------------------ | :---: | :----------: | :----: | :---------------: | :------: | :--------: |
+| Dashboard          | Full  |      R       |   R    |         R         |    R     |     R      |
+| Quản lý người dùng | Full  |      —       |   —    |         —         |    —     |     —      |
+
+#### Master Data
+
+| Chức năng                   | ADMIN | SALE_MANAGER | SELLER | OPERATION_MANAGER | OPERATOR | ACCOUNTANT |
+| --------------------------- | :---: | :----------: | :----: | :---------------: | :------: | :--------: |
+| Nhà cung cấp (Supplier)     | Full  |      R       |   R    |        R/W        |    R     |     —      |
+| Hướng dẫn viên (Tour Guide) | Full  |      R       |   R    |        R/W        |    R     |     —      |
+| Nhà hàng (Restaurant)       | Full  |      R       |   R    |        R/W        |    R     |     —      |
+| Khách sạn (Hotel)           | Full  |      R       |   R    |        R/W        |    R     |     —      |
+| Vận chuyển (Transportation) | Full  |      R       |   R    |        R/W        |    R     |     —      |
+| Nhóm Tour (Group Tour)      | Full  |      R       |   R    |        R/W        |    R     |     —      |
+| Visa Fast Track             | Full  |      R       |   R    |         R         |    —     |     —      |
+| Phí vào cửa (Entrance Fee)  | Full  |      R       |   R    |        R/W        |    R     |     —      |
+| Chuyến bay (Flights)        | Full  |      R       |   R    |        R/W        |    R     |     —      |
+| Dịch vụ thêm (Addon)        | Full  |      R       |   R    |        R/W        |    R     |     —      |
+
+#### Tour Management
+
+| Chức năng             | ADMIN | SALE_MANAGER | SELLER | OPERATION_MANAGER | OPERATOR | ACCOUNTANT |
+| --------------------- | :---: | :----------: | :----: | :---------------: | :------: | :--------: |
+| Ngày hành trình (Day) | Full  |     R/W      |   R    |        R/W        |    R     |     —      |
+| Tour mẫu (Tour)       | Full  |     R/W      |   R    |        R/W        |    R     |     —      |
+
+#### Sales
+
+| Chức năng                         | ADMIN | SALE_MANAGER | SELLER | OPERATION_MANAGER | OPERATOR | ACCOUNTANT |
+| --------------------------------- | :---: | :----------: | :----: | :---------------: | :------: | :--------: |
+| Yêu cầu đặt tour (Trip Request)   | Full  |     Full     |  R/W   |         R         |    —     |     R      |
+| Báo giá (Quotation)               | Full  |     Full     | R/W ¹  |         R         |    —     |     R      |
+| Tour đã xác nhận (Confirmed Tour) | Full  |     Full     |  R/W   |         R         |    R     |     R      |
+
+> ¹ **SELLER – Báo giá:** Chỉ có thể Edit/Delete quotation ở trạng thái `draft`. Chức năng Approve/Reject chỉ dành cho `SALE_MANAGER`.
+
+#### Operations
+
+| Chức năng               | ADMIN | SALE_MANAGER | SELLER | OPERATION_MANAGER | OPERATOR | ACCOUNTANT |
+| ----------------------- | :---: | :----------: | :----: | :---------------: | :------: | :--------: |
+| Danh sách tour vận hành | Full  |      R       |   —    |       Full        |   R/W    |     —      |
+| Chi tiết vận hành       | Full  |      R       |   —    |       Full        |   R/W    |     —      |
+
+#### Accounting
+
+| Chức năng                         | ADMIN | SALE_MANAGER | SELLER | OPERATION_MANAGER | OPERATOR | ACCOUNTANT |
+| --------------------------------- | :---: | :----------: | :----: | :---------------: | :------: | :--------: |
+| Thu khách hàng (Customer Payment) | Full  |      R       |   —    |         —         |    —     |    Full    |
+| Chi nhà cung cấp (Vendor Payment) | Full  |      R       |   —    |         —         |    —     |    Full    |
+
+#### Notification
+
+| Chức năng | ADMIN | SALE_MANAGER | SELLER | OPERATION_MANAGER | OPERATOR | ACCOUNTANT |
+| --------- | :---: | :----------: | :----: | :---------------: | :------: | :--------: |
+| Thông báo | Full  |      R       |   R    |         R         |    R     |     R      |
+
+---
 
 **Quy tắc xem dữ liệu theo role:**
 
 - **ADMIN:** Xem toàn bộ, không hạn chế
-- **Manager (bất kỳ team):** Xem toàn bộ dữ liệu của team mình
+- **Manager (SALE_MANAGER / OPERATION_MANAGER):** Xem toàn bộ dữ liệu của team mình
 - **Staff (SELLER / OPERATOR / ACCOUNTANT):** Chỉ xem dữ liệu được giao / liên quan đến mình
 
-> **Lưu ý kỹ thuật:** Hiện có sự không đồng nhất trong source code:
-> - `src/shared/enums/role.enum.ts` định nghĩa 4 role đơn giản: `ADMIN`, `MANAGER`, `ACCOUNTANT`, `SELLER`
-> - `src/modules/userManagement/types/user.type.ts` định nghĩa `UserRole` với 7 role chi tiết: `ADMIN`, `SALE_MANAGER`, `SELLER`, `OPERATION_MANAGER`, `OPERATOR`, `ACCOUNTANT_MANAGER`, `ACCOUNTANT`
->
-> Bảng 7 role ở trên phản ánh `UserRole` type (chi tiết hơn, dùng trong User Management module). Cần đồng nhất `role.enum.ts` theo `UserRole` khi tích hợp backend.
+> **Lưu ý kỹ thuật:** `UserRole` type trong `src/modules/userManagement/types/user.type.ts` định nghĩa đúng 6 role trên. File `src/shared/enums/role.enum.ts` hiện có 4 role đơn giản (`ADMIN`, `MANAGER`, `ACCOUNTANT`, `SELLER`) — cần đồng nhất theo `UserRole` khi tích hợp backend. Ma trận phân quyền ở trên là thiết kế nghiệp vụ mục tiêu, chưa được enforce trong code UI hiện tại.
 
 ---
 
@@ -1031,36 +1099,36 @@ Bước 4: Lưu → dịch vụ được thêm vào lịch trình
 
 ### 5.15 VendorPayment – Phiếu chi cho Vendor
 
-| Field               | Kiểu    | Ý nghĩa                                      |
-| ------------------- | ------- | -------------------------------------------- |
-| `id`                | string  | Mã phiếu chi                                 |
-| `confirmedTourId`   | string  | ID tour liên quan                            |
-| `confirmedTourCode` | string  | Mã tour liên quan                            |
-| `vendorName`        | string  | Tên vendor                                   |
-| `vendorType`        | string  | Loại vendor (hotel / flight / restaurant...) |
-| `serviceDescription`| string  | Mô tả dịch vụ thanh toán                     |
-| `expectedAmount`    | number  | Số tiền phải trả theo kế hoạch               |
-| `actualAmount`      | number? | Số tiền thực trả                             |
-| `currency`          | string  | Tiền tệ                                      |
-| `dueDate`           | string  | Hạn thanh toán cho vendor                    |
-| `paidAt`            | string? | Ngày thực trả                                |
-| `paymentMethod`     | string? | Hình thức thanh toán                         |
-| `status`            | enum    | `pending` / `partial` / `paid` / `overdue`   |
-| `note`              | string  | Ghi chú                                      |
-| `createdBy`         | string  | Người tạo phiếu chi                          |
-| `createdAt`         | string  | Thời điểm tạo                                |
+| Field                | Kiểu    | Ý nghĩa                                      |
+| -------------------- | ------- | -------------------------------------------- |
+| `id`                 | string  | Mã phiếu chi                                 |
+| `confirmedTourId`    | string  | ID tour liên quan                            |
+| `confirmedTourCode`  | string  | Mã tour liên quan                            |
+| `vendorName`         | string  | Tên vendor                                   |
+| `vendorType`         | string  | Loại vendor (hotel / flight / restaurant...) |
+| `serviceDescription` | string  | Mô tả dịch vụ thanh toán                     |
+| `expectedAmount`     | number  | Số tiền phải trả theo kế hoạch               |
+| `actualAmount`       | number? | Số tiền thực trả                             |
+| `currency`           | string  | Tiền tệ                                      |
+| `dueDate`            | string  | Hạn thanh toán cho vendor                    |
+| `paidAt`             | string? | Ngày thực trả                                |
+| `paymentMethod`      | string? | Hình thức thanh toán                         |
+| `status`             | enum    | `pending` / `partial` / `paid` / `overdue`   |
+| `note`               | string  | Ghi chú                                      |
+| `createdBy`          | string  | Người tạo phiếu chi                          |
+| `createdAt`          | string  | Thời điểm tạo                                |
 
 ### 5.16 AddonService – Dịch vụ thêm trong Master Data
 
-| Field         | Kiểu    | Ý nghĩa                                                                                                          |
-| ------------- | ------- | ---------------------------------------------------------------------------------------------------------------- |
-| `id`          | string  | Mã định danh duy nhất                                                                                            |
-| `entityType`  | string  | Loại entity chủ sở hữu (hotel / restaurant / transport / flight / tour_guide / visa / entrance_fee / group_tour) |
-| `entityId`    | string  | ID của entity chủ sở hữu                                                                                         |
-| `name`        | string  | Tên dịch vụ (bắt buộc)                                                                                           |
-| `price`       | number  | Đơn giá (≥ 0)                                                                                                    |
-| `currency`    | string  | Tiền tệ                                                                                                          |
-| `description` | string  | Mô tả chi tiết                                                                                                   |
+| Field         | Kiểu   | Ý nghĩa                                                                                                          |
+| ------------- | ------ | ---------------------------------------------------------------------------------------------------------------- |
+| `id`          | string | Mã định danh duy nhất                                                                                            |
+| `entityType`  | string | Loại entity chủ sở hữu (hotel / restaurant / transport / flight / tour_guide / visa / entrance_fee / group_tour) |
+| `entityId`    | string | ID của entity chủ sở hữu                                                                                         |
+| `name`        | string | Tên dịch vụ (bắt buộc)                                                                                           |
+| `price`       | number | Đơn giá (≥ 0)                                                                                                    |
+| `currency`    | string | Tiền tệ                                                                                                          |
+| `description` | string | Mô tả chi tiết                                                                                                   |
 
 ### 5.17 Quotation – Báo giá ✨ _Mới_
 
@@ -1131,34 +1199,34 @@ Bước 4: Lưu → dịch vụ được thêm vào lịch trình
 
 ### 5.19 TripRequest – Yêu cầu chuyến đi (Lead) ✨ _Mới_
 
-| Field                | Kiểu     | Ý nghĩa                                                                   |
-| -------------------- | -------- | ------------------------------------------------------------------------- |
-| `id`                 | string   | Mã định danh duy nhất                                                     |
-| `code`               | string   | Mã lead (tự sinh, VD: `TR-2026-0012`)                                     |
-| `customerName`       | string   | Tên khách / tên đoàn (bắt buộc)                                           |
-| `customerEmail`      | string?  | Email liên hệ                                                             |
-| `customerPhone`      | string?  | Số điện thoại liên hệ                                                     |
-| `leadSource`         | enum     | Nguồn lead: `email` / `phone` / `zalo` / `referral` / `walk_in` / `other` |
-| `destination`        | string?  | Điểm đến mong muốn                                                        |
-| `departureDateEst`   | string?  | Ngày đi dự kiến                                                           |
-| `durationDays`       | number?  | Số ngày dự kiến                                                           |
-| `numberOfAdults`     | number   | Số người lớn (bắt buộc)                                                   |
-| `numberOfChildren`   | number   | Số trẻ em (bắt buộc)                                                      |
-| `serviceLevel`       | enum     | Mức dịch vụ: `budget` / `standard` / `luxury`                             |
-| `budgetEstimate`     | number?  | Ngân sách tham khảo (số tiền)                                             |
-| `budgetCurrency`     | string?  | Tiền tệ của ngân sách tham khảo                                           |
-| `specialRequirements`| string?  | Sở thích, yêu cầu đặc biệt (ăn chay, phòng riêng, xe lăn...)             |
-| `suggestedTourId`    | string?  | ID tour mẫu gợi ý (tùy chọn)                                              |
-| `suggestedTourName`  | string?  | Tên tour mẫu gợi ý (tùy chọn)                                             |
-| `assignedTo`         | string?  | Seller phụ trách                                                          |
-| `status`             | enum     | Trạng thái (xem bảng bên dưới)                                            |
-| `quotationIds`       | string[] | Danh sách ID các Báo giá được tạo từ TripRequest này                      |
-| `confirmedTourId`    | string?  | ConfirmedTour đã tạo (chỉ khi `converted`)                                |
-| `lostReason`         | string?  | Lý do mất lead (chỉ khi `lost`)                                           |
-| `holdUntil`          | string?  | Ngày hẹn liên hệ lại (chỉ khi `on_hold`)                                  |
-| `internalNotes`      | string?  | Ghi chú nội bộ                                                            |
-| `createdBy`          | string   | Người tạo                                                                 |
-| `createdAt`          | string   | Ngày tạo                                                                  |
+| Field                 | Kiểu     | Ý nghĩa                                                                   |
+| --------------------- | -------- | ------------------------------------------------------------------------- |
+| `id`                  | string   | Mã định danh duy nhất                                                     |
+| `code`                | string   | Mã lead (tự sinh, VD: `TR-2026-0012`)                                     |
+| `customerName`        | string   | Tên khách / tên đoàn (bắt buộc)                                           |
+| `customerEmail`       | string?  | Email liên hệ                                                             |
+| `customerPhone`       | string?  | Số điện thoại liên hệ                                                     |
+| `leadSource`          | enum     | Nguồn lead: `email` / `phone` / `zalo` / `referral` / `walk_in` / `other` |
+| `destination`         | string?  | Điểm đến mong muốn                                                        |
+| `departureDateEst`    | string?  | Ngày đi dự kiến                                                           |
+| `durationDays`        | number?  | Số ngày dự kiến                                                           |
+| `numberOfAdults`      | number   | Số người lớn (bắt buộc)                                                   |
+| `numberOfChildren`    | number   | Số trẻ em (bắt buộc)                                                      |
+| `serviceLevel`        | enum     | Mức dịch vụ: `budget` / `standard` / `luxury`                             |
+| `budgetEstimate`      | number?  | Ngân sách tham khảo (số tiền)                                             |
+| `budgetCurrency`      | string?  | Tiền tệ của ngân sách tham khảo                                           |
+| `specialRequirements` | string?  | Sở thích, yêu cầu đặc biệt (ăn chay, phòng riêng, xe lăn...)              |
+| `suggestedTourId`     | string?  | ID tour mẫu gợi ý (tùy chọn)                                              |
+| `suggestedTourName`   | string?  | Tên tour mẫu gợi ý (tùy chọn)                                             |
+| `assignedTo`          | string?  | Seller phụ trách                                                          |
+| `status`              | enum     | Trạng thái (xem bảng bên dưới)                                            |
+| `quotationIds`        | string[] | Danh sách ID các Báo giá được tạo từ TripRequest này                      |
+| `confirmedTourId`     | string?  | ConfirmedTour đã tạo (chỉ khi `converted`)                                |
+| `lostReason`          | string?  | Lý do mất lead (chỉ khi `lost`)                                           |
+| `holdUntil`           | string?  | Ngày hẹn liên hệ lại (chỉ khi `on_hold`)                                  |
+| `internalNotes`       | string?  | Ghi chú nội bộ                                                            |
+| `createdBy`           | string   | Người tạo                                                                 |
+| `createdAt`           | string   | Ngày tạo                                                                  |
 
 **Trạng thái TripRequest:**
 
@@ -1279,7 +1347,7 @@ Bước 4: Lưu → dịch vụ được thêm vào lịch trình
 
 ### 7.10 Quy tắc Thanh toán
 
-- **ACCOUNTANT_MANAGER** xem tổng công nợ toàn hệ thống; **ACCOUNTANT** chỉ nhập/cập nhật dữ liệu
+- **ACCOUNTANT** có toàn quyền kế toán: xem tổng công nợ toàn hệ thống, nhập/cập nhật trạng thái thu/chi, tạo phiếu hoàn tiền
 - Phiếu chi chỉ được tạo khi dịch vụ đã được Vận hành xác nhận (`confirmed` / `completed`)
 - Không được xóa phiếu thanh toán đã ghi nhận — chỉ được cập nhật trạng thái
 - Một tour có thể có nhiều đợt thu khác nhau theo thỏa thuận hợp đồng
@@ -1347,25 +1415,25 @@ Bước 4: Lưu → dịch vụ được thêm vào lịch trình
 
 ## 9. Ghi chú & giả định
 
-| STT | Mục                             | Ghi chú                                                                                                                                    |
-| --- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| 1   | **Mock Store**                  | Toàn bộ dữ liệu nghiệp vụ lưu trong RAM. Khi **refresh trang, dữ liệu bị mất**. Đây là giai đoạn phát triển UI trước khi tích hợp backend. |
-| 2   | **Authentication**              | Hệ thống xác thực đang được mock cứng với role ADMIN toàn quyền. Cấu trúc JWT đã được chuẩn bị nhưng chưa kích hoạt.                       |
-| 3   | **Dashboard**                   | Màn hình Dashboard đã được triển khai đầy đủ với KPI cards, biểu đồ trạng thái, danh sách công việc cần xử lý, tour sắp khởi hành và cảnh báo thanh toán. Hiện dùng mock data. |
-| 4   | **Phân quyền chi tiết**         | `role.enum.ts` chỉ có 4 role đơn giản; phân quyền per-route/per-action chưa được triển khai. `UserRole` type trong User Management có đủ 7 role nghiệp vụ nhưng chưa được dùng để kiểm soát truy cập. |
-| 5   | **Visa `code` field**           | Field `code` trong entity Visa đang bị comment out — có thể đang tạm bỏ trong giai đoạn thiết kế.                                          |
-| 6   | **Flight `code`/`airlineCode`** | Tương tự, các field `code` và `airlineCode` của Flight bị comment out.                                                                     |
-| 7   | **Xuất báo giá**                | Chức năng **in báo giá** đã được triển khai (`QuotationPrintPage`): tự động mở dialog in của trình duyệt với layout được tối ưu cho A4. Tích hợp gửi qua email chưa có trong source code.                         |
-| 8   | **Backend API**                 | HTTP client (Axios) đã cấu hình với `VITE_API_BASE_URL` — backend đã được thiết kế nhưng chưa tích hợp vào frontend.                       |
-| 9   | **Ngôn ngữ giao diện**          | Toàn bộ UI bằng tiếng Việt; tiền tệ hỗ trợ đa quốc gia nhưng ưu tiên VND.                                                                  |
-| 10  | **Country API**                 | Dữ liệu quốc gia/thành phố lấy từ **API bên thứ ba** (external service), cấu hình qua `VITE_API_COUNTRY_URL`.                              |
-| 11  | **Quotation → Email**           | Luồng gửi báo giá qua email cho khách chưa được định nghĩa trong UI hiện tại. Tạm thời Seller tự xuất/gửi ngoài hệ thống.                  |
-| 12  | **Chính sách phí hủy**          | Bảng phí hủy trong mục 3.13 chỉ mang tính tham khảo. Giá trị thực do Kế toán nhập tay theo từng hợp đồng.                                  |
-| 13  | **TripRequest Dashboard**       | Trang tổng quan Sales nên hiển thị phễu: Tổng lead / Đang xử lý / Đã chốt / Mất lead. Chi tiết chưa được triển khai.                       |
-| 14  | **TripRequest → Quotation**     | Liên kết giữa TripRequest và Quotation là **một chiều**: TripRequest lưu mảng `quotationIds` trỏ đến các Quotation liên quan. Quotation **không** có field `tripRequestId` ngược lại. Khi tạo Quotation từ TripRequest, hệ thống tự điền thông tin khách và tour mẫu gợi ý.                                       |
-| 15  | **AddonService — unit & isActive** | Field `unit` (đơn vị tính) và `isActive` được mô tả trong thiết kế nghiệp vụ nhưng **chưa có trong TypeScript type hiện tại** (`addon.type.ts`). Cần bổ sung khi tích hợp backend. |
-| 16  | **Quotation — confirmedTourId**    | Field `confirmedTourId` đã có trong TypeScript type nhưng chưa được mô tả trong phiên bản tài liệu trước. Đã bổ sung vào mục 5.17 từ v1.6. |
-| 17  | **TourGuide — currency**           | Field `pricePerDay` trong type hiện tại là `number` thuần, không kèm `currency`. Nếu cần hỗ trợ đa tiền tệ cho hướng dẫn viên, cần bổ sung field này khi tích hợp backend. |
+| STT | Mục                                | Ghi chú                                                                                                                                                                                                                                                                     |
+| --- | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | **Mock Store**                     | Toàn bộ dữ liệu nghiệp vụ lưu trong RAM. Khi **refresh trang, dữ liệu bị mất**. Đây là giai đoạn phát triển UI trước khi tích hợp backend.                                                                                                                                  |
+| 2   | **Authentication**                 | Hệ thống xác thực đang được mock cứng với role ADMIN toàn quyền. Cấu trúc JWT đã được chuẩn bị nhưng chưa kích hoạt.                                                                                                                                                        |
+| 3   | **Dashboard**                      | Màn hình Dashboard đã được triển khai đầy đủ với KPI cards, biểu đồ trạng thái, danh sách công việc cần xử lý, tour sắp khởi hành và cảnh báo thanh toán. Hiện dùng mock data.                                                                                              |
+| 4   | **Phân quyền chi tiết**            | `role.enum.ts` chỉ có 4 role đơn giản; phân quyền per-route/per-action chưa được triển khai. `UserRole` type trong User Management có đủ 6 role nghiệp vụ. Ma trận phân quyền chi tiết đã được thiết kế (mục 4) nhưng chưa được enforce trong route config.                 |
+| 5   | **Visa `code` field**              | Field `code` trong entity Visa đang bị comment out — có thể đang tạm bỏ trong giai đoạn thiết kế.                                                                                                                                                                           |
+| 6   | **Flight `code`/`airlineCode`**    | Tương tự, các field `code` và `airlineCode` của Flight bị comment out.                                                                                                                                                                                                      |
+| 7   | **Xuất báo giá**                   | Chức năng **in báo giá** đã được triển khai (`QuotationPrintPage`): tự động mở dialog in của trình duyệt với layout được tối ưu cho A4. Tích hợp gửi qua email chưa có trong source code.                                                                                   |
+| 8   | **Backend API**                    | HTTP client (Axios) đã cấu hình với `VITE_API_BASE_URL` — backend đã được thiết kế nhưng chưa tích hợp vào frontend.                                                                                                                                                        |
+| 9   | **Ngôn ngữ giao diện**             | Toàn bộ UI bằng tiếng Việt; tiền tệ hỗ trợ đa quốc gia nhưng ưu tiên VND.                                                                                                                                                                                                   |
+| 10  | **Country API**                    | Dữ liệu quốc gia/thành phố lấy từ **API bên thứ ba** (external service), cấu hình qua `VITE_API_COUNTRY_URL`.                                                                                                                                                               |
+| 11  | **Quotation → Email**              | Luồng gửi báo giá qua email cho khách chưa được định nghĩa trong UI hiện tại. Tạm thời Seller tự xuất/gửi ngoài hệ thống.                                                                                                                                                   |
+| 12  | **Chính sách phí hủy**             | Bảng phí hủy trong mục 3.13 chỉ mang tính tham khảo. Giá trị thực do Kế toán nhập tay theo từng hợp đồng.                                                                                                                                                                   |
+| 13  | **TripRequest Dashboard**          | Trang tổng quan Sales nên hiển thị phễu: Tổng lead / Đang xử lý / Đã chốt / Mất lead. Chi tiết chưa được triển khai.                                                                                                                                                        |
+| 14  | **TripRequest → Quotation**        | Liên kết giữa TripRequest và Quotation là **một chiều**: TripRequest lưu mảng `quotationIds` trỏ đến các Quotation liên quan. Quotation **không** có field `tripRequestId` ngược lại. Khi tạo Quotation từ TripRequest, hệ thống tự điền thông tin khách và tour mẫu gợi ý. |
+| 15  | **AddonService — unit & isActive** | Field `unit` (đơn vị tính) và `isActive` được mô tả trong thiết kế nghiệp vụ nhưng **chưa có trong TypeScript type hiện tại** (`addon.type.ts`). Cần bổ sung khi tích hợp backend.                                                                                          |
+| 16  | **Quotation — confirmedTourId**    | Field `confirmedTourId` đã có trong TypeScript type nhưng chưa được mô tả trong phiên bản tài liệu trước. Đã bổ sung vào mục 5.17 từ v1.6.                                                                                                                                  |
+| 17  | **TourGuide — currency**           | Field `pricePerDay` trong type hiện tại là `number` thuần, không kèm `currency`. Nếu cần hỗ trợ đa tiền tệ cho hướng dẫn viên, cần bổ sung field này khi tích hợp backend.                                                                                                  |
 
 ---
 

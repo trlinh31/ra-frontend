@@ -14,6 +14,8 @@ import {
   SidebarRail,
 } from "@/shared/components/ui/sidebar";
 import { APP_NAME } from "@/shared/constants/app.constant";
+import { useAuth } from "@/shared/contexts/AuthContext";
+import type { Role } from "@/shared/enums/role.enum";
 import { getSidebarRoutes } from "@/shared/layouts/components/Sidebar/sidebar.config";
 import { ChevronRight } from "lucide-react";
 import type React from "react";
@@ -34,7 +36,9 @@ function NavItem({ item }: { item: AppRoute }) {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const routes = getSidebarRoutes([]);
+  const { session } = useAuth();
+  const userRole = session?.user?.roleKey as Role | undefined;
+  const routes = getSidebarRoutes(userRole ? [userRole] : []);
 
   return (
     <Sidebar {...props}>

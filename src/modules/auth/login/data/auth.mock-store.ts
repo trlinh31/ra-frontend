@@ -1,5 +1,5 @@
-import { Role } from "@/shared/enums/role.enum";
 import type { AuthUser } from "@/modules/auth/login/types/auth.type";
+import { Role } from "@/shared/enums/role.enum";
 
 // ─── Mock user registry ───────────────────────────────────────────────────────
 type MockUserRecord = AuthUser & { password: string };
@@ -19,14 +19,14 @@ const MOCK_USERS: MockUserRecord[] = [
   },
   {
     id: "usr_002",
-    email: "manager@app.com",
-    password: "Manager@123",
-    name: "Trần Thị Manager",
-    username: "manager",
-    role: "Quản lý",
-    roleKey: Role.MANAGER,
+    email: "sale-manager@app.com",
+    password: "SaleManager@123",
+    name: "Trần Thị Sale Manager",
+    username: "sale_manager",
+    role: "Trưởng phòng Sales",
+    roleKey: Role.SALE_MANAGER,
     avatar: "TT",
-    permissions: ["read", "write", "delete"],
+    permissions: ["read", "write", "delete", "approve"],
     loginAt: "",
   },
   {
@@ -35,7 +35,7 @@ const MOCK_USERS: MockUserRecord[] = [
     password: "Seller@123",
     name: "Lê Văn Seller",
     username: "seller",
-    role: "Nhân viên Sales",
+    role: "Nhân viên kinh doanh",
     roleKey: Role.SELLER,
     avatar: "LV",
     permissions: ["read", "write"],
@@ -43,13 +43,37 @@ const MOCK_USERS: MockUserRecord[] = [
   },
   {
     id: "usr_004",
+    email: "operation-manager@app.com",
+    password: "OpManager@123",
+    name: "Phạm Văn Operation Manager",
+    username: "operation_manager",
+    role: "Trưởng phòng Vận hành",
+    roleKey: Role.OPERATION_MANAGER,
+    avatar: "PV",
+    permissions: ["read", "write", "delete", "assign"],
+    loginAt: "",
+  },
+  {
+    id: "usr_005",
+    email: "operator@app.com",
+    password: "Operator@123",
+    name: "Hoàng Thị Operator",
+    username: "operator",
+    role: "Nhân viên Vận hành",
+    roleKey: Role.OPERATOR,
+    avatar: "HT",
+    permissions: ["read", "write"],
+    loginAt: "",
+  },
+  {
+    id: "usr_006",
     email: "accountant@app.com",
     password: "Accountant@123",
-    name: "Phạm Thị Kế Toán",
+    name: "Vũ Thị Kế Toán",
     username: "accountant",
     role: "Kế toán",
     roleKey: Role.ACCOUNTANT,
-    avatar: "PT",
+    avatar: "VT",
     permissions: ["read", "write"],
     loginAt: "",
   },
@@ -83,16 +107,10 @@ function generateMockToken(user: MockUserRecord): string {
 }
 
 // ─── Auth service (async, mock network delay) ─────────────────────────────────
-export async function loginWithCredentials(
-  email: string,
-  password: string
-): Promise<{ token: string; user: AuthUser }> {
+export async function loginWithCredentials(email: string, password: string): Promise<{ token: string; user: AuthUser }> {
   await new Promise((r) => setTimeout(r, 800)); // simulate latency
 
-  const found = MOCK_USERS.find(
-    (u) =>
-      u.email.toLowerCase() === email.toLowerCase() && u.password === password
-  );
+  const found = MOCK_USERS.find((u) => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
 
   if (!found) {
     throw new Error("Email hoặc mật khẩu không chính xác.");

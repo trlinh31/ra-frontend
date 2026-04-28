@@ -1,3 +1,4 @@
+import { Role } from "@/shared/enums/role.enum";
 import {
   Banknote,
   Bell,
@@ -118,6 +119,7 @@ export const APP_ROUTES: AppRoute[] = [
         title: "Dashboard",
         pageTitle: "Tổng quan hệ thống",
         element: <DashboardPage />,
+        roles: [Role.ADMIN, Role.SALE_MANAGER, Role.SELLER, Role.OPERATION_MANAGER, Role.OPERATOR, Role.ACCOUNTANT],
         icon: LayoutGrid,
         showInSidebar: true,
       },
@@ -127,6 +129,7 @@ export const APP_ROUTES: AppRoute[] = [
         pageTitle: "Quản lý Master Data",
         icon: Box,
         showInSidebar: true,
+        roles: [Role.ADMIN, Role.SALE_MANAGER, Role.SELLER, Role.OPERATION_MANAGER, Role.OPERATOR],
         children: [
           {
             path: PATHS.MASTER_DATA.SUPPLIER,
@@ -135,16 +138,19 @@ export const APP_ROUTES: AppRoute[] = [
             element: <SupplierListPage />,
             icon: Container,
             showInSidebar: true,
+            roles: [Role.ADMIN, Role.SALE_MANAGER, Role.SELLER, Role.OPERATION_MANAGER, Role.OPERATOR],
           },
           {
             path: PATHS.MASTER_DATA.SUPPLIER_CREATE,
             element: <EditSupplierPage />,
             showInSidebar: false,
+            roles: [Role.ADMIN, Role.OPERATION_MANAGER],
           },
           {
             path: PATHS.MASTER_DATA.SUPPLIER_EDIT,
             element: <EditSupplierPage />,
             showInSidebar: false,
+            roles: [Role.ADMIN, Role.OPERATION_MANAGER],
           },
           {
             path: PATHS.MASTER_DATA.TOUR_GUIDE,
@@ -153,16 +159,19 @@ export const APP_ROUTES: AppRoute[] = [
             element: <TourGuideListPage />,
             icon: UserRound,
             showInSidebar: true,
+            roles: [Role.ADMIN, Role.SALE_MANAGER, Role.SELLER, Role.OPERATION_MANAGER, Role.OPERATOR],
           },
           {
             path: PATHS.MASTER_DATA.TOUR_GUIDE_CREATE,
             element: <EditTourGuidePage />,
             showInSidebar: false,
+            roles: [Role.ADMIN, Role.OPERATION_MANAGER],
           },
           {
             path: PATHS.MASTER_DATA.TOUR_GUIDE_EDIT,
             element: <EditTourGuidePage />,
             showInSidebar: false,
+            roles: [Role.ADMIN, Role.OPERATION_MANAGER],
           },
           {
             path: PATHS.MASTER_DATA.RESTAURANT,
@@ -171,16 +180,19 @@ export const APP_ROUTES: AppRoute[] = [
             element: <RestaurantListPage />,
             icon: UtensilsCrossed,
             showInSidebar: true,
+            roles: [Role.ADMIN, Role.SALE_MANAGER, Role.SELLER, Role.OPERATION_MANAGER, Role.OPERATOR],
           },
           {
             path: PATHS.MASTER_DATA.RESTAURANT_CREATE,
             element: <EditRestaurantPage />,
             showInSidebar: false,
+            roles: [Role.ADMIN, Role.OPERATION_MANAGER],
           },
           {
             path: PATHS.MASTER_DATA.RESTAURANT_EDIT,
             element: <EditRestaurantPage />,
             showInSidebar: false,
+            roles: [Role.ADMIN, Role.OPERATION_MANAGER],
           },
           {
             path: PATHS.MASTER_DATA.HOTEL,
@@ -189,21 +201,25 @@ export const APP_ROUTES: AppRoute[] = [
             element: <HotelListPage />,
             icon: Hotel,
             showInSidebar: true,
+            roles: [Role.ADMIN, Role.SALE_MANAGER, Role.SELLER, Role.OPERATION_MANAGER, Role.OPERATOR],
           },
           {
             path: PATHS.MASTER_DATA.HOTEL_CREATE,
             element: <EditHotelPage />,
             showInSidebar: false,
+            roles: [Role.ADMIN, Role.OPERATION_MANAGER],
           },
           {
             path: PATHS.MASTER_DATA.HOTEL_EDIT,
             element: <EditHotelPage />,
             showInSidebar: false,
+            roles: [Role.ADMIN, Role.OPERATION_MANAGER],
           },
           {
             path: PATHS.MASTER_DATA.HOTEL_DETAIL,
             element: <HotelDetailPage />,
             showInSidebar: false,
+            roles: [Role.ADMIN, Role.SALE_MANAGER, Role.SELLER, Role.OPERATION_MANAGER, Role.OPERATOR],
           },
           {
             path: PATHS.MASTER_DATA.TRANSPORTATION,
@@ -212,16 +228,19 @@ export const APP_ROUTES: AppRoute[] = [
             element: <TransportationListPage />,
             icon: Bus,
             showInSidebar: true,
+            roles: [Role.ADMIN, Role.SALE_MANAGER, Role.SELLER, Role.OPERATION_MANAGER, Role.OPERATOR],
           },
           {
             path: PATHS.MASTER_DATA.TRANSPORTATION_CREATE,
             element: <EditTransportationPage />,
             showInSidebar: false,
+            roles: [Role.ADMIN, Role.OPERATION_MANAGER],
           },
           {
             path: PATHS.MASTER_DATA.TRANSPORTATION_EDIT,
             element: <EditTransportationPage />,
             showInSidebar: false,
+            roles: [Role.ADMIN, Role.OPERATION_MANAGER],
           },
           {
             path: PATHS.MASTER_DATA.GROUP_TOUR,
@@ -230,16 +249,19 @@ export const APP_ROUTES: AppRoute[] = [
             element: <GroupTourListPage />,
             icon: MapPin,
             showInSidebar: true,
+            roles: [Role.ADMIN, Role.SALE_MANAGER, Role.SELLER, Role.OPERATION_MANAGER, Role.OPERATOR],
           },
           {
             path: PATHS.MASTER_DATA.GROUP_TOUR_CREATE,
             element: <EditGroupTourPage />,
             showInSidebar: false,
+            roles: [Role.ADMIN, Role.OPERATION_MANAGER],
           },
           {
             path: PATHS.MASTER_DATA.GROUP_TOUR_EDIT,
             element: <EditGroupTourPage />,
             showInSidebar: false,
+            roles: [Role.ADMIN, Role.OPERATION_MANAGER],
           },
           {
             path: PATHS.MASTER_DATA.VISA_FAST_TRACK,
@@ -248,16 +270,19 @@ export const APP_ROUTES: AppRoute[] = [
             element: <VisaFastTrackListPage />,
             icon: Shield,
             showInSidebar: true,
+            roles: [Role.ADMIN, Role.SALE_MANAGER, Role.SELLER, Role.OPERATION_MANAGER],
           },
           {
             path: PATHS.MASTER_DATA.VISA_FAST_TRACK_CREATE,
             element: <EditVisaFastTrackPage />,
             showInSidebar: false,
+            roles: [Role.ADMIN],
           },
           {
             path: PATHS.MASTER_DATA.VISA_FAST_TRACK_EDIT,
             element: <EditVisaFastTrackPage />,
             showInSidebar: false,
+            roles: [Role.ADMIN],
           },
           {
             path: PATHS.MASTER_DATA.ENTRANCE_FEE,
@@ -266,16 +291,19 @@ export const APP_ROUTES: AppRoute[] = [
             element: <EntranceFeeListPage />,
             icon: Ticket,
             showInSidebar: true,
+            roles: [Role.ADMIN, Role.SALE_MANAGER, Role.SELLER, Role.OPERATION_MANAGER, Role.OPERATOR],
           },
           {
             path: PATHS.MASTER_DATA.ENTRANCE_FEE_CREATE,
             element: <EditEntranceFeePage />,
             showInSidebar: false,
+            roles: [Role.ADMIN, Role.OPERATION_MANAGER],
           },
           {
             path: PATHS.MASTER_DATA.ENTRANCE_FEE_EDIT,
             element: <EditEntranceFeePage />,
             showInSidebar: false,
+            roles: [Role.ADMIN, Role.OPERATION_MANAGER],
           },
           {
             path: PATHS.MASTER_DATA.FLIGHTS,
@@ -284,16 +312,19 @@ export const APP_ROUTES: AppRoute[] = [
             element: <FlightListPage />,
             icon: Plane,
             showInSidebar: true,
+            roles: [Role.ADMIN, Role.SALE_MANAGER, Role.SELLER, Role.OPERATION_MANAGER, Role.OPERATOR],
           },
           {
             path: PATHS.MASTER_DATA.FLIGHTS_CREATE,
             element: <EditFlightPage />,
             showInSidebar: false,
+            roles: [Role.ADMIN, Role.OPERATION_MANAGER],
           },
           {
             path: PATHS.MASTER_DATA.FLIGHTS_EDIT,
             element: <EditFlightPage />,
             showInSidebar: false,
+            roles: [Role.ADMIN, Role.OPERATION_MANAGER],
           },
         ],
       },
@@ -303,6 +334,7 @@ export const APP_ROUTES: AppRoute[] = [
         pageTitle: "Quản lý Tour",
         icon: Compass,
         showInSidebar: true,
+        roles: [Role.ADMIN, Role.SALE_MANAGER, Role.SELLER, Role.OPERATION_MANAGER, Role.OPERATOR],
         children: [
           {
             path: PATHS.TOUR.DAYS,
@@ -311,16 +343,19 @@ export const APP_ROUTES: AppRoute[] = [
             element: <DayListPage />,
             icon: CalendarDays,
             showInSidebar: true,
+            roles: [Role.ADMIN, Role.SALE_MANAGER, Role.SELLER, Role.OPERATION_MANAGER, Role.OPERATOR],
           },
           {
             path: PATHS.TOUR.DAY_CREATE,
             element: <EditDayPage />,
             showInSidebar: false,
+            roles: [Role.ADMIN, Role.SALE_MANAGER, Role.OPERATION_MANAGER],
           },
           {
             path: PATHS.TOUR.DAY_EDIT,
             element: <EditDayPage />,
             showInSidebar: false,
+            roles: [Role.ADMIN, Role.SALE_MANAGER, Role.OPERATION_MANAGER],
           },
           {
             path: PATHS.TOUR.TOURS,
@@ -329,16 +364,19 @@ export const APP_ROUTES: AppRoute[] = [
             element: <TourListPage />,
             icon: Compass,
             showInSidebar: true,
+            roles: [Role.ADMIN, Role.SALE_MANAGER, Role.SELLER, Role.OPERATION_MANAGER, Role.OPERATOR],
           },
           {
             path: PATHS.TOUR.TOUR_CREATE,
             element: <EditTourPage />,
             showInSidebar: false,
+            roles: [Role.ADMIN, Role.SALE_MANAGER, Role.OPERATION_MANAGER],
           },
           {
             path: PATHS.TOUR.TOUR_EDIT,
             element: <EditTourPage />,
             showInSidebar: false,
+            roles: [Role.ADMIN, Role.SALE_MANAGER, Role.OPERATION_MANAGER],
           },
         ],
       },
@@ -348,6 +386,7 @@ export const APP_ROUTES: AppRoute[] = [
         pageTitle: "Phòng Sales",
         icon: ShoppingBag,
         showInSidebar: true,
+        roles: [Role.ADMIN, Role.SALE_MANAGER, Role.SELLER, Role.OPERATION_MANAGER, Role.ACCOUNTANT],
         children: [
           // ── Trip Request ──────────────────────────────────────────
           {
@@ -357,16 +396,19 @@ export const APP_ROUTES: AppRoute[] = [
             element: <TripRequestListPage />,
             icon: PhoneCall,
             showInSidebar: true,
+            roles: [Role.ADMIN, Role.SALE_MANAGER, Role.SELLER, Role.OPERATION_MANAGER, Role.ACCOUNTANT],
           },
           {
             path: PATHS.SALES.TRIP_REQUEST_CREATE,
             element: <CreateTripRequestPage />,
             showInSidebar: false,
+            roles: [Role.ADMIN, Role.SALE_MANAGER, Role.SELLER],
           },
           {
             path: PATHS.SALES.TRIP_REQUEST_DETAIL,
             element: <TripRequestDetailPage />,
             showInSidebar: false,
+            roles: [Role.ADMIN, Role.SALE_MANAGER, Role.SELLER, Role.OPERATION_MANAGER, Role.ACCOUNTANT],
           },
           // ── Báo giá ──────────────────────────────────────────────
           {
@@ -376,21 +418,25 @@ export const APP_ROUTES: AppRoute[] = [
             element: <QuotationListPage />,
             icon: FileText,
             showInSidebar: true,
+            roles: [Role.ADMIN, Role.SALE_MANAGER, Role.SELLER, Role.OPERATION_MANAGER, Role.ACCOUNTANT],
           },
           {
             path: PATHS.SALES.QUOTATION_CREATE,
             element: <CreateQuotationPage />,
             showInSidebar: false,
+            roles: [Role.ADMIN, Role.SALE_MANAGER, Role.SELLER],
           },
           {
             path: PATHS.SALES.QUOTATION_DETAIL,
             element: <QuotationDetailPage />,
             showInSidebar: false,
+            roles: [Role.ADMIN, Role.SALE_MANAGER, Role.SELLER, Role.OPERATION_MANAGER, Role.ACCOUNTANT],
           },
           {
             path: PATHS.SALES.QUOTATION_EDIT,
             element: <EditQuotationPage />,
             showInSidebar: false,
+            roles: [Role.ADMIN, Role.SALE_MANAGER, Role.SELLER],
           },
           // ── Booking Tour ──────────────────────────────────────────
           {
@@ -400,16 +446,19 @@ export const APP_ROUTES: AppRoute[] = [
             element: <ConfirmedTourListPage />,
             icon: ClipboardCheck,
             showInSidebar: true,
+            roles: [Role.ADMIN, Role.SALE_MANAGER, Role.SELLER, Role.OPERATION_MANAGER, Role.OPERATOR, Role.ACCOUNTANT],
           },
           {
             path: PATHS.SALES.CONFIRMED_TOUR_CREATE,
             element: <CreateConfirmedTourPage />,
             showInSidebar: false,
+            roles: [Role.ADMIN, Role.SALE_MANAGER, Role.SELLER],
           },
           {
             path: PATHS.SALES.CONFIRMED_TOUR_DETAIL,
             element: <ConfirmedTourDetailPage />,
             showInSidebar: false,
+            roles: [Role.ADMIN, Role.SALE_MANAGER, Role.SELLER, Role.OPERATION_MANAGER, Role.OPERATOR, Role.ACCOUNTANT],
           },
         ],
       },
@@ -420,6 +469,7 @@ export const APP_ROUTES: AppRoute[] = [
         pageTitle: "Vận hành Tour",
         icon: Truck,
         showInSidebar: true,
+        roles: [Role.ADMIN, Role.SALE_MANAGER, Role.OPERATION_MANAGER, Role.OPERATOR],
         children: [
           {
             path: PATHS.OPERATIONS.TOUR_LIST,
@@ -427,12 +477,14 @@ export const APP_ROUTES: AppRoute[] = [
             pageTitle: "Vận hành Tour",
             element: <OperatorToursPage />,
             icon: Truck,
+            roles: [Role.ADMIN, Role.SALE_MANAGER, Role.OPERATION_MANAGER, Role.OPERATOR],
             showInSidebar: true,
           },
           {
             path: PATHS.OPERATIONS.TOUR_DETAIL,
             element: <OperationDetailPage />,
             showInSidebar: false,
+            roles: [Role.ADMIN, Role.SALE_MANAGER, Role.OPERATION_MANAGER, Role.OPERATOR],
           },
         ],
       },
@@ -442,6 +494,7 @@ export const APP_ROUTES: AppRoute[] = [
         pageTitle: "Kế toán",
         icon: Wallet,
         showInSidebar: true,
+        roles: [Role.ADMIN, Role.SALE_MANAGER, Role.ACCOUNTANT],
         children: [
           {
             path: PATHS.ACCOUNTING.CUSTOMER_PAYMENTS,
@@ -450,16 +503,19 @@ export const APP_ROUTES: AppRoute[] = [
             element: <CustomerPaymentListPage />,
             icon: CreditCard,
             showInSidebar: true,
+            roles: [Role.ADMIN, Role.SALE_MANAGER, Role.ACCOUNTANT],
           },
           {
             path: PATHS.ACCOUNTING.CUSTOMER_PAYMENT_CREATE,
             element: <CreateCustomerPaymentPage />,
             showInSidebar: false,
+            roles: [Role.ADMIN, Role.ACCOUNTANT],
           },
           {
             path: PATHS.ACCOUNTING.CUSTOMER_PAYMENT_DETAIL,
             element: <CustomerPaymentDetailPage />,
             showInSidebar: false,
+            roles: [Role.ADMIN, Role.SALE_MANAGER, Role.ACCOUNTANT],
           },
           {
             path: PATHS.ACCOUNTING.VENDOR_PAYMENTS,
@@ -468,11 +524,13 @@ export const APP_ROUTES: AppRoute[] = [
             element: <VendorPaymentListPage />,
             icon: Banknote,
             showInSidebar: true,
+            roles: [Role.ADMIN, Role.SALE_MANAGER, Role.ACCOUNTANT],
           },
           {
             path: PATHS.ACCOUNTING.VENDOR_PAYMENT_CREATE,
             element: <CreateVendorPaymentPage />,
             showInSidebar: false,
+            roles: [Role.ADMIN, Role.ACCOUNTANT],
           },
         ],
       },
@@ -482,6 +540,7 @@ export const APP_ROUTES: AppRoute[] = [
         pageTitle: "Quản lý Người dùng",
         icon: UserCog,
         showInSidebar: true,
+        roles: [Role.ADMIN],
         children: [
           {
             path: PATHS.USER_MANAGEMENT.USERS,
@@ -490,16 +549,19 @@ export const APP_ROUTES: AppRoute[] = [
             element: <UserListPage />,
             icon: Users,
             showInSidebar: true,
+            roles: [Role.ADMIN],
           },
           {
             path: PATHS.USER_MANAGEMENT.USER_CREATE,
             element: <EditUserPage />,
             showInSidebar: false,
+            roles: [Role.ADMIN],
           },
           {
             path: PATHS.USER_MANAGEMENT.USER_EDIT,
             element: <EditUserPage />,
             showInSidebar: false,
+            roles: [Role.ADMIN],
           },
         ],
       },
@@ -510,6 +572,7 @@ export const APP_ROUTES: AppRoute[] = [
         element: <NotificationListPage />,
         icon: Bell,
         showInSidebar: true,
+        roles: [Role.ADMIN, Role.SALE_MANAGER, Role.SELLER, Role.OPERATION_MANAGER, Role.OPERATOR, Role.ACCOUNTANT],
       },
     ],
   },
