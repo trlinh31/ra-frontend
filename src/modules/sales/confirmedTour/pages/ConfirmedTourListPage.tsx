@@ -70,13 +70,9 @@ export default function ConfirmedTourListPage() {
       cell: ({ row }) => {
         const t = row.original;
         if (t.quotationId) {
-          return <span className='bg-blue-50 px-2 py-0.5 border border-blue-200 rounded-full text-blue-700 text-xs'>Từ báo giá</span>;
+          return <span className='bg-blue-50 px-2 py-0.5 border border-blue-200 rounded-full text-blue-700'>Từ báo giá</span>;
         }
-        return t.tourTemplateName ? (
-          <span className='text-muted-foreground text-xs'>{t.tourTemplateName}</span>
-        ) : (
-          <span className='text-muted-foreground text-xs'>—</span>
-        );
+        return t.tourTemplateName ? <span className='text-muted-foreground'>{t.tourTemplateName}</span> : null;
       },
     },
     {
@@ -91,7 +87,7 @@ export default function ConfirmedTourListPage() {
       enableSorting: false,
       cell: ({ row }) => {
         const entries = Object.entries(row.original.totalCost);
-        if (!entries.length) return <span className='text-muted-foreground'>—</span>;
+        if (!entries.length) return null;
         return (
           <div className='space-y-0.5'>
             {entries.map(([cur, amt]) => (

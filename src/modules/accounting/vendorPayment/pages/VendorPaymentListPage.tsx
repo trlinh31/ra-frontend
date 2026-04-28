@@ -75,9 +75,7 @@ export default function VendorPaymentListPage() {
           <span className='font-medium text-green-700'>
             {formatNumberVN(amt)} {row.original.currency}
           </span>
-        ) : (
-          <span className='text-muted-foreground'>—</span>
-        );
+        ) : null;
       },
     },
     { header: "Hạn TT", accessorKey: "dueDate" },
@@ -95,11 +93,9 @@ export default function VendorPaymentListPage() {
         const vp = row.original;
         return (
           <div className='flex items-center gap-1.5'>
-            {vp.status !== "paid" && (
-              <Button type='button' size='sm' variant='outline' onClick={() => setRecordTarget(vp)}>
-                <HandCoins className='w-4 h-4' />
-              </Button>
-            )}
+            <Button type='button' size='sm' variant='outline' disabled={vp.status === "paid"} onClick={() => setRecordTarget(vp)}>
+              <HandCoins className='w-4 h-4' />
+            </Button>
             <ActionButton action='delete' size='icon-sm' variant='destructive' onClick={() => handleDelete(vp)} />
           </div>
         );
